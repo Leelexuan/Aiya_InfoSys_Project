@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="log_in">
+    <style name="header_text">
 
-    <item name="android:textSize">
-    30sp
-    </item>
+        <item name="android:textSize">
+        30sp
+        </item>
 
-    <item name="android:textColor">
-    #D44E52
-    </item>
+        <item name="android:textColor">
+        #D44E52
+        </item>
+
+    </style>
+    <style name="create_your">
+
+        <item name="android:textSize">
+        20sp
+        </item>
+
+        <item name="android:textColor">
+        #D44E52
+        </item>
+
+    </style>
+
+    <style name="subheader_text">
+        <item name="android:textSize">
+            20sp
+        </item>
+
+        <item name="android:textColor">
+            #D44E52
+        </item>
 
     </style>
 <!--    <style name="log_in_button">-->
