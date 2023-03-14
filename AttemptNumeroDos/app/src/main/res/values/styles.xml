@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="log_in">
+
+    <item name="android:textSize">
+    30sp
+    </item>
+
+    <item name="android:textColor">
+    #D44E52
+    </item>
+
+    </style>
+<!--    <style name="log_in_button">-->
+
+<!--        <item name="android:textSize">-->
+<!--            30sp-->
+<!--        </item>-->
+
+<!--        <item name="android:textColor">-->
+<!--            white-->
+<!--        </item>-->
+
+<!--        <item name="android:fillColor">-->
+<!--            #DB4545-->
+<!--        </item>-->
+
+<!--    </style>-->
+</resources>
