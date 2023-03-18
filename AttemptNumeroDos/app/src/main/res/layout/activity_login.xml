@@ -117,6 +117,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
 
-    
+    <TextView
+        android:id="@+id/no_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signup_link"
+        android:color="@color/selector_blue_purple"
+        tools:layout_editor_absoluteX="106dp"
+        tools:layout_editor_absoluteY="385dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

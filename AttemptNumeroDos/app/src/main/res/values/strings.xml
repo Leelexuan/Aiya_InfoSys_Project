@@ -15,4 +15,5 @@
     <string name="password_text">PASSWORD</string>
     <string name="confirm_password_text">CONFIRM PASSWORD</string>
     <string name="create_your">CREATE YOUR USERNAME\nAND PASSWORD</string>
+    <string name="signup_link">New to Aiya? Sign up here!</string>
 </resources>

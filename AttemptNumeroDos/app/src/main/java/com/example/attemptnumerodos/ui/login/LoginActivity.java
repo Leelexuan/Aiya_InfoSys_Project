@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.example.attemptnumerodos.R;
 import com.example.attemptnumerodos.ui.login.LoginViewModel;
 import com.example.attemptnumerodos.ui.login.LoginViewModelFactory;
+import com.example.attemptnumerodos.ui.signup.SignupActivity;
 import com.example.attemptnumerodos.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
@@ -37,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        //setContentView should accept the R.layout.login_activity
         setContentView(binding.getRoot());
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
@@ -46,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
+        final TextView makeAccountText = (TextView) findViewById(R.id.no_account);
+
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -120,6 +125,15 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+            }
+        });
+
+        //start the signup page aka "activity"
+        makeAccountText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
             }
         });
     }
