@@ -1,17 +1,8 @@
 package com.example.attemptnumerodos.ui.login;
 
 import android.app.Activity;
-
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -24,37 +15,53 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.attemptnumerodos.R;
-import com.example.attemptnumerodos.databinding.ActivityLoginBinding;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
-public class LoginActivity extends AppCompatActivity {
+import com.example.attemptnumerodos.R;
+import com.example.attemptnumerodos.databinding.ActivitySignupBinding;
+
+//don't forget that every time you start a new activity
+//please update the manifest with that activity declaration
+//don't forget to extend AppCompat Activity
+public class SignupActivity extends AppCompatActivity {
+    private LoginViewModel loginViewModel;
+    //note that the below class is automatically generated
+    //by the formatting of the xml file name
+    //since the associated layout is activity_signup
+    //the name should be Activity Signup Binding
+    private ActivitySignupBinding binding;
+    private LayoutInflater inflater;
 
     private View app_bar;
-
-    private LoginViewModel loginViewModel;
-    private ActivityLoginBinding binding;
-
-    private LayoutInflater inflater;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        binding = ActivitySignupBinding.inflate(getLayoutInflater());
         //setContentView should accept the R.layout.login_activity
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_signup);
         inflater = LayoutInflater.from(this);
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
+        //note that all binding.[id] are generated automatically
+
         app_bar = inflater.inflate(R.layout.app_bar, null);
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
-        final ProgressBar loadingProgressBar = binding.loading;
-        final TextView makeAccountText = (TextView) findViewById(R.id.no_account);
+        final EditText confirmEditText = binding.confirmPassword;
+        //no implementation of this yet
+        final Button loginButton = binding.signup;
+        //final ProgressBar loadingProgressBar = binding.loading;
+        //TODO: we don't have a loading bar for signup yet!
+//        final TextView makeAccountText = (TextView) findViewById(R.id.no_account);
 
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -79,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginResult == null) {
                     return;
                 }
-                loadingProgressBar.setVisibility(View.GONE);
+//                loadingProgressBar.setVisibility(View.GONE);
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
                 }
@@ -127,26 +134,27 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
+//                loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         });
 
-        //start the signup page aka "activity"
-        makeAccountText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                startActivity(intent);
-            }
-        });
+
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
+        // TODO : initiate successful signup experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+//        //start the login
+//        makeAccountText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

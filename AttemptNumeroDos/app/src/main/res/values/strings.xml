@@ -1,4 +1,5 @@
 <resources>
+<!--    easier to modify here than shotgun surgery in xml filess-->
     <string name="app_name">Aiya!</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -16,4 +17,5 @@
     <string name="confirm_password_text">CONFIRM PASSWORD</string>
     <string name="create_your">CREATE YOUR USERNAME\nAND PASSWORD</string>
     <string name="signup_link">New to Aiya? Sign up here!</string>
+    <string name="account_create_success">Your account is successfully registered!</string>
 </resources>

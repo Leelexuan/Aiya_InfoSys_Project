@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.signup.SignupActivity"
+            android:name=".ui.login.SignupActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
