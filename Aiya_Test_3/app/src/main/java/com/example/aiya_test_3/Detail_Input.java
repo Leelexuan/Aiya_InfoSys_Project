@@ -16,10 +16,23 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+// For Firebase
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+
 public class Detail_Input extends AppCompatActivity {
     private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
     private LinearLayout appbarContainer,inputdetailsContainer; // Linear layout means it is either horizontal or vertical, holds the respective name item
     private View app_bar,input_detail;
+
+    // Firebase
+    DatabaseReference nRootDatabaseRef;
+    DatabaseReference nNodeRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +125,11 @@ public class Detail_Input extends AppCompatActivity {
         EditText HazardAddress_Input = input_detail.findViewById(R.id.editText_PostalAddress);
         EditText HazardDescription_Input = input_detail.findViewById(R.id.editText_HazardDescriptionMultiLine);
 
+        // Firebase
+        final String node = "Hazard_Details";
+        nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        nNodeRef = nRootDatabaseRef.child(node);
+
         submitHazard.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -123,6 +141,16 @@ public class Detail_Input extends AppCompatActivity {
                 Log.d("HazardName_Input: ", String.valueOf(HazardName_Input.getText()));
                 Log.d("HazardAddress_Input: ", String.valueOf(HazardAddress_Input.getText()));
                 Log.d("HazardDescription_Input: ", String.valueOf(HazardDescription_Input.getText()));
+
+                // Create a HashMap with log message keys and values
+                HashMap<String, String> Send_database_details = new HashMap<>();
+                Send_database_details.put("HazardName_Input", HazardName_Input.getText().toString());
+                Send_database_details.put("HazardAddress_Input", HazardAddress_Input.getText().toString());
+                Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
+
+                // Send the HashMap to Firebase
+                DatabaseReference nNodeRefPush = nNodeRef.push();
+                nNodeRefPush.setValue(Send_database_details);
             }
         });
 

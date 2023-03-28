@@ -17,6 +17,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+// For Firebase
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+
 public class Forum extends AppCompatActivity implements SearchView.OnQueryTextListener  {
 
     private SearchView searchView;    // Component for search bar
@@ -26,6 +34,10 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
     private View cardView, app_bar;
     private ConstraintLayout cardContent;
     private List<String> cardData;
+
+    // Firebase
+    DatabaseReference nRootDatabaseRef;
+    DatabaseReference nNodeRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
