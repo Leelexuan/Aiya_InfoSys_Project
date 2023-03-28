@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible">
+
+    <TextView
+        android:id="@+id/HazardSubject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/bobbyroughsoft"
+        android:text="Hazard Name"
+        android:textColor="#D44E52"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        style="@style/Widget.AppCompat.AutoCompleteTextView"
+        android:layout_width="216dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/inputview_bg"
+        android:ems="10"
+        android:fontFamily="@font/bobbyroughsoft"
+        android:hint="Input Hazard Name Here"
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:textAlignment="textStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        android:textStyle="bold|italic"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.082"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HazardSubject" />
+
+    <TextView
+        android:id="@+id/HazardAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:fontFamily="@font/bobbyroughsoft"
+        android:text="Address"
+        android:textColor="#D44E52"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.049"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hazardType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="212dp"
+        android:fontFamily="@font/bobbyroughsoft"
+        android:text="Hazerd Type"
+        android:textColor="#D44E52"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextTextPostalAddress"
+        style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+        android:layout_width="216dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/inputview_bg"
+        android:ems="10"
+        android:fontFamily="@font/bobbyroughsoft"
+        android:hint="Input Address Here"
+        android:inputType="textPostalAddress"
+        android:paddingLeft="10dp"
+        android:textAlignment="textStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        android:textStyle="bold|italic"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.079"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HazardAddress" />
+
+    <Spinner
+        android:id="@+id/hazardTypeSpinner"
+        android:layout_width="180dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.069"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hazardType" />
+
+    <TextView
+        android:id="@+id/HazardDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="288dp"
+        android:fontFamily="@font/bobbyroughsoft"
+        android:text="Hazard Description"
+        android:textColor="#D44E52"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.043"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextHazardDescriptionMultiLine"
+        style="@style/Widget.AppCompat.AutoCompleteTextView"
+        android:layout_width="322dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/inputview_bg"
+        android:ems="10"
+        android:fontFamily="@font/bobbyroughsoft"
+        android:hint="Input Hazard Description Here.."
+        android:inputType="textMultiLine"
+        android:paddingLeft="10dp"
+        android:textAlignment="textStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        android:textStyle="bold|italic"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.134"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HazardDescription" />
+
+    <TextView
+        android:id="@+id/HazardSeverity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="416dp"
+        android:fontFamily="@font/bobbyroughsoft"
+        android:text="Hazard Severity"
+        android:textColor="#D44E52"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.047"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/uploadPhotoBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.082"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HazardSeverity">
+
+        <!-- Need to make this responsive!!! :( -->
+
+        <include
+            layout="@layout/important_radio_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <include
+            layout="@layout/warning_radio_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <include
+            layout="@layout/mild_radio_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <include
+            layout="@layout/good_radio_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/uploadPhotoBtn"
+        android:layout_width="249dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="20dp"
+        android:background="#DB4545"
+        android:text="Upload Photo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radio_group" />
+
+    <Button
+        android:id="@+id/submitHazardBtn"
+        android:layout_width="249dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="29dp"
+        android:background="#DB4545"
+        android:text="Submit Hazard"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/uploadedPhotoImage" />
+
+    <ImageView
+        android:id="@+id/uploadedPhotoImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/submitHazardBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uploadPhotoBtn"
+        app:layout_constraintVertical_bias="0.13"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

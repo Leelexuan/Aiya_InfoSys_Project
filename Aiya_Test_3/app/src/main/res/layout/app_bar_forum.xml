@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- This is the tool bar for the forum page that will be inside the app bar container -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="false"
+    android:clipChildren="false"
+    android:visibility="visible">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/red"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="16dp">
+
+            <ImageButton
+                android:id="@+id/input_detail_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="#00FFFFFF"
+                android:elevation="4dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/app_logo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/HeaderText"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.488"
+                app:srcCompat="@drawable/app_logo" />
+
+            <TextView
+                android:id="@+id/HeaderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/bobbyroughsoft"
+                android:text="Hazard Near You"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="20dp"
+                app:layout_constraintStart_toEndOf="@+id/input_detail_button"
+                app:layout_constraintTop_toBottomOf="@+id/SearchBar" />
+
+            <SearchView
+                android:id="@+id/SearchBar"
+                android:layout_width="276dp"
+                android:layout_height="39dp"
+                android:background="@drawable/searchview_bg"
+                android:iconifiedByDefault="false"
+                android:queryHint="Search..."
+                android:textColorHint="#D13B3B"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.231"
+                app:layout_constraintStart_toEndOf="@+id/input_detail_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.383">
+
+            </SearchView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- This is the login button, but for now, I have configured it to go to the input details page -->
+
+        <!-- I use table layout here to arrange the items, I will try to see if there are better ways - Darren -->
+
+
+        <!-- This is the search bar -->
+
+
+        <!-- This is the header text bar -->
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

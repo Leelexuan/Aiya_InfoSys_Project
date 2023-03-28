@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
+<!-- This is the card that will be called to be used in the forum page -->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -19,8 +21,9 @@
         android:padding="16dp"
         android:visibility="visible">
 
+        <!-- This is the hazard picture -->
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/hazardPicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -30,15 +33,35 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_launcher_foreground" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
+        <!-- Todo: To fix the fact that scroll view cause it to have delayed opening -->
+        <!-- This is the hazard description -->
+        <ScrollView
+            android:layout_width="197dp"
+            android:layout_height="189dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHorizontal_bias="0.589"
+            app:layout_constraintStart_toEndOf="@+id/hazardPicture"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                android:id="@+id/hazardDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget arcu dapibus,
+                vulputate felis sed, malesuada dolor. Nunc et massa viverra, tincidunt tellus ac, porttitor sapien.
+                Phasellus et risus sagittis, aliquam magna vel, vestibulum libero. Sed quis nibh ipsum. Quisque tincidunt
+                tristique quam, sed dapibus urna condimentum nec. Morbi fringilla velit at nisi vestibulum, at bibendum odio
+                ultrices. Ut a lorem in metus maximus porta. Quisque non suscipit lacus. Nam non sapien convallis, tincidunt
+                neque eget, fermentum magna. Donec nec diam finibus, accumsan leo at, interdum elit. Donec sed iaculis nibh, vel condimentum mi."
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/hazardPicture"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.906" />
+        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
