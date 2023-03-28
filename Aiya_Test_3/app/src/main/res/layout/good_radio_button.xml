@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/radio_button_good"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/ic_launcher_foreground"
+        android:button="@null"
+        android:checked="false" />
