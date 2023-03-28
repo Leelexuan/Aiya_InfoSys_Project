@@ -11,33 +11,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".ui.login.LoginActivity">
 <!--call app bar on MainActivity instead using inflater inflater-->
-<!--    NOOOOO -->
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:id="@+id/appbar"-->
 
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:contentInsetStart="0dp"-->
-<!--        android:contentInsetLeft="0dp"-->
-<!--        android:contentInsetEnd="0dp"-->
-<!--        android:contentInsetRight="0dp"-->
-<!--        android:paddingLeft="-16dp"-->
-<!--        android:paddingTop="-16dp"-->
-<!--        android:paddingRight="-16dp"-->
-<!--        android:paddingBottom="-16dp"-->
-<!--        app:contentInsetEnd="0dp"-->
-<!--        app:contentInsetLeft="0dp"-->
-<!--        app:contentInsetRight="0dp"-->
-<!--        app:contentInsetStart="0dp"-->
-<!--        tools:layout_editor_absoluteX="16dp"-->
-<!--        tools:layout_editor_absoluteY="-17dp">-->
-<!--        &lt;!&ndash;        android:layout_marginTop="-16dp"&ndash;&gt;-->
-<!--        &lt;!&ndash;        android:layout_marginRight="-16dp"&ndash;&gt;-->
-<!--        &lt;!&ndash;        android:layout_marginLeft="-16dp">&ndash;&gt;-->
-
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
-
-<!--    container for app_bar on activity -->
+<!--    un-inflated yet place for app_bar on activity -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -45,6 +20,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+<!--    the big CREATE YOUR USERNAME AND PASSWORD text-->
+<!--    TODO: apply the bobbyjones font-->
     <TextView
         android:id="@+id/create_your"
         android:layout_width="361dp"
@@ -58,6 +35,7 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="69dp" />
 
+<!--    the editable email field -->
     <EditText
         android:id="@+id/username"
         android:layout_width="0dp"

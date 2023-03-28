@@ -63,6 +63,8 @@ public class SignupActivity extends AppCompatActivity {
         //TODO: we don't have a loading bar for signup yet!
 //        final TextView makeAccountText = (TextView) findViewById(R.id.no_account);
 
+        //TODO: Note that most of the below code are currently unchanged from loginActivity. See Login Activity for comments.
+
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
