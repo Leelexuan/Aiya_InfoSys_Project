@@ -11,6 +11,9 @@ import com.example.attemptnumerodos.data.Result;
 import com.example.attemptnumerodos.data.model.LoggedInUser;
 import com.example.attemptnumerodos.R;
 
+//keeps/retains the datafields (e.g. typed in password, drafts) even if the Activity is destroyed due to rotations
+//will be accessed to repopulate the field upon onCreate of new layout
+//for login specifically, you maintain username and password
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
@@ -31,6 +34,7 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
+        // threads, lesgooo
         Result<LoggedInUser> result = loginRepository.login(username, password);
 
         if (result instanceof Result.Success) {
@@ -64,6 +68,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     // A placeholder password validation check
+    // Obviously we'll need to connect this to our online database
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
     }

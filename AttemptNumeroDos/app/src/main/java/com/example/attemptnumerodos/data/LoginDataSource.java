@@ -13,6 +13,8 @@ public class LoginDataSource {
 
         try {
             // TODO: handle loggedInUser authentication
+            // call to database, check keys, or something
+            // this is just placeholder code
             LoggedInUser fakeUser =
                     new LoggedInUser(
                             java.util.UUID.randomUUID().toString(),
