@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -106,13 +107,24 @@ public class Detail_Input extends AppCompatActivity {
 
         //Todo: Send information recorded here into database
         Button submitHazard = input_detail.findViewById(R.id.submitHazardBtn);
+
+        EditText HazardName_Input = input_detail.findViewById(R.id.editText_HazardName);
+        EditText HazardAddress_Input = input_detail.findViewById(R.id.editText_PostalAddress);
+        EditText HazardDescription_Input = input_detail.findViewById(R.id.editText_HazardDescriptionMultiLine);
+
         submitHazard.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 Intent go_to_submit_page = new Intent(Detail_Input.this, Submitted_Details.class);
                 startActivity(go_to_submit_page);
                 Log.d("Submit Button", "User clicked submit details");
+
+                //Todo: Update and send information to database
+                Log.d("HazardName_Input: ", String.valueOf(HazardName_Input.getText()));
+                Log.d("HazardAddress_Input: ", String.valueOf(HazardAddress_Input.getText()));
+                Log.d("HazardDescription_Input: ", String.valueOf(HazardDescription_Input.getText()));
             }
         });
+
     }
 }

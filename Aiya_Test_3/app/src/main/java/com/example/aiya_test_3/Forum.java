@@ -69,6 +69,8 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
             // Inflate the card_view.xml layout
             cardView = inflater.inflate(R.layout.card_view, null);
 
+            //Todo: Retrieve data from database
+
             // Set any component or attributes that you want for the card in cardContainer
             cardContent = cardView.findViewById(R.id.card_content);
             cardTextView = cardContent.findViewById(R.id.hazardDescription);
