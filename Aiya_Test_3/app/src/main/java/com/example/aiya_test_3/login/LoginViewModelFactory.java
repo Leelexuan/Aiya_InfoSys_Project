@@ -1,11 +1,11 @@
-package login;
+package com.example.aiya_test_3.login;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.attemptnumerodos.data.LoginDataSource;
-import com.example.attemptnumerodos.data.LoginRepository;
+import com.example.aiya_test_3.data.LoginDataSource;
+import com.example.aiya_test_3.data.LoginRepository;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

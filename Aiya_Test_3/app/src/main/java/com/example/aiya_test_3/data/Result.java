@@ -1,4 +1,4 @@
-package data;
+package com.example.aiya_test_3.data;
 
 /**
  * A generic class that holds a result success w/ data or an error exception.

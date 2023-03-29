@@ -1,4 +1,4 @@
-package login;
+package com.example.aiya_test_3.login;
 
 import android.util.Patterns;
 
@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.attemptnumerodos.R;
-import com.example.attemptnumerodos.data.LoginRepository;
-import com.example.attemptnumerodos.data.Result;
-import com.example.attemptnumerodos.data.model.LoggedInUser;
+import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.data.LoginRepository;
+import com.example.aiya_test_3.data.Result;
+import com.example.aiya_test_3.data.model.LoggedInUser;
 
 //keeps/retains the datafields (e.g. typed in password, drafts) even if the Activity is destroyed due to rotations
 //will be accessed to repopulate the field upon onCreate of new layout

@@ -1,4 +1,4 @@
-package login;
+package com.example.aiya_test_3.login;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,8 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.attemptnumerodos.R;
-import com.example.attemptnumerodos.databinding.ActivitySignupBinding;
+import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.databinding.ActivitySignupBinding;
 
 //don't forget that every time you start a new activity
 //please update the manifest with that activity declaration

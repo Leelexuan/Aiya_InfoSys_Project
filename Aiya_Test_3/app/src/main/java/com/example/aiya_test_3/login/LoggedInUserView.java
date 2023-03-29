@@ -1,4 +1,4 @@
-package login;
+package com.example.aiya_test_3.login;
 
 /**
  * Class exposing authenticated user details to the UI.

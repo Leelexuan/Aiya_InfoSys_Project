@@ -1,4 +1,4 @@
-package data.model;
+package com.example.aiya_test_3.data.model;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

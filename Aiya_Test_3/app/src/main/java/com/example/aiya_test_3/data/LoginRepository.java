@@ -1,6 +1,6 @@
-package data;
+package com.example.aiya_test_3.data;
 
-import com.example.attemptnumerodos.data.model.LoggedInUser;
+import com.example.aiya_test_3.data.model.LoggedInUser;
 
 /**
  * Class that requests authentication and user information from the remote data source and

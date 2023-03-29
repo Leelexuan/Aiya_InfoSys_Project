@@ -1,4 +1,4 @@
-package login;
+package com.example.aiya_test_3.login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,8 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.attemptnumerodos.R;
-import com.example.attemptnumerodos.databinding.ActivityLoginBinding;
+import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
 
