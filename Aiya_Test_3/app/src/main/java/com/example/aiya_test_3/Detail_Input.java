@@ -1,8 +1,10 @@
 package com.example.aiya_test_3;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,12 +19,18 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 // For Firebase
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class Detail_Input extends AppCompatActivity {
@@ -33,6 +41,8 @@ public class Detail_Input extends AppCompatActivity {
     // Firebase
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
+    FirebaseStorage storageDatabaseRef;
+    StorageReference storageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +139,9 @@ public class Detail_Input extends AppCompatActivity {
         final String node = "Hazard_Details";
         nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
         nNodeRef = nRootDatabaseRef.child(node);
+        storageDatabaseRef = FirebaseStorage.getInstance();
+        storageRef = storageDatabaseRef.getReference();
+
 
         submitHazard.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -147,6 +160,22 @@ public class Detail_Input extends AppCompatActivity {
                 Send_database_details.put("HazardName_Input", HazardName_Input.getText().toString());
                 Send_database_details.put("HazardAddress_Input", HazardAddress_Input.getText().toString());
                 Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
+
+                Uri file = Uri.fromFile(new File("res/images/ROOT Stores.jpeg"));
+                StorageReference imageRef = storageRef.child("images/image.jpg");
+
+                UploadTask uploadTask = imageRef.putFile(file);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Image uploaded successfully
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                    }
+                });
 
                 // Send the HashMap to Firebase
                 DatabaseReference nNodeRefPush = nNodeRef.push();
