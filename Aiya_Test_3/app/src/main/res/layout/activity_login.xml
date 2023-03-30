@@ -22,7 +22,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--  the big text written LOG IN  -->
+<!--  the big LOG IN text -->
     <TextView
         android:id="@+id/log_in"
         android:layout_width="122dp"
