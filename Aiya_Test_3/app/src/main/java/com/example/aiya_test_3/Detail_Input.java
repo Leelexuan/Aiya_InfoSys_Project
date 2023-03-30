@@ -67,19 +67,20 @@ public class Detail_Input extends AppCompatActivity {
         inputdetailsContainer = findViewById(R.id.inputdetailsContainer);
         inputdetailsContainer.addView(input_detail);
 
+        // Todo : Figure out the options for dropdown
         String[] options = {"Trees", "Pot Holes", "Dead Animals"}; // This are the options for the dropdown option
         ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options); // Add options to spinner
 
-        Spinner hazardDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
-        hazardDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
-        hazardDropDownMenu.setSelection(0); // Set the first value as the default value
+        Spinner HazardTypeDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
+        HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
+        HazardTypeDropDownMenu.setSelection(0); // Set the first value as the default value
 
         // Note currently when you choose an item in drop down box, it doesn't do anything other than logcat
-        hazardDropDownMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        HazardTypeDropDownMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Hazard Drop Down Menu","You have selected: " + hazardDropDownMenu.getSelectedItem());// Option "Important" is selected
+                Log.d("Hazard Drop Down Menu","You have selected: " + HazardTypeDropDownMenu.getSelectedItem());
             }
 
             @Override
@@ -93,9 +94,10 @@ public class Detail_Input extends AppCompatActivity {
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
-            //Todo: Input the radio button icons with visibility change
+            //Todo UI: Input the radio button icons with visibility change
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
                 // Perform an action based on the selected radio button
                 if (checkedId == R.id.radio_button_important) {
                     Log.d("BUTTON","Hello This is Important");// Option "Important" is selected
@@ -115,33 +117,39 @@ public class Detail_Input extends AppCompatActivity {
         Button submitPicture = input_detail.findViewById(R.id.uploadPhotoBtn);
         submitPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Todo: Let user open either camera or gallery and store it
+
+                // Todo PhotoUploading: Let user choose between gallery or camera app
+
+                // Todo PhotoUploading: Gallery: Open Gallery and get url
+                // Todo PhotoUploading: Camera: Store Image in known folder after image is taken
+
+                /* Uncomment this to open camera app
 
                 Intent openCameraAppIntent = new Intent("android.media.action.IMAGE_CAPTURE");
                 startActivity(openCameraAppIntent);
                 Log.d("Submit Button", "User clicked submit picture");
+                */
 
-                // Todo: Get actual photo that user picked and display here
-                ImageView uploadedPhoto = findViewById(R.id.uploadedPhotoImage);
-                uploadedPhoto.setVisibility(View.VISIBLE);
+                // Todo PhotoUploading: Get actual photo that user picked and display to input_detail.findViewById(R.id.uploadedPhotoImage)
 
             }
         });
 
-        //Todo: Send information recorded here into database
-        Button submitHazard = input_detail.findViewById(R.id.submitHazardBtn);
-
-        EditText HazardName_Input = input_detail.findViewById(R.id.editText_HazardName);
-        EditText HazardAddress_Input = input_detail.findViewById(R.id.editText_PostalAddress);
-        EditText HazardDescription_Input = input_detail.findViewById(R.id.editText_HazardDescriptionMultiLine);
-
-        // Firebase
+        // Firebase Real-Time Database (Only for scalar data type e.g string, int, float)
         final String node = "Hazard_Details";
         nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
         nNodeRef = nRootDatabaseRef.child(node);
+
+        // Firebase Storage (For images and all form of data, can think of it like google drive)
         storageDatabaseRef = FirebaseStorage.getInstance();
         storageRef = storageDatabaseRef.getReference();
 
+        // All the different inputs from the user are being initiated here
+        // Todo Design Pattern: To rewrite using template/builder pattern
+        Button submitHazard = input_detail.findViewById(R.id.submitHazardBtn);
+        EditText HazardName_Input = input_detail.findViewById(R.id.editText_HazardName);
+        EditText HazardAddress_Input = input_detail.findViewById(R.id.editText_PostalAddress);
+        EditText HazardDescription_Input = input_detail.findViewById(R.id.editText_HazardDescriptionMultiLine);
 
         submitHazard.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -150,36 +158,28 @@ public class Detail_Input extends AppCompatActivity {
                 startActivity(go_to_submit_page);
                 Log.d("Submit Button", "User clicked submit details");
 
-                //Todo: Update and send information to database
+                //Todo Design Pattern: To rewrite a log file using singleton pattern
                 Log.d("HazardName_Input: ", String.valueOf(HazardName_Input.getText()));
                 Log.d("HazardAddress_Input: ", String.valueOf(HazardAddress_Input.getText()));
                 Log.d("HazardDescription_Input: ", String.valueOf(HazardDescription_Input.getText()));
 
-                // Create a HashMap with log message keys and values
+                // Create a HashMap with the header as keys and input as values
                 HashMap<String, String> Send_database_details = new HashMap<>();
                 Send_database_details.put("HazardName_Input", HazardName_Input.getText().toString());
                 Send_database_details.put("HazardAddress_Input", HazardAddress_Input.getText().toString());
                 Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
-
-                Uri file = Uri.fromFile(new File("res/images/ROOT Stores.jpeg"));
-                StorageReference imageRef = storageRef.child("images/image.jpg");
-
-                UploadTask uploadTask = imageRef.putFile(file);
-                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Image uploaded successfully
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                    }
-                });
+                Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
 
                 // Send the HashMap to Firebase
                 DatabaseReference nNodeRefPush = nNodeRef.push();
                 nNodeRefPush.setValue(Send_database_details);
+
+                //Todo Database: Send image to firebase STORAGE
+                //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE
+
+                /* Do the above here
+
+                */
             }
         });
 

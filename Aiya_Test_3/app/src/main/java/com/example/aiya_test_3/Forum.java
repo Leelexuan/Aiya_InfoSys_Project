@@ -43,11 +43,11 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
         super.onCreate(savedInstanceState);
 
+        // Todo Design Pattern: Rewrite entire forum code using recycler view (low priority)(Lesson 4)
         // main layout for this page
         setContentView(R.layout.activity_forum); // activity_forum layout does not have content, only containers
 
         // Bring in contents to fill up the containers, we do this by using inflater
-
         // Inflater is to bring another layout into this layout
         inflater = LayoutInflater.from(this);
         app_bar = inflater.inflate(R.layout.app_bar_forum, null); // Here we bring in app_bar_forum
@@ -81,7 +81,7 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
             // Inflate the card_view.xml layout
             cardView = inflater.inflate(R.layout.card_view, null);
 
-            //Todo: Retrieve data from database
+            //Todo Database: Retrieve data from database and input into cards
 
             // Set any component or attributes that you want for the card in cardContainer
             cardContent = cardView.findViewById(R.id.card_content);
@@ -137,6 +137,10 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
         searchView.setOnQueryTextListener(this);
 
     }
+
+    // Everything beyond this line is for search bar functionality
+    // Todo Design Pattern: Ryan say he will use multi-threading to make this faster
+    // Todo Database: Figure out how to search database and refresh forum page
 
     @Override
     public boolean onQueryTextSubmit(String query) {
