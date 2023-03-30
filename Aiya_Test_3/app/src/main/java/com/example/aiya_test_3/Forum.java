@@ -81,7 +81,7 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
             // Inflate the card_view.xml layout
             cardView = inflater.inflate(R.layout.card_view, null);
 
-            //Todo Database: Retrieve data from database and input into cards
+            //Todo Database: Retrieve data from database and input into cards (Lesson 5)
 
             // Set any component or attributes that you want for the card in cardContainer
             cardContent = cardView.findViewById(R.id.card_content);
@@ -139,8 +139,8 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
     }
 
     // Everything beyond this line is for search bar functionality
-    // Todo Design Pattern: Ryan say he will use multi-threading to make this faster
-    // Todo Database: Figure out how to search database and refresh forum page
+    // Todo Design Pattern: Ryan say he will use multi-threading to make this faster (Lesson 3)
+    // Todo Database: Figure out how to search database and refresh forum page (Lesson 5)
 
     @Override
     public boolean onQueryTextSubmit(String query) {

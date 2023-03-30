@@ -120,8 +120,8 @@ public class Detail_Input extends AppCompatActivity {
 
                 // Todo PhotoUploading: Let user choose between gallery or camera app
 
-                // Todo PhotoUploading: Gallery: Open Gallery and get url
-                // Todo PhotoUploading: Camera: Store Image in known folder after image is taken
+                // Todo PhotoUploading: Gallery: Open Gallery and get url (Lesson 4)
+                // Todo PhotoUploading: Camera: Store Image in known folder after image is taken (Lesson 4)
 
                 /* Uncomment this to open camera app
 
@@ -130,7 +130,7 @@ public class Detail_Input extends AppCompatActivity {
                 Log.d("Submit Button", "User clicked submit picture");
                 */
 
-                // Todo PhotoUploading: Get actual photo that user picked and display to input_detail.findViewById(R.id.uploadedPhotoImage)
+                // Todo PhotoUploading: Get actual photo that user picked and display to input_detail.findViewById(R.id.uploadedPhotoImage) (Lesson 4)
 
             }
         });
@@ -145,7 +145,7 @@ public class Detail_Input extends AppCompatActivity {
         storageRef = storageDatabaseRef.getReference();
 
         // All the different inputs from the user are being initiated here
-        // Todo Design Pattern: To rewrite using template/builder pattern
+        // Todo Design Pattern: To rewrite using template/builder pattern (Lesson 3)
         Button submitHazard = input_detail.findViewById(R.id.submitHazardBtn);
         EditText HazardName_Input = input_detail.findViewById(R.id.editText_HazardName);
         EditText HazardAddress_Input = input_detail.findViewById(R.id.editText_PostalAddress);
@@ -158,7 +158,7 @@ public class Detail_Input extends AppCompatActivity {
                 startActivity(go_to_submit_page);
                 Log.d("Submit Button", "User clicked submit details");
 
-                //Todo Design Pattern: To rewrite a log file using singleton pattern
+                //Todo Design Pattern: To rewrite a log file using singleton pattern (Pre-Mid Terms, Week 5)
                 Log.d("HazardName_Input: ", String.valueOf(HazardName_Input.getText()));
                 Log.d("HazardAddress_Input: ", String.valueOf(HazardAddress_Input.getText()));
                 Log.d("HazardDescription_Input: ", String.valueOf(HazardDescription_Input.getText()));
@@ -174,8 +174,8 @@ public class Detail_Input extends AppCompatActivity {
                 DatabaseReference nNodeRefPush = nNodeRef.push();
                 nNodeRefPush.setValue(Send_database_details);
 
-                //Todo Database: Send image to firebase STORAGE
-                //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE
+                //Todo Database: Send image to firebase STORAGE (Lesson 5)
+                //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE (Lesson 5)
 
                 /* Do the above here
 
