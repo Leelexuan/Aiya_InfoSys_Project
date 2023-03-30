@@ -38,7 +38,7 @@ public class SignupViewModel extends ViewModel {
         //if it failed return signup failed
         //placeholder if else parameter - use isConfirmValid etc
         if (!password.equals(confirm)) {
-            //push to login database
+            //push to login database8
             //insert further variables later
             signupResult.setValue(new SignupResult(R.string.signup_failed));
         }

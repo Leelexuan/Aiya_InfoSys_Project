@@ -91,18 +91,22 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-        signupViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        signupViewModel.getSignupResult().observe(this, new Observer<SignupResult>() {
             @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
+            //if signupResult changes
+            //haha
+            //TODO: fix this
+            public void onChanged(@Nullable SignupResult signupResult) {
+                if (signupResult == null) {
                     return;
                 }
 //                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
+                if (signupResult.getError() != null) {
+                    showSignupFailed(signupResult.getError());
                 }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
+                if (signupResult.getSuccess() != null) {
+                    //use this to update intent/transition to login page
+                    updateUiWithUser(signupResult.getSuccess());
                 }
                 setResult(Activity.RESULT_OK);
 
@@ -137,8 +141,8 @@ public class SignupActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     //happens when button is pressed
                     //replace with signupViewModel.signup
-                    signupViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+                    signupViewModel.signup(usernameEditText.getText().toString(),
+                            passwordEditText.getText().toString(), confirmEditText.getText().toString());
                 }
                 return false;
             }
@@ -149,15 +153,15 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                loadingProgressBar.setVisibility(View.VISIBLE);
-                signupViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                signupViewModel.signup(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString(), confirmEditText.getText().toString());
             }
         });
 
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+    private void updateUiWithUser(Boolean success) {
+        String welcome = getString(R.string.signup_thanks);
         // TODO : initiate successful signup experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
@@ -172,7 +176,7 @@ public class SignupActivity extends AppCompatActivity {
 //        });
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
+    private void showSignupFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 }
