@@ -67,7 +67,12 @@ public class SignupActivity extends AppCompatActivity {
         //TODO: we don't have a loading bar for signup yet!
 //        final TextView makeAccountText = (TextView) findViewById(R.id.no_account);
 
+<<<<<<< Updated upstream
         //TODO: Note that most of the below code are currently unchanged from loginActivity. See Login Activity for comments.
+=======
+        //TODO: Note that most of the below code are similar to loginActivity. See Login Activity for comments.
+        //TODO: Implement signup upload to database thing
+>>>>>>> Stashed changes
 
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -88,8 +93,15 @@ public class SignupActivity extends AppCompatActivity {
 
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
+<<<<<<< Updated upstream
             public void onChanged(@Nullable LoginResult loginResult) {
                 if (loginResult == null) {
+=======
+            //if signupResult changes
+            //haha
+            public void onChanged(@Nullable SignupResult signupResult) {
+                if (signupResult == null) {
+>>>>>>> Stashed changes
                     return;
                 }
 //                loadingProgressBar.setVisibility(View.GONE);
@@ -137,7 +149,11 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+<<<<<<< Updated upstream
         loginButton.setOnClickListener(new View.OnClickListener() {
+=======
+        signupButton.setOnClickListener(new View.OnClickListener() {
+>>>>>>> Stashed changes
             @Override
             public void onClick(View v) {
 //                loadingProgressBar.setVisibility(View.VISIBLE);

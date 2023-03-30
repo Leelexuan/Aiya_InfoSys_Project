@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
         app_bar = inflater.inflate(R.layout.app_bar, null);
 
-        //TODO: Implement app_bar container
+        //Implement app_bar container
         // Once everything is instantiated, add the app_bar layout to the container meant for app bar to the MainActivity's layout
         appbarContainer = findViewById(R.id.appbar);
         appbarContainer.addView(app_bar, 0);
