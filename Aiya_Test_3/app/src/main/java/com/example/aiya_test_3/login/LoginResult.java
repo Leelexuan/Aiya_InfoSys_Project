@@ -11,6 +11,7 @@ class LoginResult {
     @Nullable
     private Integer error;
 
+    //set by way of constructor, by login activity
     LoginResult(@Nullable Integer error) {
         this.error = error;
     }

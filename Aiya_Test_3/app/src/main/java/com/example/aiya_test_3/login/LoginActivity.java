@@ -23,7 +23,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.aiya_test_3.R;
+//databinding issues: you sync your project -> Files -> sync project with gradle builder
 import com.example.aiya_test_3.databinding.ActivityLoginBinding;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -44,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        //setContentView should accept the R.layout.login_activity
+        //setContentView should accept the R.layout.activity_login
         setContentView(binding.getRoot());
         inflater = LayoutInflater.from(this);
 
@@ -89,12 +91,13 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginFormState.getUsernameError() != null) {
                     usernameEditText.setError(getString(loginFormState.getUsernameError()));
                 }
-                //no password found, show error text message
+                //password doesn't match database, show error text message
                 if (loginFormState.getPasswordError() != null) {
                     passwordEditText.setError(getString(loginFormState.getPasswordError()));
                 }
             }
         });
+
 
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override

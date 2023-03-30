@@ -2,28 +2,28 @@ package com.example.aiya_test_3.login;
 
 import androidx.annotation.Nullable;
 
-/**
- * Data validation state of the login form.
- */
-//possible security issues with public type, but for now I'll leave it be
-public class LoginFormState {
+public class SignupFormState {
     @Nullable
     private Integer usernameError;
     @Nullable
     private Integer passwordError;
+    @Nullable
+    private Integer confirmError;
     private boolean isDataValid;
 
-    //constructor to be used when one of the inputs have mistakes
-    LoginFormState(@Nullable Integer usernameError, @Nullable Integer passwordError) {
+    //two different constructors to indirectly set values
+    SignupFormState(@Nullable Integer usernameError, @Nullable Integer passwordError, @Nullable Integer confirmError) {
         this.usernameError = usernameError;
         this.passwordError = passwordError;
+        this.confirmError = confirmError;
         this.isDataValid = false;
     }
 
-    //constructor to be used when data is invalid
-    LoginFormState(boolean isDataValid) {
+    //essentially only used when isDataValid=true
+    SignupFormState(boolean isDataValid) {
         this.usernameError = null;
         this.passwordError = null;
+        this.confirmError = null;
         this.isDataValid = isDataValid;
     }
 
@@ -35,6 +35,11 @@ public class LoginFormState {
     @Nullable
     Integer getPasswordError() {
         return passwordError;
+    }
+
+    @Nullable
+    Integer getConfirmError() {
+        return confirmError;
     }
 
     boolean isDataValid() {
