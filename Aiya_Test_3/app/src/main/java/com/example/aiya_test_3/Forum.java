@@ -1,4 +1,4 @@
-package com.example.aiya_test_3;
+package com.example.aiya_test_3; // Don't forgot to change this if you shift files out
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -162,6 +162,7 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
         return true;
     }
 
+    // Todo Search: To redo with smarter more efficient method
     private void updateCardViews(List<String> data) {
         // Remove all existing CardViews from the container
         cardContainer.removeAllViews();

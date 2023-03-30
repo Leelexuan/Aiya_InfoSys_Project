@@ -85,7 +85,7 @@ public class Detail_Input extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                // Never do anything, go back to default
             }
         });
 
@@ -115,6 +115,7 @@ public class Detail_Input extends AppCompatActivity {
 
 
         Button submitPicture = input_detail.findViewById(R.id.uploadPhotoBtn);
+        ImageView submittedPicture = input_detail.findViewById(R.id.uploadedPhotoImage);
         submitPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -125,10 +126,13 @@ public class Detail_Input extends AppCompatActivity {
 
                 /* Uncomment this to open camera app
 
+                // Implicit Intent (Lesson 2)
                 Intent openCameraAppIntent = new Intent("android.media.action.IMAGE_CAPTURE");
                 startActivity(openCameraAppIntent);
                 Log.d("Submit Button", "User clicked submit picture");
                 */
+
+                submittedPicture.setVisibility(View.VISIBLE);
 
                 // Todo PhotoUploading: Get actual photo that user picked and display to input_detail.findViewById(R.id.uploadedPhotoImage) (Lesson 4)
 
