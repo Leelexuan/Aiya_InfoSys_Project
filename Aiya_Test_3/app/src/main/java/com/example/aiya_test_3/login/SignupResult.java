@@ -1,24 +1,23 @@
 package com.example.aiya_test_3.login;
 
+
 import androidx.annotation.Nullable;
 
-/**
- * Authentication result : success (user details) or error message.
- */
-class LoginResult {
+//where we push to the database, I guess
+public class SignupResult {
     @Nullable
     private LoggedInUserView success;
     @Nullable
     private Integer error;
 
     //set by way of constructor, by login activity
-    LoginResult(@Nullable Integer error) {
+    SignupResult(@Nullable Integer error) {
         this.error = error;
     }
 
-    LoginResult(@Nullable LoggedInUserView success) {
-        this.success = success;
-    }
+//    SignupResult(@Nullable LoggedInUserView success) {
+//        this.success = success;
+//    }
 
     @Nullable
     LoggedInUserView getSuccess() {

@@ -1,6 +1,7 @@
 package com.example.aiya_test_3.login;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,7 +28,7 @@ import com.example.aiya_test_3.databinding.ActivitySignupBinding;
 //please update the manifest with that activity declaration
 //don't forget to extend AppCompat Activity
 public class SignupActivity extends AppCompatActivity {
-    private LoginViewModel loginViewModel;
+    private SignupViewModel signupViewModel;
     //note that the below class is automatically generated
     //by the formatting of the xml file name
     //since the associated layout is activity_signup
@@ -48,8 +49,9 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         inflater = LayoutInflater.from(this);
 
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        //so many things to fix! tomorrow
+        signupViewModel = new ViewModelProvider(this, new SignupViewModelFactory())
+                .get(SignupViewModel.class);
 
         //note that all binding.[id] are generated automatically
 
@@ -62,31 +64,34 @@ public class SignupActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final EditText confirmEditText = binding.confirmPassword;
         //no implementation of this yet
-        final Button loginButton = binding.signup;
+        final Button signupButton = binding.signup;
         //final ProgressBar loadingProgressBar = binding.loading;
-        //TODO: we don't have a loading bar for signup yet!
 //        final TextView makeAccountText = (TextView) findViewById(R.id.no_account);
 
         //TODO: Note that most of the below code are currently unchanged from loginActivity. See Login Activity for comments.
+        //TODO: Implement signup upload to database thing
 
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        signupViewModel.getSignupFormState().observe(this, new Observer<SignupFormState>() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
+            public void onChanged(@Nullable SignupFormState signupFormState) {
+                if (signupFormState == null) {
                     return;
                 }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                signupButton.setEnabled(signupFormState.isDataValid());
+                if (signupFormState.getUsernameError() != null) {
+                    usernameEditText.setError(getString(signupFormState.getUsernameError()));
                 }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                if (signupFormState.getPasswordError() != null) {
+                    passwordEditText.setError(getString(signupFormState.getPasswordError()));
+                }
+                if (signupFormState.getConfirmError() != null) {
+                    confirmEditText.setError("Password doesn't match");
                 }
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        signupViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
                 if (loginResult == null) {
@@ -119,8 +124,8 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                signupViewModel.signupDataChanged(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString(), confirmEditText.getText().toString());
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
@@ -130,22 +135,24 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
+                    //happens when button is pressed
+                    //replace with signupViewModel.signup
+                    signupViewModel.login(usernameEditText.getText().toString(),
                             passwordEditText.getText().toString());
                 }
                 return false;
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            //TODO: verify that the password typed in password and confirm password is the same
             @Override
             public void onClick(View v) {
 //                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
+                signupViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
         });
-
 
     }
 
@@ -153,6 +160,8 @@ public class SignupActivity extends AppCompatActivity {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful signup experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        startActivity(intent);
 //        //start the login
 //        makeAccountText.setOnClickListener(new View.OnClickListener() {
 //            @Override
