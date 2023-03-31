@@ -9,7 +9,7 @@ import android.os.Handler;
 public class Launcher_Loading extends AppCompatActivity {
 
     // I shall put all the todos that haven't start at all here
-    // Todo: Implement Map  (Lesson 3) [Darren and Michaels]
+    // Todo: Implement Map (Darren wants to do~!  :( ) (Lesson 3)
     // Todo Design Pattern: Implement superclass for incident (observable and visitable) with subclass being the hazard type
 
     @Override
