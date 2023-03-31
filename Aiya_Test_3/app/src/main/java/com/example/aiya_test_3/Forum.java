@@ -43,7 +43,7 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
         super.onCreate(savedInstanceState);
 
-        // Todo Design Pattern: Rewrite entire forum code using recycler view (low priority)(Lesson 4)
+        // Todo Design Pattern: Rewrite entire forum code using recycler view (low priority)(Lesson 4) [Darren]
         // main layout for this page
         setContentView(R.layout.activity_forum); // activity_forum layout does not have content, only containers
 
