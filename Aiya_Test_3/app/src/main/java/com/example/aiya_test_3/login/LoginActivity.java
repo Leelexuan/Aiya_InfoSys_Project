@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.aiya_test_3.Forum;
 import com.example.aiya_test_3.R;
 //databinding issues: you sync your project -> Files -> sync project with gradle builder
 import com.example.aiya_test_3.databinding.ActivityLoginBinding;
@@ -195,6 +196,8 @@ public class LoginActivity extends AppCompatActivity {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience aka integrate with Darren work
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(LoginActivity.this, Forum.class);
+        startActivity(intent);
     }
 
     //whoops. failed login.
