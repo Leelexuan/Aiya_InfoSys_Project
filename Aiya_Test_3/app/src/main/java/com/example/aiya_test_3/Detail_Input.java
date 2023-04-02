@@ -167,15 +167,16 @@ public class Detail_Input extends AppCompatActivity {
                 startActivity(go_to_submit_page);
                 Log.d("Submit Button", "User clicked submit details");
 
-                // obtain Hazard Name and pad right to 15 spaces
+                // obtain Hazard Name and pad to the right 15 spaces
                 String hazardName = String.format("%-15s", HazardName_Input.getText().toString());
                 String hazardAddress = String.format("%-15s", HazardAddress_Input.getText().toString());
 
                 // getting the current date
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-                // log into incident log.
+                // documenting the incident into the incident log.
                 incidentLog.INFO("|" + String.format("%-12s",date) + "|" + hazardName + "|" + hazardAddress +"|");
+                // testing:
                 // Log.d("Incident Log", incidentLog.displayLog());
 
 
