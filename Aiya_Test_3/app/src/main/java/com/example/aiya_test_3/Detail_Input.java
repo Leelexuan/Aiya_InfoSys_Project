@@ -31,7 +31,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class Detail_Input extends AppCompatActivity {
     private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
@@ -44,10 +47,12 @@ public class Detail_Input extends AppCompatActivity {
     FirebaseStorage storageDatabaseRef;
     StorageReference storageRef;
 
+    // IncidentLog
+    private IncidentLog incidentLog = IncidentLog.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // main layout for this page
         setContentView(R.layout.activity_detail_input); // activity_forum layout does not have content, only containers
 
@@ -162,10 +167,18 @@ public class Detail_Input extends AppCompatActivity {
                 startActivity(go_to_submit_page);
                 Log.d("Submit Button", "User clicked submit details");
 
-                //Todo Design Pattern: To rewrite a log file using singleton pattern (Pre-Mid Terms, Week 5) [Ryan]
-                Log.d("HazardName_Input: ", String.valueOf(HazardName_Input.getText()));
-                Log.d("HazardAddress_Input: ", String.valueOf(HazardAddress_Input.getText()));
-                Log.d("HazardDescription_Input: ", String.valueOf(HazardDescription_Input.getText()));
+
+                // obtain Hazard Name and pad to the right 15 spaces
+                String hazardName = String.format("%-15s", HazardName_Input.getText().toString());
+                String hazardAddress = String.format("%-15s", HazardAddress_Input.getText().toString());
+
+                // getting the current date
+                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+                // documenting the incident into the incident log.
+                incidentLog.INFO("|" + String.format("%-12s",date) + "|" + hazardName + "|" + hazardAddress +"|");
+                // testing:
+                // Log.d("Incident Log", incidentLog.displayLog());             
 
                 // Create a HashMap with the header as keys and input as values
                 HashMap<String, String> Send_database_details = new HashMap<>();

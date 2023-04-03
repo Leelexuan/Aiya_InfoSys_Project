@@ -4,18 +4,21 @@ package Accounts;
 public abstract class Account {
     // TODO implement visitor: upvote/downvoting incidents - TBC
     // TODO implement observer: "subscribe" to incidents - for reported incidents/following incidents.
-
-    // TODO 1: private attributes
-    // TODO 2: abstract methods: eg. getID() - getter, but don't need setter.
+    // Attributes
+    private Integer userID;
+    public Integer getUserID() {
+        return userID;
+    }
     // TODO 3: normal methods:
 }
 
-// TODO Guest Account extends Account
-// Have limited features - for people who want to just see incidents //
-// do not implement reporting feature
-
 // TODO Normal Account extends Account
-// Have what you expect.
+class NormalAccount extends Account{
+
+}
 
 // TODO Verified/Official Accounts for NEA, etc extends Account
 // Able to Resolve Incidents - add updates to incidents.
+class VerifiedAccount extends Account{
+
+}
