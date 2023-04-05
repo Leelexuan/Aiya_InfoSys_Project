@@ -45,7 +45,7 @@
         android:layout_marginTop="96dp"
         android:gravity="top"
         android:lineSpacingExtra="-2sp"
-        android:text="@string/username_text"
+        android:text="@string/prompt_email"
         android:textAppearance="@style/subheader_text"
         app:layout_constraintBottom_toTopOf="@+id/username"
         app:layout_constraintEnd_toEndOf="parent"

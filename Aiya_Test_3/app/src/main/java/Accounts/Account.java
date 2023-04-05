@@ -1,24 +1,34 @@
 package Accounts;
 
-// consider using templater and builder pattern also can.
+// template design pattern to build an Account from the inputs.
 public abstract class Account {
-    // TODO implement visitor: upvote/downvoting incidents - TBC
-    // TODO implement observer: "subscribe" to incidents - for reported incidents/following incidents.
-    // Attributes
-    private Integer userID;
-    public Integer getUserID() {
-        return userID;
+    void prepareAccount() {
+        getEmail();
+        getName();
+        getPassword();
     }
-    // TODO 3: normal methods:
+
+    abstract void getEmail();
+
+    abstract void getName();
+
+    abstract void getPassword();
+
 }
 
-// TODO Normal Account extends Account
-class NormalAccount extends Account{
+class normalAccount extends Account{
+    @Override
+    void getEmail() {
 
-}
+    }
 
-// TODO Verified/Official Accounts for NEA, etc extends Account
-// Able to Resolve Incidents - add updates to incidents.
-class VerifiedAccount extends Account{
+    @Override
+    void getName() {
 
+    }
+
+    @Override
+    void getPassword() {
+
+    }
 }
