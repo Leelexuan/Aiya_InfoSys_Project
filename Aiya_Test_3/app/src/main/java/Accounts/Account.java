@@ -3,32 +3,38 @@ package Accounts;
 // template design pattern to build an Account from the inputs.
 public abstract class Account {
     void prepareAccount() {
-        getEmail();
-        getName();
-        getPassword();
+        String email = getEmail();
+        String password = getPassword();
+        // TODO: generate unique user id if have time.
+        // TODO: add account to database.
     }
 
-    abstract void getEmail();
-
-    abstract void getName();
-
-    abstract void getPassword();
+    abstract String getEmail();
+    abstract String getPassword();
 
 }
 
 class normalAccount extends Account{
     @Override
-    void getEmail() {
-
+    String getEmail() {
+        return "Test";
     }
 
     @Override
-    void getName() {
+    String getPassword() {
+        return "Test";
+    }
+}
 
+class verifiedAccount extends Account{
+    // this subclass is meant for official (government) accounts
+    @Override
+    String getEmail() {
+        return "Test";
     }
 
     @Override
-    void getPassword() {
-
+    String getPassword() {
+        return "Test";
     }
 }

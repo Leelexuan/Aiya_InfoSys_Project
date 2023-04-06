@@ -47,7 +47,7 @@ public class Detail_Input extends AppCompatActivity {
     FirebaseStorage storageDatabaseRef;
     StorageReference storageRef;
 
-    // IncidentLog
+    // Incident Log (Singleton)
     private IncidentLog incidentLog = IncidentLog.getInstance();
 
     @Override
@@ -176,8 +176,9 @@ public class Detail_Input extends AppCompatActivity {
 
                 // documenting the incident into the incident log.
                 incidentLog.INFO("|" + String.format("%-12s",date) + "|" + hazardName + "|" + hazardAddress +"|");
-                // testing:
-                // Log.d("Incident Log", incidentLog.displayLog());
+
+                // record the incident documentation into logcat.
+                Log.d("Incident Log", incidentLog.recordLog());
 
 
                 // Create a HashMap with the header as keys and input as values
