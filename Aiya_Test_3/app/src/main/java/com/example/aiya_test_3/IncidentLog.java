@@ -28,7 +28,7 @@ public class IncidentLog {
         log += "\n" + msg; // log activities down.
     }
 
-    public String displayLog(){
+    public String recordLog(){
         return log;
     }
 }

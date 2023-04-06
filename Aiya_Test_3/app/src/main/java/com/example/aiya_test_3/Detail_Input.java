@@ -47,7 +47,7 @@ public class Detail_Input extends AppCompatActivity {
     FirebaseStorage storageDatabaseRef;
     StorageReference storageRef;
 
-    // IncidentLog
+    // Incident Log (Singleton)
     private IncidentLog incidentLog = IncidentLog.getInstance();
 
     @Override
@@ -72,7 +72,7 @@ public class Detail_Input extends AppCompatActivity {
         inputdetailsContainer = findViewById(R.id.inputdetailsContainer);
         inputdetailsContainer.addView(input_detail);
 
-        // Todo : Figure out the options for dropdown [Le Xuan]
+        // Todo : Figure out the options for dropdown
         String[] options = {"Trees", "Pot Holes", "Dead Animals"}; // This are the options for the dropdown option
         ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options); // Add options to spinner
 
@@ -99,7 +99,7 @@ public class Detail_Input extends AppCompatActivity {
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
-            //Todo UI: Input the radio button icons with visibility change [Darren]
+            //Todo UI: Input the radio button icons with visibility change
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
@@ -124,7 +124,7 @@ public class Detail_Input extends AppCompatActivity {
         submitPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                // Todo PhotoUploading: Let user choose between gallery or camera app [Le Xuan and Lucas]
+                // Todo PhotoUploading: Let user choose between gallery or camera app
 
                 // Todo PhotoUploading: Gallery: Open Gallery and get url (Lesson 4)
                 // Todo PhotoUploading: Camera: Store Image in known folder after image is taken (Lesson 4)
@@ -154,7 +154,7 @@ public class Detail_Input extends AppCompatActivity {
         storageRef = storageDatabaseRef.getReference();
 
         // All the different inputs from the user are being initiated here
-        // Todo Design Pattern: To rewrite using template/builder pattern (Lesson 3) [Ryan]
+        // Todo Design Pattern: To rewrite using template/builder pattern (Lesson 3)
         Button submitHazard = input_detail.findViewById(R.id.submitHazardBtn);
         EditText HazardName_Input = input_detail.findViewById(R.id.editText_HazardName);
         EditText HazardAddress_Input = input_detail.findViewById(R.id.editText_PostalAddress);
@@ -167,7 +167,6 @@ public class Detail_Input extends AppCompatActivity {
                 startActivity(go_to_submit_page);
                 Log.d("Submit Button", "User clicked submit details");
 
-
                 // obtain Hazard Name and pad to the right 15 spaces
                 String hazardName = String.format("%-15s", HazardName_Input.getText().toString());
                 String hazardAddress = String.format("%-15s", HazardAddress_Input.getText().toString());
@@ -177,8 +176,10 @@ public class Detail_Input extends AppCompatActivity {
 
                 // documenting the incident into the incident log.
                 incidentLog.INFO("|" + String.format("%-12s",date) + "|" + hazardName + "|" + hazardAddress +"|");
-                // testing:
-                // Log.d("Incident Log", incidentLog.displayLog());             
+
+                // record the incident documentation into logcat.
+                Log.d("Incident Log", incidentLog.recordLog());
+
 
                 // Create a HashMap with the header as keys and input as values
                 HashMap<String, String> Send_database_details = new HashMap<>();
@@ -191,10 +192,8 @@ public class Detail_Input extends AppCompatActivity {
                 DatabaseReference nNodeRefPush = nNodeRef.push();
                 nNodeRefPush.setValue(Send_database_details);
 
-                //Todo Database: Send image to firebase STORAGE (Lesson 5) [Le Xuan and Lucas]
+                //Todo Database: Send image to firebase STORAGE (Lesson 5)
                 //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE (Lesson 5)
-
-                //Todo Database: Sorting and storing [Isaac and Brian]
 
                 /* Do the above here
 
