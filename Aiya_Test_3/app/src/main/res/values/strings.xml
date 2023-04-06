@@ -15,7 +15,7 @@
     <string name="login_failed">"Login failed"</string>
 
     <string name="log_in">LOG IN</string>
-    <string name="username_text">USERNAME</string>
+    <string name="email_text">EMAIL</string>
     <string name="password_text">PASSWORD</string>
     <string name="confirm_password_text">CONFIRM PASSWORD</string>
     <string name="create_your">CREATE YOUR EMAIL\nAND PASSWORD</string>
