@@ -33,7 +33,7 @@ public class Activity_Login extends AppCompatActivity {
         password = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
 
-        // when the user clicks the button //
+        // when the user clicks the login button //
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,30 +45,33 @@ public class Activity_Login extends AppCompatActivity {
                 String passwordText = password.getText().toString();
 
                 // DELEGATION STRATEGY //
-                // VERIFY USER INPUT -> IF VERIFIED, VALIDATE WITH DATABASE //
+                // VERIFY USER INPUT -> IF VERIFIED -> VALIDATE WITH DATABASE //
 
-                // VERIFICATION - Check if user input is legal
+                // VERIFICATION: Check if user input is acceptable
                 boolean verified = userInput.verify(emailText, passwordText); // verified = true if is legal, false if illegal.
 
-                if(!verified){
-                    // display toast message if illegal input
-                    Log.d("USER LOGIN", "User input an INVALID value."); // log unverified attempt
-                    Toast.makeText(Activity_Login.this, "Walao, put a real email/password leh", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("USER LOGIN", "User input a VALID value."); // log verified attempt to log in
-                    // VALIDATION - Cross check user input with database //
+                if(verified){
+                    // VALIDATION: Cross check user input with database //
                     boolean validated = userInput.validate(emailText, passwordText);
 
-                    if(validated){
-                        Log.d("USER LOGIN", "User is verified and validated. Proceeding to Activity_Incident.");
-                        // EXPLICIT INTENT - Go back to Activity_Incident
+                    if(validated) { //
+                        Log.d("USER LOGIN", "Login Successful. Proceeding to Activity_Incident."); // log successful login
+
+                        // explicit intent to go back to Activity_Incident //
                         Intent intent = new Intent(Activity_Login.this, Activity_Incidents.class);
+                        Toast.makeText(Activity_Login.this, "Successful Login", Toast.LENGTH_SHORT).show(); // notify user successful login //
                         startActivity(intent);
                     } else {
-                        // invalid credentials
+                        // Failed Login Attempt //
                         Log.d("USER LOGIN", "User is not validated - failed login"); // log failed attempt to login
                         Toast.makeText(Activity_Login.this, "Your email and password wrong sia, please sign up if you have not!", Toast.LENGTH_SHORT).show();
                     }
+
+                } else { // NOT VERIFIED //
+                    // log unacceptable input //
+                    Log.d("USER LOGIN", "User input an unacceptable value."); // log unverified attemp
+                    // display Toast message //
+                    Toast.makeText(Activity_Login.this, "Walao, put a real email leh", Toast.LENGTH_SHORT).show();
                 }
             }
         });
