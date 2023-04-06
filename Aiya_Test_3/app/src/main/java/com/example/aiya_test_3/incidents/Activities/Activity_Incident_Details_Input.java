@@ -1,4 +1,4 @@
-package com.example.aiya_test_3.incidents;
+package com.example.aiya_test_3.incidents.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,6 +18,8 @@ import android.widget.Spinner;
 
 // For Firebase
 import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.incidents.IncidentLog;
+import com.example.aiya_test_3.incidents.Submitted_Details;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;

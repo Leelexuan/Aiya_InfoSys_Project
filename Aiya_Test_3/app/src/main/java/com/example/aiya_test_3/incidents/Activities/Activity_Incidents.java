@@ -1,4 +1,4 @@
-package com.example.aiya_test_3.incidents; // Don't forgot to change this if you shift files out
+package com.example.aiya_test_3.incidents.Activities; // Don't forgot to change this if you shift files out
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;

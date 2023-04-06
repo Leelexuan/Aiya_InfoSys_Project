@@ -1,4 +1,4 @@
-package com.example.aiya_test_3.incidents;
+package com.example.aiya_test_3.incidents.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 

@@ -10,7 +10,7 @@
     android:clickable="false"
     android:clipChildren="false"
     android:visibility="visible"
-    tools:context=".incidents.Activity_Incident_Details_Input">
+    tools:context=".incidents.Activities.Activity_Incident_Details_Input">
 
     <!-- This is the app bar container at the top of the page, which allows you to have various components -->
     <com.google.android.material.appbar.AppBarLayout

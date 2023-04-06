@@ -1,4 +1,4 @@
-package com.example.aiya_test_3.login;
+package com.example.aiya_test_3.login.Activities;
 
 import android.os.Bundle;
 import android.util.Log;
