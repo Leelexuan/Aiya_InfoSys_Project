@@ -53,7 +53,7 @@ public class Activity_Login extends AppCompatActivity {
                 if(!verified){
                     // display toast message if illegal input
                     Log.d("USER LOGIN", "User input an INVALID value."); // log unverified attempt
-                    Toast.makeText(Activity_Login.this, "Invalid password/email!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Activity_Login.this, "Walao, put a real email/password leh", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.d("USER LOGIN", "User input a VALID value."); // log verified attempt to log in
                     // VALIDATION - Cross check user input with database //
@@ -61,13 +61,13 @@ public class Activity_Login extends AppCompatActivity {
 
                     if(validated){
                         Log.d("USER LOGIN", "User is verified and validated. Proceeding to Activity_Incident.");
-                        // Go back to Activity_Incident
+                        // EXPLICIT INTENT - Go back to Activity_Incident
                         Intent intent = new Intent(Activity_Login.this, Activity_Incidents.class);
                         startActivity(intent);
                     } else {
                         // invalid credentials
-                        Log.d("USER LOGIN", "User is not validated"); // log failed attempt to login
-                        Toast.makeText(Activity_Login.this, "Wrong password/email! Please Sign up if you have not!", Toast.LENGTH_SHORT).show();
+                        Log.d("USER LOGIN", "User is not validated - failed login"); // log failed attempt to login
+                        Toast.makeText(Activity_Login.this, "Your email and password wrong sia, please sign up if you have not!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
