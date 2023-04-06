@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Aiya_Test_3"
         tools:targetApi="31">
         <activity
-            android:name=".Launcher_Loading"
+            android:name=".incidents.Activity_LoadingScreenStartUp"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,13 +23,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Submitted_Details"
+            android:name=".incidents.Submitted_Details"
             android:exported="false" />
         <activity
-            android:name=".Detail_Input"
+            android:name=".incidents.Activity_Incident_Details_Input"
             android:exported="true" />
         <activity
-            android:name=".Forum"
+            android:name=".incidents.Activity_Incidents"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".login.Activity_Login"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.example.aiya_test_3;
+package com.example.aiya_test_3.incidents;
 
 public class IncidentLog {
     // this class implements the singleton (creational) design pattern

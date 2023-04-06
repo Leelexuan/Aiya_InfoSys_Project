@@ -1,4 +1,4 @@
-package com.example.aiya_test_3; // Don't forgot to change this if you shift files out
+package com.example.aiya_test_3.incidents; // Don't forgot to change this if you shift files out
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -18,19 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 // For Firebase
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.example.aiya_test_3.R;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
-public class Forum extends AppCompatActivity implements SearchView.OnQueryTextListener  {
+public class Activity_Incidents extends AppCompatActivity implements SearchView.OnQueryTextListener  {
 
-    private SearchView searchView;    // Component for search bar
-    private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
+    // Instantiation of attributes and views //
+    private SearchView searchView;    // search bar
+    private LayoutInflater inflater; // instantiate with more than one layout.
     private LinearLayout cardContainer,appbarContainer; // Linear layout means it is either horizontal or vertical, holds the respective name item
-    private TextView cardTextView; // For viewing text
+    private TextView cardTextView; // textView
     private View cardView, app_bar;
     private ConstraintLayout cardContent;
     private List<String> cardData;
@@ -59,7 +57,7 @@ public class Forum extends AppCompatActivity implements SearchView.OnQueryTextLi
 
                 // When we click the button, we want it to open the open the detail page
                 // We use intent to do that
-                Intent openDetail_input = new Intent(Forum.this,Detail_Input.class);
+                Intent openDetail_input = new Intent(Activity_Incidents.this, Activity_Incident_Details_Input.class);
                 startActivity(openDetail_input);
                 Log.d("Input Details Button", "User click to input details");
             }
