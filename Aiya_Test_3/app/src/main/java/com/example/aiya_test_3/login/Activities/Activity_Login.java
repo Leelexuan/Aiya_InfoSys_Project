@@ -34,6 +34,8 @@ public class Activity_Login extends AppCompatActivity {
                 // Log the attempt to logCat
                 Log.d("Login Button", "User attempted to login");
 
+                // Using Delegation Strategy for clarity //
+
                 // check if the user input a valid email and password - Verification
                 // TODO - implement a class to check for valid email
 
