@@ -20,7 +20,7 @@ public class Activity_Login extends AppCompatActivity {
     private Button loginButton;
 
     // Declare necessary classes //
-    private UserInput userInput = new UserInput(); // this class is used to verify and validate inputs.
+    private UserInput userInput; // this class is used to verify and validate inputs.
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,34 +44,28 @@ public class Activity_Login extends AppCompatActivity {
                 String emailText = email.getText().toString();
                 String passwordText = password.getText().toString();
 
-                // DELEGATION STRATEGY //
-                // VERIFY USER INPUT -> IF VERIFIED -> VALIDATE WITH DATABASE //
 
+                userInput = new UserInput.UserLogin(emailText, passwordText);
                 // VERIFICATION: Check if user input is acceptable
-                boolean verified = userInput.verify(emailText, passwordText); // verified = true if is legal, false if illegal.
+                if(userInput.verify()){
 
-                if(verified){
                     // VALIDATION: Cross check user input with database //
-                    boolean validated = userInput.validate(emailText, passwordText);
-
-                    if(validated) { //
+                    if(userInput.validate()) { // validated login //
                         Log.d("USER LOGIN", "Login Successful. Proceeding to Activity_Incident."); // log successful login
 
                         // explicit intent to go back to Activity_Incident //
                         Intent intent = new Intent(Activity_Login.this, Activity_Incidents.class);
                         Toast.makeText(Activity_Login.this, "Successful Login", Toast.LENGTH_SHORT).show(); // notify user successful login //
                         startActivity(intent);
-                    } else {
-                        // Failed Login Attempt //
+
+                    } else { // not validated - email and password does not match database
                         Log.d("USER LOGIN", "User is not validated - failed login"); // log failed attempt to login
-                        Toast.makeText(Activity_Login.this, "Your email and password wrong sia, please sign up if you have not!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Activity_Login.this, "Your email and password wrong sia, please sign up if you have not!", Toast.LENGTH_SHORT).show(); // display Toast message
                     }
 
-                } else { // NOT VERIFIED //
-                    // log unacceptable input //
-                    Log.d("USER LOGIN", "User input an unacceptable value."); // log unverified attemp
-                    // display Toast message //
-                    Toast.makeText(Activity_Login.this, "Walao, put a real email leh", Toast.LENGTH_SHORT).show();
+                } else { // not verified - email and password inputs are unacceptable.
+                    Log.d("USER LOGIN", "User input an unacceptable value."); // log unacceptable input
+                    Toast.makeText(Activity_Login.this, "Walao, put a real email/password leh", Toast.LENGTH_SHORT).show(); // display Toast message
                 }
             }
         });
