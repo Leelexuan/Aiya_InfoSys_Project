@@ -1,10 +1,8 @@
-package com.example.aiya_test_3;
+package com.example.aiya_test_3.incidents.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,24 +17,20 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 // For Firebase
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.incidents.IncidentLog;
+import com.example.aiya_test_3.incidents.Submitted_Details;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class Detail_Input extends AppCompatActivity {
+public class Activity_Incident_Details_Input extends AppCompatActivity {
     private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
     private LinearLayout appbarContainer,inputdetailsContainer; // Linear layout means it is either horizontal or vertical, holds the respective name item
     private View app_bar,input_detail;
@@ -163,7 +157,7 @@ public class Detail_Input extends AppCompatActivity {
         submitHazard.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Intent go_to_submit_page = new Intent(Detail_Input.this, Submitted_Details.class);
+                Intent go_to_submit_page = new Intent(Activity_Incident_Details_Input.this, Submitted_Details.class);
                 startActivity(go_to_submit_page);
                 Log.d("Submit Button", "User clicked submit details");
 
