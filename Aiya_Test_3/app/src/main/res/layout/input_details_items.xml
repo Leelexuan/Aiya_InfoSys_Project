@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
         android:fontFamily="@font/bobbyroughsoft"
-        android:text="Address"
+        android:text="Address Name"
         android:textColor="#D44E52"
         android:textSize="16sp"
         android:textStyle="bold|italic"
