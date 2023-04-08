@@ -1,5 +1,6 @@
 package com.example.aiya_test_3.incidents.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -20,23 +21,31 @@ import android.widget.Spinner;
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.IncidentLog;
 import com.example.aiya_test_3.incidents.Submitted_Details;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.sql.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class Activity_Incident_Details_Input extends AppCompatActivity {
     private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
     private LinearLayout appbarContainer,inputdetailsContainer; // Linear layout means it is either horizontal or vertical, holds the respective name item
     private View app_bar,input_detail;
+
+    String[] issueList;
     // Firebase
     DatabaseReference nRootDatabaseRef;
-    DatabaseReference nNodeRef;
+    DatabaseReference nNodeRefInputDetails, nNodeRefIssueList;
     FirebaseStorage storageDatabaseRef;
     StorageReference storageRef;
 
@@ -65,20 +74,75 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         inputdetailsContainer = findViewById(R.id.inputdetailsContainer);
         inputdetailsContainer.addView(input_detail);
 
-        // Todo : Figure out the options for dropdown
-        String[] options = {"Trees", "Pot Holes", "Dead Animals"}; // This are the options for the dropdown option
-        ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options); // Add options to spinner
+        nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
+        final String issueNode = "Issues";
+        nNodeRefIssueList = nRootDatabaseRef.child(issueNode);
+
+        // Get the list of issues
+        // So onDataChange is async, so means that it is getting this data while the app is also building
+        // So we need to have another issueList and drop down that is null while this is still getting the data
+        nNodeRefIssueList.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int size = (int) snapshot.getChildrenCount();
+                issueList = new String[size];
+                int index = 0;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Object value = dataSnapshot.getValue();
+                    if (value != null && value instanceof String) {
+                        issueList[index++] = dataSnapshot.getValue(String.class);
+                    }
+                }
+
+                String[] options = issueList; // This are the options for the dropdown option
+                ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(Activity_Incident_Details_Input.this, android.R.layout.simple_spinner_item, options); // Add options to spinner
+
+                Spinner HazardTypeDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
+                HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
+                HazardTypeDropDownMenu.setSelection(0); // Set the first value as the default value
+
+                // Note currently when you choose an item in drop down box, it doesn't do anything other than logcat
+                HazardTypeDropDownMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d("Hazard Drop Down Menu", "You have selected: " + HazardTypeDropDownMenu.getSelectedItem());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Never do anything, go back to default
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // From here, it is just a repeat of whatever is inside onDataChange but with null values
+        //=======================================================================================
+        ArrayAdapter<String> optionAdapter = null;
+        if (issueList == null) {
+            issueList = new String[0];
+            String[] options = issueList; // This are the options for the dropdown option
+            optionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
+
+        }
 
         Spinner HazardTypeDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
         HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
         HazardTypeDropDownMenu.setSelection(0); // Set the first value as the default value
 
         // Note currently when you choose an item in drop down box, it doesn't do anything other than logcat
-        HazardTypeDropDownMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        HazardTypeDropDownMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Hazard Drop Down Menu","You have selected: " + HazardTypeDropDownMenu.getSelectedItem());
+                Log.d("Hazard Drop Down Menu", "You have selected: " + HazardTypeDropDownMenu.getSelectedItem());
             }
 
             @Override
@@ -86,6 +150,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 // Never do anything, go back to default
             }
         });
+        //=============================== END onDataChange Duplicate w Null ====================
 
         // This is for the radio button on the hazard severity
         RadioGroup radioGroup = input_detail.findViewById(R.id.radio_group);
@@ -98,15 +163,13 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
 
                 // Perform an action based on the selected radio button
                 if (checkedId == R.id.radio_button_important) {
-                    Log.d("BUTTON","Hello This is Important");// Option "Important" is selected
+                    Log.d("BUTTON", "Hello This is Important");// Option "Important" is selected
                 } else if (checkedId == R.id.radio_button_warning) {
-                    Log.d("BUTTON","Hello This is Warning");// Option "Warning" is selected
-                }
-                else if (checkedId == R.id.radio_button_mild) {
-                    Log.d("BUTTON","Hello This is Mild"); // Option "Mild" is selected
-                }
-                else if (checkedId == R.id.radio_button_good) {
-                    Log.d("BUTTON","Hello This is Good"); // Option "Good" is selected
+                    Log.d("BUTTON", "Hello This is Warning");// Option "Warning" is selected
+                } else if (checkedId == R.id.radio_button_mild) {
+                    Log.d("BUTTON", "Hello This is Mild"); // Option "Mild" is selected
+                } else if (checkedId == R.id.radio_button_good) {
+                    Log.d("BUTTON", "Hello This is Good"); // Option "Good" is selected
                 }
             }
         });
@@ -138,9 +201,8 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         });
 
         // Firebase Real-Time Database (Only for scalar data type e.g string, int, float)
-        final String node = "Hazard_Details";
-        nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        nNodeRef = nRootDatabaseRef.child(node);
+        final String hazardDetailsNode = "Hazard_Details";
+        nNodeRefInputDetails = nRootDatabaseRef.child(hazardDetailsNode);
 
         // Firebase Storage (For images and all form of data, can think of it like google drive)
         storageDatabaseRef = FirebaseStorage.getInstance();
@@ -168,7 +230,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
                 // documenting the incident into the incident log.
-                incidentLog.INFO("|" + String.format("%-12s",date) + "|" + hazardName + "|" + hazardAddress +"|");
+                incidentLog.INFO("|" + String.format("%-12s", date) + "|" + hazardName + "|" + hazardAddress + "|");
 
                 // record the incident documentation into logcat.
                 Log.d("Incident Log", incidentLog.recordLog());
@@ -182,7 +244,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
 
                 // Send the HashMap to Firebase
-                DatabaseReference nNodeRefPush = nNodeRef.push();
+                DatabaseReference nNodeRefPush = nNodeRefInputDetails.push();
                 nNodeRefPush.setValue(Send_database_details);
 
                 //Todo Database: Send image to firebase STORAGE (Lesson 5)
@@ -190,7 +252,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
 
                 /* Do the above here
 
-                */
+                 */
             }
         });
 
