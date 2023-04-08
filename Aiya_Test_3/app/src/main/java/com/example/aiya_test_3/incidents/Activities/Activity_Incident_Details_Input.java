@@ -34,7 +34,6 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
     private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
     private LinearLayout appbarContainer,inputdetailsContainer; // Linear layout means it is either horizontal or vertical, holds the respective name item
     private View app_bar,input_detail;
-
     // Firebase
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
