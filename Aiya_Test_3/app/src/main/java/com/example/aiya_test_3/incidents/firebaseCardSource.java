@@ -21,7 +21,7 @@ public class firebaseCardSource implements cardDataSource{
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
     int size;
-    List<String> hazardDescriptionList,hazardAddressList,hazardNameList;
+    List<String> hazardDescriptionList,hazardAddressList,hazardNameList,hazardImageList;
     TextView t;
     boolean initialDataReadyFlag = false;
 
@@ -39,7 +39,6 @@ public class firebaseCardSource implements cardDataSource{
                 countListItems(snapshot);
                 repopulateList(snapshot);
                 initialDataReadyFlag = true;
-
             }
 
             @Override
@@ -59,17 +58,20 @@ public class firebaseCardSource implements cardDataSource{
         hazardDescriptionList = new ArrayList<>();
         hazardNameList = new ArrayList<>();
         hazardAddressList = new ArrayList<>();
+        hazardImageList = new ArrayList<>();
         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
             Object value = dataSnapshot.getValue();
             if (value != null && value instanceof HashMap) {
                 HashMap<String, Object> hashMap = (HashMap<String, Object>) value;
                 // Access the values in the HashMap using their keys
-                String key1 = (String) hashMap.get("HazardName_Input");
-                String key2 = (String) hashMap.get("HazardDescription_Input");
-                String key3 = (String) hashMap.get("HazardAddress_Input");
-                hazardDescriptionList.add(key2);
-                hazardNameList.add(key1);
-                hazardAddressList.add(key3);
+                String HazardName_Key = (String) hashMap.get("HazardName_Input");
+                String HazardDescription_Key = (String) hashMap.get("HazardDescription_Input");
+                String HazardAddress_Key = (String) hashMap.get("HazardAddress_Input");
+                String HazardImage_Key = (String) hashMap.get("HazardImage_Input");
+                hazardDescriptionList.add(HazardDescription_Key);
+                hazardNameList.add(HazardName_Key);
+                hazardAddressList.add(HazardAddress_Key);
+                hazardImageList.add(HazardImage_Key);
                 Log.d(FIREBASE_TESTING, hazardDescriptionList.get(0));
             }
         }
@@ -96,6 +98,8 @@ public class firebaseCardSource implements cardDataSource{
     public String getHazardAddress(int i){
         return hazardAddressList.get(i);
     }
+
+    public String getHazardImage(int i) { return hazardImageList.get(i); }
 
     public void removeWord(int i){
 

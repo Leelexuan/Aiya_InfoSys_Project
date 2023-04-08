@@ -1,5 +1,7 @@
 package com.example.aiya_test_3.incidents;
 
+import static com.example.aiya_test_3.incidents.CardAdapter.CardViewHolder.Fixed_Height;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aiya_test_3.R;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
@@ -25,6 +30,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     //Firebase Code
     DatabaseReference mRootDatabaseRef;
+    FirebaseStorage storageDatabaseRef;
+    StorageReference storageRef;
 
     public CardAdapter(Context context, firebaseCardSource data) {
         this.context = context;
@@ -36,9 +43,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public class CardViewHolder extends RecyclerView.ViewHolder{
 
         private TextView hazardDescription, hazardName, hazardAddress;
+        private ImageView hazardPicture;
         private View cardView;
         private View cardContent;
         int original_height = 0;
+
+        public static final int Fixed_Height = 400;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -46,6 +56,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             hazardDescription = itemView.findViewById(R.id.hazardDescription);
             hazardName = itemView.findViewById(R.id.hazardName);
             hazardAddress = itemView.findViewById(R.id.hazardAddress);
+            hazardPicture = itemView.findViewById(R.id.hazardPicture);
             cardContent = itemView.findViewById(R.id.card_content);
 
             // Minimize initial cards
@@ -60,7 +71,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                     cardView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     original_height = cardView.getMeasuredHeight(); // Get original height here
                     ViewGroup.LayoutParams layoutParams = cardView.getLayoutParams();
-                    layoutParams.height = 300;
+                    layoutParams.height = Fixed_Height;
                     cardView.setLayoutParams(layoutParams);
                 }
             });
@@ -95,6 +106,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         holder.hazardDescription.setText(word);
         holder.hazardName.setText(hazardName);
         holder.hazardAddress.setText(hazardAddress);
+
+        // Firebase Storage (For images and all form of data, can think of it like google drive)
+        storageDatabaseRef = FirebaseStorage.getInstance();
+        storageRef = storageDatabaseRef.getReference();
+        StorageReference hazardPictureLocation =  storageRef.child(data.getHazardImage(position));
+        FireBaseUtils.downloadToImageView(holder.itemView.getContext(),hazardPictureLocation,holder.hazardPicture);
     }
 
     @Override
@@ -103,16 +120,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     }
 
     int vHeight = 0; // instantiate card height
-    int tempCardHeightVariable = 0;
 
     public void toggleCard(View view, int original_height) {
 
         vHeight = original_height; // instantiate card height
         int height = view.getMeasuredHeight();
         ValueAnimator cardAnimation;
-        if (view.getMeasuredHeight() == 300) {
+        if (view.getMeasuredHeight() == Fixed_Height) {
             // Card is minimized, expand it
-            cardAnimation = ValueAnimator.ofInt(300, vHeight);
+            cardAnimation = ValueAnimator.ofInt(Fixed_Height, vHeight);
             cardAnimation.setDuration(500);
             cardAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -124,7 +140,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             });
         } else {
             // Card is expanded, minimize it
-            cardAnimation = ValueAnimator.ofInt(vHeight, 300);
+            cardAnimation = ValueAnimator.ofInt(vHeight, Fixed_Height);
             cardAnimation.setDuration(500);
             cardAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 public void onAnimationUpdate(ValueAnimator animation) {
