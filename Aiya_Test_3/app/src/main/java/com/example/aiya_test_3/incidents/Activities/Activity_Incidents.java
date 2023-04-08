@@ -50,6 +50,10 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
     private GoogleMap mMap;
 
+    private firebaseCardSource cardDataSource;
+
+    boolean initialDataReady = false;
+
     // Firebase
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
@@ -107,11 +111,10 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         cardTextView = cardContent.findViewById(R.id.hazardDescription);
 
         //cardDataSource cardDataSource = new LocalCardData(cardTextView);//
-        firebaseCardSource cardDataSource = new firebaseCardSource(cardTextView);
+        cardDataSource = new firebaseCardSource(cardTextView);
         adapter = new CardAdapter(this, cardDataSource);
         revisedCardContainer.setAdapter( adapter );
         revisedCardContainer.setLayoutManager( new LinearLayoutManager(this));
-
         searchView = app_bar.findViewById(R.id.SearchBar);
         searchView.setOnQueryTextListener(this);
     }
@@ -133,8 +136,13 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
             // Call the refresh method here
             refreshData();
 
+            if(cardDataSource.isInitialDataReadyFlag() == false){
             // Schedule the next refresh after a delay (in milliseconds)
-            handler.postDelayed(this, 5000); // 5000 milliseconds = 5 seconds
+                handler.postDelayed(this, 5000); // 5000 milliseconds = 5 seconds
+            }
+            else{
+                handler.removeCallbacks(refreshRunnable);
+            }
         }
     };
 
@@ -142,9 +150,9 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     @Override
     protected void onStart() {
         super.onStart();
+
         // Call the refresh method here to initially load data
         refreshData();
-
         // Schedule the first refresh after a delay (in milliseconds)
         handler.postDelayed(refreshRunnable, 5000); // 5000 milliseconds = 5 seconds
     }

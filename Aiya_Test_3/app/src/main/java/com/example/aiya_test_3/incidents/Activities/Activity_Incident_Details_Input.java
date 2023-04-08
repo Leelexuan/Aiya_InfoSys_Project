@@ -6,10 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +24,8 @@ import android.widget.Spinner;
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.IncidentLog;
 import com.example.aiya_test_3.incidents.Submitted_Details;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,13 +33,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-import java.sql.Array;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class Activity_Incident_Details_Input extends AppCompatActivity {
@@ -53,6 +51,8 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
     DatabaseReference nNodeRefInputDetails, nNodeRefIssueList;
     FirebaseStorage storageDatabaseRef;
     StorageReference storageRef;
+
+    String imageFileNameInStorage;
 
     // Incident Log (Singleton)
     private IncidentLog incidentLog = IncidentLog.getInstance();
@@ -191,7 +191,19 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Uri photoUri = result.getData().getData();
                         StorageReference imageRef = storageRef.child(filename);
-                        imageRef.putFile(photoUri);
+                        imageRef.putFile(photoUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Task<Uri> downloadUrlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                downloadUrlTask.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        imageFileNameInStorage = filename;
+                                    }
+                                });
+                            }
+                        });
+
 
                         //display user input
                         ImageView uploaded_photo = input_detail.findViewById(R.id.uploadedPhotoImage);
@@ -262,15 +274,13 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
                 Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
 
+                //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE (Lesson 5)
+                Send_database_details.put("HazardImage_Input", imageFileNameInStorage);
+
                 // Send the HashMap to Firebase
                 DatabaseReference nNodeRefPush = nNodeRefInputDetails.push();
                 nNodeRefPush.setValue(Send_database_details);
 
-                //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE (Lesson 5)
-
-                /* Do the above here
-
-                 */
             }
         });
 

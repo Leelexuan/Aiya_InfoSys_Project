@@ -24,24 +24,26 @@
         <!-- This is the hazard picture -->
         <ImageView
             android:id="@+id/hazardPicture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.06"
+            app:layout_constraintEnd_toStartOf="@+id/scrollView2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_launcher_foreground" />
 
         <!-- Todo: To fix the fact that scroll view cause it to have delayed opening -->
         <!-- This is the hazard description -->
+
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="197dp"
             android:layout_height="189dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.589"
             app:layout_constraintStart_toEndOf="@+id/hazardPicture"
             app:layout_constraintTop_toTopOf="parent">
 
