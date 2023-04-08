@@ -1,10 +1,15 @@
 package com.example.aiya_test_3.incidents.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -174,28 +179,42 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
             }
         });
 
+        // Firebase Storage (For images and all form of data, can think of it like google drive)
+        storageDatabaseRef = FirebaseStorage.getInstance();
+        storageRef = storageDatabaseRef.getReference();
+
+        //name of photo to be uploaded
+        String filename = "/User Uploaded Photos Test/" + System.currentTimeMillis() + ".jpg";
+
+        ActivityResultLauncher<Intent> photo_app_launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri photoUri = result.getData().getData();
+                        StorageReference imageRef = storageRef.child(filename);
+                        imageRef.putFile(photoUri);
+
+                        //display user input
+                        ImageView uploaded_photo = input_detail.findViewById(R.id.uploadedPhotoImage);
+                        uploaded_photo.setImageURI(photoUri);
+                        uploaded_photo.setVisibility(View.VISIBLE);
+                        Log.d("putFile","User uploaded photo to database");
+                        }
+                    }
+
+        );
+
 
         Button submitPicture = input_detail.findViewById(R.id.uploadPhotoBtn);
-        ImageView submittedPicture = input_detail.findViewById(R.id.uploadedPhotoImage);
         submitPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                // Todo PhotoUploading: Let user choose between gallery or camera app
+                //Intent for gallery app
+                Intent getPicture = new Intent(Intent.ACTION_PICK);
+                getPicture.setType("image/*");
 
-                // Todo PhotoUploading: Gallery: Open Gallery and get url (Lesson 4)
-                // Todo PhotoUploading: Camera: Store Image in known folder after image is taken (Lesson 4)
-
-                /* Uncomment this to open camera app
-
-                // Implicit Intent (Lesson 2)
-                Intent openCameraAppIntent = new Intent("android.media.action.IMAGE_CAPTURE");
-                startActivity(openCameraAppIntent);
-                Log.d("Submit Button", "User clicked submit picture");
-                */
-
-                submittedPicture.setVisibility(View.VISIBLE);
-
-                // Todo PhotoUploading: Get actual photo that user picked and display to input_detail.findViewById(R.id.uploadedPhotoImage) (Lesson 4)
+                //Calling launcher
+                photo_app_launcher.launch(getPicture);
+                Log.d("getPicture", "User chose app");
 
             }
         });
@@ -247,7 +266,6 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 DatabaseReference nNodeRefPush = nNodeRefInputDetails.push();
                 nNodeRefPush.setValue(Send_database_details);
 
-                //Todo Database: Send image to firebase STORAGE (Lesson 5)
                 //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE (Lesson 5)
 
                 /* Do the above here
