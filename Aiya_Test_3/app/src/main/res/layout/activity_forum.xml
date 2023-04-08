@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <!-- Todo: Amend to be recycler view -->
-
 <!-- This is the main home page for right now! This is the forum page container -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,34 +9,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="false"
+    android:visibility="visible"
     android:clipChildren="false"
-    android:visibility="visible">
+    android:clipToPadding="false"
+    >
+
+    <!-- Map fragment in forum -->
 
     <!-- This is the app bar container at the top of the page, which allows you to have various components -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </com.google.android.material.appbar.AppBarLayout>
 
     <!-- This is the nested scroll view container to hold all the different forum "topic" cards -->
     <!-- To be changed to "Recycler View" based on what Roger say is best practice (I still need research ths) -->
-    <androidx.core.widget.NestedScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="658dp"
-        android:clipChildren="false"
-        android:fillViewport="true"
-        android:isScrollContainer="true"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:id="@+id/cardContainer"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+            app:layout_scrollFlags="scroll|enterAlways">
 
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <!-- Map fragment in forum -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                tools:context=".Forum"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        </FrameLayout>
+
+        <!-- This is the nested scroll view container to hold all the different forum "topic" cards -->
+        <!-- To be changed to "Recycler View" based on what Roger say is best practice (I still need research ths) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/revisedCardContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

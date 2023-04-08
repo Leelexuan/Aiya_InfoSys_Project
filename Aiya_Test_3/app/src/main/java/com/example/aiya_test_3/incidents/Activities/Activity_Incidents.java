@@ -1,11 +1,17 @@
 package com.example.aiya_test_3.incidents.Activities; // Don't forgot to change this if you shift files out
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,23 +25,35 @@ import java.util.List;
 
 // For Firebase
 import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.incidents.CardAdapter;
+import com.example.aiya_test_3.incidents.firebaseCardSource;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 
 
-public class Activity_Incidents extends AppCompatActivity implements SearchView.OnQueryTextListener  {
+public class Activity_Incidents extends AppCompatActivity implements SearchView.OnQueryTextListener, OnMapReadyCallback {
 
     // Instantiation of attributes and views //
-    private SearchView searchView;    // search bar
-    private LayoutInflater inflater; // instantiate with more than one layout.
+    private SearchView searchView;    // Component for search bar
+    private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
     private LinearLayout cardContainer,appbarContainer; // Linear layout means it is either horizontal or vertical, holds the respective name item
     private TextView cardTextView; // textView
     private View cardView, app_bar;
     private ConstraintLayout cardContent;
     private List<String> cardData;
 
+    private GoogleMap mMap;
+
     // Firebase
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
+    RecyclerView.Adapter<CardAdapter.CardViewHolder> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
@@ -67,78 +85,84 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         appbarContainer = findViewById(R.id.appbar);
         appbarContainer.addView(app_bar, 0);
 
+
+        //sets gmap
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         // We want to generate in the cards for the forum pages automatically
-        cardContainer = findViewById(R.id.cardContainer);
+        // cardContainer = findViewById(R.id.cardContainer);
 
         int tempCardHeightVariable = 0;
         int num_of_cards = 100; // Here, we hardcode the number of cards
         cardData = new ArrayList<>(num_of_cards);
 
-        for (int i = 0; i < num_of_cards /*input some data here to tell it how many to create i guess*/ ; i++) {
+        // Testing Recycler View
+        // Inflate the card_view.xml layout
+        cardView = inflater.inflate(R.layout.card_view, null);
+        RecyclerView revisedCardContainer = findViewById(R.id.revisedCardContainer);
+        cardContent = cardView.findViewById(R.id.card_content);
+        cardTextView = cardContent.findViewById(R.id.hazardDescription);
 
-            // Inflate the card_view.xml layout
-            cardView = inflater.inflate(R.layout.card_view, null);
+        //cardDataSource cardDataSource = new LocalCardData(cardTextView);//
+        firebaseCardSource cardDataSource = new firebaseCardSource(cardTextView);
+        adapter = new CardAdapter(this, cardDataSource);
+        revisedCardContainer.setAdapter( adapter );
+        revisedCardContainer.setLayoutManager( new LinearLayoutManager(this));
 
-            //Todo Database: Retrieve data from database and input into cards (Lesson 5)
-
-            // Set any component or attributes that you want for the card in cardContainer
-            cardContent = cardView.findViewById(R.id.card_content);
-            cardTextView = cardContent.findViewById(R.id.hazardDescription);
-            cardData.add(i + ".Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget arcu dapibus,\n" +
-                    "vulputate felis sed, malesuada dolor. Nunc et massa viverra, tincidunt tellus ac, porttitor sapien.\n" +
-                    "Phasellus et risus sagittis, aliquam magna vel, vestibulum libero. Sed quis nibh ipsum. Quisque tincidunt\n" +
-                    "tristique quam, sed dapibus urna condimentum nec. Morbi fringilla velit at nisi vestibulum, at bibendum odio\n" +
-                    "ultrices. Ut a lorem in metus maximus porta. Quisque non suscipit lacus. Nam non sapien convallis, tincidunt\n" +
-                    "neque eget, fermentum magna. Donec nec diam finibus, accumsan leo at, interdum elit. Donec sed iaculis nibh, vel condimentum mi.\"\n");
-            cardTextView.setText(cardData.get(i)); // Add text card data into the card Textview
-
-            ObjectAnimator animator = ObjectAnimator.ofInt(cardContent, "maxHeight", 100);
-            animator.setDuration(200);
-
-            if (tempCardHeightVariable == 0){
-                    tempCardHeightVariable = cardView.getMeasuredHeight(); // Get initial height of the card and store it in a "getter" variable
-            }
-
-            int vHeight = tempCardHeightVariable; // instantiate card height
-
-            View.OnClickListener dropdownCardListener = new View.OnClickListener() { // This onClickListener is for the drop down mechanism
-                boolean expanded = false; // a flag to check if it is expanded
-
-                @Override
-                public void onClick(View v) { // This is the logic for the drop down
-
-                    if (expanded == false) {
-                        animator.setIntValues(vHeight, vHeight+500);
-                        expanded = true;
-                    } else {
-                        animator.setIntValues(vHeight+500, 100);
-                        expanded = false;
-                    }
-                    animator.start();
-                }
-
-            };
-
-            // This here is to start the card minimized
-            animator.setIntValues(vHeight, 100);
-            animator.start();
-
-            // Add the CardView to the container ViewGroup
-            cardContainer.addView(cardView);
-
-            // Set the card view with the above drop down listener
-            cardView.setOnClickListener(dropdownCardListener);
-        }
-
-        // This is to instantiate search bar
         searchView = app_bar.findViewById(R.id.SearchBar);
         searchView.setOnQueryTextListener(this);
-
     }
 
     // Everything beyond this line is for search bar functionality
     // Todo Design Pattern: Ryan say he will use multi-threading to make this faster (Lesson 3)
     // Todo Database: Figure out how to search database and refresh forum page (Lesson 5)
+
+    // The firebase obtain data via firebaseCardSource.onDataChange only AFTER the onCreate has been run.
+    // It also takes a while to get the data.
+    // So we need a auto-refresher to trigger a refresh data to fetch the data once it is ready.
+    // This entire code block is for that
+    // =======================================================================================
+    private Handler handler = new Handler();
+    private Runnable refreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            // Call the refresh method here
+            refreshData();
+
+            // Schedule the next refresh after a delay (in milliseconds)
+            handler.postDelayed(this, 5000); // 5000 milliseconds = 5 seconds
+        }
+    };
+
+    // Start auto-refresh when the Activity starts
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Call the refresh method here to initially load data
+        refreshData();
+
+        // Schedule the first refresh after a delay (in milliseconds)
+        handler.postDelayed(refreshRunnable, 5000); // 5000 milliseconds = 5 seconds
+    }
+
+    // Stop auto-refresh when the Activity stops
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Remove any pending callbacks to stop the auto-refresh
+        handler.removeCallbacks(refreshRunnable);
+    }
+
+    // Update data in the adapter
+    public void refreshData() {
+        // Notify adapter that data has changed
+        adapter.notifyDataSetChanged();
+    }
+    // =======================================================================================
 
     @Override
     public boolean onQueryTextSubmit(String query) {
@@ -162,61 +186,30 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
     // Todo Search: To redo with smarter more efficient method
     private void updateCardViews(List<String> data) {
-        // Remove all existing CardViews from the container
-        cardContainer.removeAllViews();
+    }
 
-        // Create new CardViews based on the filtered data
-        // Make Card View Automatically
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
 
-        inflater = LayoutInflater.from(this);
-        cardContainer = findViewById(R.id.cardContainer);
+        // Add bitmap marker
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) getDrawable(R.drawable.lamp_post);
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
 
-        int tempTester = 0;
-        int num_of_cards = data.size();
+        // Add a marker in singapore and move the camera
+        final LatLng singapore = new LatLng(1.28, 103.8);
+        mMap.addMarker(
+                new MarkerOptions()
+                        .position(singapore)
+                        .title("Marker in Singapore")
+                        .snippet("Population: 4,137,400")
+                        .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(singapore, 15));
+    }
 
-        for (int i = 0; i < num_of_cards /*input some data here to tell it how many to create i guess*/ ; i++) {
-            // Inflate the card_view.xml layout file
-            cardView = inflater.inflate(R.layout.card_view, null);
-
-            // Set any content or attributes that you want for the CardView
-            cardContent = cardView.findViewById(R.id.card_content);
-            cardTextView = cardContent.findViewById(R.id.hazardDescription);
-            cardData.add("Card " + i);
-            cardTextView.setText(cardData.get(i));
-
-            ObjectAnimator animator = ObjectAnimator.ofInt(cardContent, "maxHeight", 100);
-            animator.setDuration(200);
-            if (tempTester == 0){
-                tempTester = cardView.getMeasuredHeight();
-            }
-
-            int vHeight = tempTester;
-
-            View.OnClickListener dropdownCardListener = new View.OnClickListener() {
-                boolean expanded = false;
-
-                @Override
-                public void onClick(View v) {
-
-                    if (expanded == false) {
-                        animator.setIntValues(vHeight, vHeight+500);
-                        expanded = true;
-                    } else {
-                        animator.setIntValues(vHeight+500, 100);
-                        expanded = false;
-                    }
-                    animator.start();
-                }
-
-            };
-            // Perform initial expansion
-            animator.setIntValues(vHeight, 100);
-            animator.start();
-
-            // Add the CardView to the container ViewGroup
-            cardContainer.addView(cardView);
-
-            cardView.setOnClickListener(dropdownCardListener);
-        }
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
     }
