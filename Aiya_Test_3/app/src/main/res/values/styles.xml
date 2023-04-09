@@ -33,19 +33,6 @@
         </item>
 
     </style>
-<!--    <style name="log_in_button">-->
 
-<!--        <item name="android:textSize">-->
-<!--            30sp-->
-<!--        </item>-->
 
-<!--        <item name="android:textColor">-->
-<!--            white-->
-<!--        </item>-->
-
-<!--        <item name="android:fillColor">-->
-<!--            #DB4545-->
-<!--        </item>-->
-
-<!--    </style>-->
 </resources>
