@@ -6,32 +6,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.Activities.Activity_Incidents;
-import com.example.aiya_test_3.incidents.Activities.Activity_LoadingScreenStartUp;
 import com.example.aiya_test_3.login.UserInput;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class Activity_Login extends AppCompatActivity {
     // Declaring necessary widgets //
     private EditText password, email;
     private Button loginButton;
 
-    private TextView signuplink;
-
     // Declare necessary classes //
-    private UserInput userInput = new UserInput(); // this class is used to verify and validate inputs.
-
-    // Connect to Firebase
-    private FirebaseAuth auth;
-
+    private UserInput userInput; // this class is used to verify and validate inputs.
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,20 +32,6 @@ public class Activity_Login extends AppCompatActivity {
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
-        signuplink = findViewById(R.id.no_account);
-
-        auth = FirebaseAuth.getInstance();
-
-        signuplink.setOnClickListener(new View.OnClickListener() {
-            // switches to sign up activity when user clicks on text//
-            @Override
-            public void onClick(View view) {
-                //Log switch from log in activity to sign up activity//
-                Log.d("Sign up switch", "User redirected to sign up");
-                startActivity(new Intent(Activity_Login.this, Activity_SignUp.class));
-                finish();
-            }
-        });
 
         // when the user clicks the login button //
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -69,38 +44,29 @@ public class Activity_Login extends AppCompatActivity {
                 String emailText = email.getText().toString();
                 String passwordText = password.getText().toString();
 
-                // DELEGATION STRATEGY //
-                // VERIFY USER INPUT -> IF VERIFIED -> VALIDATE WITH DATABASE //
 
+                userInput = new UserInput.UserLogin(emailText, passwordText);
                 // VERIFICATION: Check if user input is acceptable
-                boolean verified = userInput.verify(emailText, passwordText); // verified = true if is legal, false if illegal.
+                if(userInput.verify()){
 
-                if(verified){
-                    // VALIDATION: Cross check user input with database, if details match log user in//
+                    // VALIDATION: Cross check user input with database //
+                    if(userInput.validate()) { // validated login //
+                        Log.d("USER LOGIN", "Login Successful. Proceeding to Activity_Incident."); // log successful login
 
-                    loginUser(emailText, passwordText);
+                        // explicit intent to go back to Activity_Incident //
+                        Intent intent = new Intent(Activity_Login.this, Activity_Incidents.class);
+                        Toast.makeText(Activity_Login.this, "Successful Login", Toast.LENGTH_SHORT).show(); // notify user successful login //
+                        startActivity(intent);
 
+                    } else { // not validated - email and password does not match database
+                        Log.d("USER LOGIN", "User is not validated - failed login"); // log failed attempt to login
+                        Toast.makeText(Activity_Login.this, "Your email and password wrong sia, please sign up if you have not!", Toast.LENGTH_SHORT).show(); // display Toast message
+                    }
 
-
-
-                } else { // NOT VERIFIED //
-                    // log unacceptable input //
-                    Log.d("USER LOGIN", "User input an unacceptable value."); // log unverified attemp
-                    // display Toast message //
-                    Toast.makeText(Activity_Login.this, "Walao, put a real email leh", Toast.LENGTH_SHORT).show();
+                } else { // not verified - email and password inputs are unacceptable.
+                    Log.d("USER LOGIN", "User input an unacceptable value."); // log unacceptable input
+                    Toast.makeText(Activity_Login.this, "Walao, put a real email/password leh", Toast.LENGTH_SHORT).show(); // display Toast message
                 }
-            }
-        });
-    }
-
-    private void loginUser(String email, String password){
-        auth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                Log.d("USER LOGIN", "Login Successful. Proceeding to Activity_Incident.");
-                Toast.makeText(Activity_Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Activity_Login.this, Activity_LoadingScreenStartUp.class));
-                finish();
             }
         });
     }
