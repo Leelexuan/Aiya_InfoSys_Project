@@ -1,5 +1,13 @@
 package com.example.aiya_test_3.login;
 
+import androidx.annotation.NonNull;
+
+import com.example.aiya_test_3.login.Activities.Activity_SignUp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 public class UserInput {
     /*DESCRIPTION
     * This class takes in inputs from the login page and checks if the user entered an acceptable value.
@@ -30,21 +38,25 @@ public class UserInput {
         return true; // valid email and password
     }
 
-    public static boolean validate(String email, String password){
-        /*DESCRIPTION
-         * This method checks if the user inputs matches the database values.
-         *
-         * INPUTS:
-         * String email from EditText widget email in the activity_login.xml
-         * String password from EditText widget password in the activity_login.xml
-         *
-         * OUTPUT:
-         * boolean true: matches with the database
-         * boolean false: does not match with database - failed login
-         * */
 
-
-        // TODO DATABASE: get email and password from database
-        return true;
+    public static boolean passwordequals(String password, String confirm_password){
+        //Check if passwords inputs are of the same value//
+        if (password.equals(confirm_password)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
+
+    public static boolean uniqueemail(String email){
+        // Check if account with email already exists//
+
+        // TODO Check database for account with same linked email
+        return true;
+
+    }
+
+
+
 }
