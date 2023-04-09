@@ -27,7 +27,7 @@ public class Activity_Login extends AppCompatActivity {
     private TextView signuplink;
 
     // Declare necessary classes //
-    private UserInput userInput = new UserInput(); // this class is used to verify and validate inputs.
+    private UserInput userInput; // this class is used to verify and validate inputs.
 
     // Connect to Firebase
     private FirebaseAuth auth;
@@ -69,11 +69,11 @@ public class Activity_Login extends AppCompatActivity {
                 String emailText = email.getText().toString();
                 String passwordText = password.getText().toString();
 
-                // DELEGATION STRATEGY //
-                // VERIFY USER INPUT -> IF VERIFIED -> VALIDATE WITH DATABASE //
 
+                userInput = new UserInput.UserLogin(emailText, passwordText);
                 // VERIFICATION: Check if user input is acceptable
-                boolean verified = userInput.verify(emailText, passwordText); // verified = true if is legal, false if illegal.
+                if(userInput.verify()){
+
 
                 if(verified){
                     // VALIDATION: Cross check user input with database, if details match log user in//
@@ -81,13 +81,9 @@ public class Activity_Login extends AppCompatActivity {
                     loginUser(emailText, passwordText);
 
 
-
-
-                } else { // NOT VERIFIED //
-                    // log unacceptable input //
-                    Log.d("USER LOGIN", "User input an unacceptable value."); // log unverified attemp
-                    // display Toast message //
-                    Toast.makeText(Activity_Login.this, "Walao, put a real email leh", Toast.LENGTH_SHORT).show();
+                } else { // not verified - email and password inputs are unacceptable.
+                    Log.d("USER LOGIN", "User input an unacceptable value."); // log unacceptable input
+                    Toast.makeText(Activity_Login.this, "Walao, put a real email/password leh", Toast.LENGTH_SHORT).show(); // display Toast message
                 }
             }
         });

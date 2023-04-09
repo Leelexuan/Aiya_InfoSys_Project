@@ -1,5 +1,6 @@
 package com.example.aiya_test_3.login.Activities;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,11 +36,14 @@ public class Activity_SignUp extends AppCompatActivity {
 
 
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // set main layout //
         setContentView(R.layout.activity_signup);
+
 
         // reference widgets in layout//
         username = findViewById(R.id.username);
@@ -127,7 +131,6 @@ public class Activity_SignUp extends AppCompatActivity {
             }
         });
     }
-
 }
 
 
