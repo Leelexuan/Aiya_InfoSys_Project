@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aiya_test_3.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -101,7 +102,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         String word = data.getHazardDescription(position);
         String hazardName = data.getHazardName(position);
+        String hazardType = data.getHazardType(position);
         String hazardAddress = data.getHazardAddress(position);
+        LatLng hazardLatLng = data.getHazardLatLng(position);
         Log.d("RecyclerView", "onBindViewHolder(): " + word);
         holder.hazardDescription.setText(word);
         holder.hazardName.setText(hazardName);

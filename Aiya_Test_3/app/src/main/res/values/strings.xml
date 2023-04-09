@@ -21,5 +21,6 @@
     <string name="create_your">CREATE YOUR EMAIL\nAND PASSWORD</string>
     <string name="signup_link">New to Aiya? Sign up here!</string>
     <string name="account_create_success">Your account is successfully registered!</string>
+    <string name="MAPS_API">ce558cd849364031</string>
 
 </resources>
