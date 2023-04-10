@@ -8,7 +8,6 @@
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00FFFFFF"
     android:backgroundTint="#00FFFFFF"
     android:clickable="false"
     android:clipChildren="false"
@@ -18,7 +17,7 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/red"
+        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -35,8 +34,8 @@
 
             <ImageButton
                 android:id="@+id/login_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:background="#00FFFFFF"
                 android:elevation="4dp"
                 android:scaleType="fitStart"
@@ -80,8 +79,8 @@
 
             <SearchView
                 android:id="@+id/SearchBar"
-                android:layout_width="276dp"
-                android:layout_height="39dp"
+                android:layout_width="250dp"
+                android:layout_height="37dp"
                 android:background="@drawable/searchview_bg"
                 android:iconifiedByDefault="false"
                 android:queryHint="Search..."
@@ -100,7 +99,6 @@
                 android:id="@+id/input_detail_button"
                 android:layout_width="40dp"
                 android:layout_height="32dp"
-                android:background="#00FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.615"

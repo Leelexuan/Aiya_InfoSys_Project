@@ -9,5 +9,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#D44E52</color>
     <color name="main_red">#D44E52</color>
+    <color name="dark_brown">#523c4e</color>
     <color name="sky_blue">#38607C</color>
+    <color name="yellow">#fff8c0</color>
+    <color name="dark_yellow">#ffcc68</color>
+    <color name="beige_purple">#C49BAF</color>
+    <color name="beige_yellow">#EFDCC3</color>
 </resources>
