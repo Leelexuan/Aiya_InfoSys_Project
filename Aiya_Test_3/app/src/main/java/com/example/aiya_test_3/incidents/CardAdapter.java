@@ -6,6 +6,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aiya_test_3.R;
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,9 +33,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     //Firebase Code
     DatabaseReference mRootDatabaseRef;
-    FirebaseStorage storageDatabaseRef;
-    StorageReference storageRef;
-
+    public int positionL = 0;
     public CardAdapter(Context context, firebaseCardSource data) {
         this.context = context;
         this.data = data;
@@ -99,27 +99,22 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-
         String word = data.getHazardDescription(position);
         String hazardName = data.getHazardName(position);
         String hazardType = data.getHazardType(position);
         String hazardAddress = data.getHazardAddress(position);
         LatLng hazardLatLng = data.getHazardLatLng(position);
+        StorageReference hazardPicture = data.getHazardImage(position);
         Log.d("RecyclerView", "onBindViewHolder(): " + word);
         holder.hazardDescription.setText(word);
         holder.hazardName.setText(hazardName);
         holder.hazardAddress.setText(hazardAddress);
-
-        // Firebase Storage (For images and all form of data, can think of it like google drive)
-        storageDatabaseRef = FirebaseStorage.getInstance();
-        storageRef = storageDatabaseRef.getReference();
-        StorageReference hazardPictureLocation =  storageRef.child(data.getHazardImage(position));
-        FireBaseUtils.downloadToImageView(holder.itemView.getContext(),hazardPictureLocation,holder.hazardPicture);
+        FireBaseUtils.downloadToImageView(holder.itemView.getContext(),hazardPicture,holder.hazardPicture);
     }
 
     @Override
     public int getItemCount() {
-        return data.getSize();
+        return data.getSize(); // return the total number of data items.
     }
 
     int vHeight = 0; // instantiate card height

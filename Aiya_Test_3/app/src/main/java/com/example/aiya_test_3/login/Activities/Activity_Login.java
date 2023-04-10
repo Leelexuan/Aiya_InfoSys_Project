@@ -80,9 +80,6 @@ public class Activity_Login extends AppCompatActivity {
 
                     loginUser(emailText, passwordText);
 
-
-
-
                 } else { // NOT VERIFIED //
                     // log unacceptable input //
                     Log.d("USER LOGIN", "User input an unacceptable value."); // log unverified attemp
@@ -94,6 +91,7 @@ public class Activity_Login extends AppCompatActivity {
     }
 
     private void loginUser(String email, String password){
+        Log.d("USER LOGIN", "Button Pressed");
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {

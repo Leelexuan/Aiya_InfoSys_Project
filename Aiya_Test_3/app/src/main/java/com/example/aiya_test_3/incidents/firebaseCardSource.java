@@ -3,12 +3,15 @@ package com.example.aiya_test_3.incidents;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,10 +24,20 @@ public class firebaseCardSource implements cardDataSource{
     public static final String FIREBASE_TESTING = "FirebaseTesting";
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
+    FirebaseStorage storageDatabaseRef;
+    StorageReference storageRef;
+
     int size;
     long numberOfIncident;
     List<String> hazardDescriptionList,hazardAddressList,hazardNameList,hazardImageList, hazardTypeList;
     List<Double> hazardLatList,hazardLngList;
+    List<String> OriginalHazardNameList;
+    List<String> OriginalhazardDescriptionList;
+    List<String> OriginalhazardTypeList;
+    List<String> OriginalhazardAddressList;
+    List<String> OriginalhazardImageList;
+    List<Double> OriginalhazardLatList;
+    List<Double> OriginalhazardLngList;
     TextView t;
     boolean initialDataReadyFlag = false;
 
@@ -34,6 +47,10 @@ public class firebaseCardSource implements cardDataSource{
         final String node = "Hazard_Details";
         nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
         nNodeRef = nRootDatabaseRef.child(node);
+
+        // Firebase Storage (For images and all form of data, can think of it like google drive)
+        storageDatabaseRef = FirebaseStorage.getInstance();
+        storageRef = storageDatabaseRef.getReference();
 
         this.t = t;
         nNodeRef.addValueEventListener(new ValueEventListener() {
@@ -51,6 +68,50 @@ public class firebaseCardSource implements cardDataSource{
         });
     }
 
+    public void rebuild_list(String searcher){
+        List<Integer> indexes = new ArrayList<>();
+
+        hazardNameList.clear();
+        hazardDescriptionList.clear();
+        hazardTypeList.clear();
+        hazardAddressList.clear();
+        hazardImageList.clear();
+        hazardLatList.clear();
+        hazardLngList.clear();
+
+        for (int i = 0; i < OriginalHazardNameList.size(); i ++) {
+            hazardNameList.add(OriginalHazardNameList.get(i));
+            hazardDescriptionList.add(OriginalhazardDescriptionList.get(i));
+            hazardTypeList.add(OriginalhazardTypeList.get(i));
+            hazardAddressList.add(OriginalhazardAddressList.get(i));
+            hazardImageList.add(OriginalhazardImageList.get(i));
+            hazardLatList.add(OriginalhazardLatList.get(i));
+            hazardLngList.add(OriginalhazardLngList.get(i));
+        }
+
+        for(int i = 0; i < hazardNameList.size(); i++){
+            if (hazardNameList.get(i).toLowerCase().contains(searcher.toLowerCase())){
+                if(!indexes.contains(i))
+                    indexes.add(i);
+            }
+        }
+
+        // Retain specific elements
+        for (int i = hazardNameList.size() - 1; i >= 0; i--) {
+            if (!indexes.contains(i)) {
+                hazardNameList.remove(i);
+                hazardDescriptionList.remove(i);
+                hazardTypeList.remove(i);
+                hazardAddressList.remove(i);
+                hazardImageList.remove(i);
+                hazardLatList.remove(i);
+                hazardLngList.remove(i);
+            }
+        }
+
+        size = hazardNameList.size();
+    }
+
     private void countListItems(DataSnapshot snapshot){
         size = (int) snapshot.getChildrenCount();
         t.setText( String.valueOf(size));
@@ -65,6 +126,7 @@ public class firebaseCardSource implements cardDataSource{
         hazardLatList = new ArrayList<>();
         hazardLngList = new ArrayList<>();
         hazardImageList = new ArrayList<>();
+
         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
 
             numberOfIncident = snapshot.getChildrenCount();
@@ -92,6 +154,26 @@ public class firebaseCardSource implements cardDataSource{
         }
     }
 
+    public void buildOriginalList(){
+
+        OriginalHazardNameList = new ArrayList<>();
+        OriginalhazardDescriptionList = new ArrayList<>();
+        OriginalhazardTypeList = new ArrayList<>();
+        OriginalhazardAddressList = new ArrayList<>();
+        OriginalhazardImageList = new ArrayList<>();
+        OriginalhazardLatList = new ArrayList<>();
+        OriginalhazardLngList = new ArrayList<>();
+
+        for (int i = 0; i < hazardNameList.size(); i ++) {
+            OriginalHazardNameList.add(hazardNameList.get(i));
+            OriginalhazardDescriptionList.add(hazardDescriptionList.get(i));
+            OriginalhazardTypeList.add(hazardTypeList.get(i));
+            OriginalhazardAddressList.add(hazardAddressList.get(i));
+            OriginalhazardImageList.add(hazardImageList.get(i));
+            OriginalhazardLatList.add(hazardLatList.get(i));
+            OriginalhazardLngList.add(hazardLngList.get(i));
+        }
+    }
 
     public boolean isInitialDataReadyFlag() {
         return initialDataReadyFlag;
@@ -120,12 +202,15 @@ public class firebaseCardSource implements cardDataSource{
         return HazardLatLng;
     }
 
-    public String getHazardImage(int i) { return hazardImageList.get(i); }
+    public StorageReference getHazardImage(int i) {
+        StorageReference hazardPictureLocation =  storageRef.child(hazardImageList.get(i));
+        return hazardPictureLocation;
+    }
 
     public void removeWord(int i){
 
         String word = hazardDescriptionList.get(i);
-
+        size -= 1;
         nNodeRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -133,8 +218,13 @@ public class firebaseCardSource implements cardDataSource{
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     if( dataSnapshot.getValue().toString().equals(word) ){
                         Log.d(FIREBASE_TESTING, "word:" + word + dataSnapshot.getValue().toString());
-                        nNodeRef.child(dataSnapshot.getKey()).removeValue();
-
+                        hazardNameList.remove(i);
+                        hazardDescriptionList.remove(i);
+                        hazardTypeList.remove(i);
+                        hazardAddressList.remove(i);
+                        hazardImageList.remove(i);
+                        hazardLatList.remove(i);
+                        hazardLngList.remove(i);
                     }
                 }
 

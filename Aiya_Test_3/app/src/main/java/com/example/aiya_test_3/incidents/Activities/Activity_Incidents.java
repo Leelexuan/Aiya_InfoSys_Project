@@ -57,11 +57,12 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     private firebaseCardSource cardDataSource;
 
     boolean initialDataReady = false;
+    RecyclerView revisedCardContainer;
 
     // Firebase
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
-    RecyclerView.Adapter<CardAdapter.CardViewHolder> adapter;
+    CardAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
@@ -118,7 +119,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         // Recycler View
         // Inflate the card_view.xml layout
         cardView = inflater.inflate(R.layout.card_view, null);
-        RecyclerView revisedCardContainer = findViewById(R.id.revisedCardContainer);
+        revisedCardContainer = findViewById(R.id.revisedCardContainer);
         cardContent = cardView.findViewById(R.id.card_content);
         cardTextView = cardContent.findViewById(R.id.hazardDescription);
 
@@ -127,13 +128,10 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         adapter = new CardAdapter(this, cardDataSource);
         revisedCardContainer.setAdapter( adapter );
         revisedCardContainer.setLayoutManager( new LinearLayoutManager(this));
+
         searchView = app_bar.findViewById(R.id.SearchBar);
         searchView.setOnQueryTextListener(this);
     }
-
-    // Everything beyond this line is for search bar functionality
-    // Todo Design Pattern: Ryan say he will use multi-threading to make this faster (Lesson 3)
-    // Todo Database: Figure out how to search database and refresh forum page (Lesson 5)
 
     // The firebase obtain data via firebaseCardSource.onDataChange only AFTER the onCreate has been run.
     // It also takes a while to get the data.
@@ -153,6 +151,8 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
                 handler.postDelayed(this, 5000); // 5000 milliseconds = 5 seconds
             }
             else{
+                cardDataSource.buildOriginalList();
+                Log.d("Refresh","Stop Refresh");
                 handler.removeCallbacks(refreshRunnable);
             }
         }
@@ -187,22 +187,19 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        cardDataSource.rebuild_list(query);
+        adapter.getItemCount();
+        revisedCardContainer.setAdapter(null);
+        revisedCardContainer.setLayoutManager(null);
+        revisedCardContainer.setAdapter(adapter);
+        revisedCardContainer.setLayoutManager( new LinearLayoutManager(this));
+        adapter.notifyDataSetChanged();
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        List<String> filteredData = new ArrayList<>();
-        for (String data : cardData) {
-            if (data.toLowerCase().contains(newText.toLowerCase())) {
-                filteredData.add(data);
-            }
-        }
-
-        // Update the CardViews based on the filtered data
-        updateCardViews(filteredData);
-
-        return true;
+        return false;
     }
 
     // Todo Search: To redo with smarter more efficient method
@@ -258,7 +255,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
                 case "Litter" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.litter_hazard); break;
                 case "Fallen Tree" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.fallen_tree); break;
                 case "Pipe leakage" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.clogged_drain); break;
-                case "Rats in public area" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.mosquito_everywhere); break;
+                case "Rats in public area" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.rat_infestation); break;
                 case "Choked drain" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.no_water); break;
                 default: Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.lamp_post); break;
             }
