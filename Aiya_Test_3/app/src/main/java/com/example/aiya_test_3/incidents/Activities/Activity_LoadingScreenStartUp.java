@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.incidents.firebaseCardSource;
+
+import java.io.Serializable;
 
 public class Activity_LoadingScreenStartUp extends AppCompatActivity {
-
-    // Todo: Implement Map  (Lesson 3) [Darren and Michaels]
-    // Todo Design Pattern: Implement superclass for incident (observable and visitable) with subclass being the hazard type
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
