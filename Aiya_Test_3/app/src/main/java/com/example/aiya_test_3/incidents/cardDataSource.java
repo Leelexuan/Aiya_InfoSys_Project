@@ -4,7 +4,6 @@ public interface cardDataSource {
 
     void addWord(String s);
     String getHazardDescription(int i);
-    void removeWord(int i);
     int getSize();
 
 }

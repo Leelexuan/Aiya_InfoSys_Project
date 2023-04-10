@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ public class Activity_SignUp extends AppCompatActivity {
     private EditText username, password, confirm_password;
 
     private Button sign_up;
+    private TextView back_login;
 
 
     //Declare necessary class//
@@ -45,10 +47,21 @@ public class Activity_SignUp extends AppCompatActivity {
         password = findViewById(R.id.password);
         confirm_password = findViewById(R.id.confirm_password);
         sign_up = findViewById(R.id.signup);
+        back_login = findViewById(R.id.back_login);
 
         // reference Firebase auth//
         auth = FirebaseAuth.getInstance();
 
+        back_login.setOnClickListener(new View.OnClickListener() {
+            // switches to sign up activity when user clicks on text//
+            @Override
+            public void onClick(View view) {
+                //Log switch from log in activity to sign up activity//
+                Log.d("Sign up switch", "User redirected to sign up");
+                startActivity(new Intent(Activity_SignUp.this, Activity_Login.class));
+                finish();
+            }
+        });
 
         // when user clicks on sign up button//
         sign_up.setOnClickListener(new View.OnClickListener() {

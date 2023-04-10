@@ -48,7 +48,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
     private LinearLayout cardContainer,appbarContainer; // Linear layout means it is either horizontal or vertical, holds the respective name item
     private TextView cardTextView; // textView
-    private View cardView, app_bar;
+    private View cardView, app_bar,overlay;
     private ConstraintLayout cardContent;
     private List<String> cardData;
 
@@ -68,6 +68,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
+        cardDataSource = new firebaseCardSource();
 
         // Todo Design Pattern: Rewrite entire forum code using recycler view (low priority)(Lesson 4) [Darren]
         // main layout for this page
@@ -112,7 +113,13 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
+        Activity_Incidents.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mapFragment.getMapAsync(Activity_Incidents.this);
+            }
+        });
 
 
         // We want to generate in the cards for the forum pages automatically
@@ -124,11 +131,10 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         cardTextView = cardContent.findViewById(R.id.hazardDescription);
 
         //cardDataSource cardDataSource = new LocalCardData(cardTextView);//
-        cardDataSource = new firebaseCardSource(cardTextView);
+        cardDataSource = new firebaseCardSource();
         adapter = new CardAdapter(this, cardDataSource);
         revisedCardContainer.setAdapter( adapter );
         revisedCardContainer.setLayoutManager( new LinearLayoutManager(this));
-
         searchView = app_bar.findViewById(R.id.SearchBar);
         searchView.setOnQueryTextListener(this);
     }
@@ -148,12 +154,13 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
             if(cardDataSource.isInitialDataReadyFlag() == false){
             // Schedule the next refresh after a delay (in milliseconds)
-                handler.postDelayed(this, 5000); // 5000 milliseconds = 5 seconds
+                handler.postDelayed(this, 0); // 5000 milliseconds = 5 seconds
             }
             else{
                 cardDataSource.buildOriginalList();
                 Log.d("Refresh","Stop Refresh");
                 handler.removeCallbacks(refreshRunnable);
+
             }
         }
     };
@@ -192,7 +199,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         revisedCardContainer.setAdapter(null);
         revisedCardContainer.setLayoutManager(null);
         revisedCardContainer.setAdapter(adapter);
-        revisedCardContainer.setLayoutManager( new LinearLayoutManager(this));
+        revisedCardContainer.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
         return true;
     }
@@ -214,19 +221,6 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         Bitmap bitmap = bitmapDrawable.getBitmap();
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
         Log.d("Map Created", "Created");
-        // Add a marker in singapore and move the camera
-        LatLng singapore = new LatLng(1.28, 103.8);
-        for(int index = 0; index < cardDataSource.numberOfIncident(); index++){
-            LatLng name = cardDataSource.getHazardLatLng(index);
-            Log.d("Marker Created", "Created");
-            mMap.addMarker(
-                    new MarkerOptions()
-                            .position(name)
-                            .title("Marker in Singapore")
-                            .snippet("Population: 4,137,400")
-                            .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(name, 15));
-        }
     }
 
     @Override

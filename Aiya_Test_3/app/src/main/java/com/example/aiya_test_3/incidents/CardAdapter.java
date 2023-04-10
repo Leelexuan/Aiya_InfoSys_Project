@@ -91,7 +91,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     @NonNull
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType){
-
         Log.d("RecyclerView", "onCreateViewHolder()");
         View cardView = mInflater.inflate(R.layout.card_view, viewGroup,false);
         return new CardViewHolder(cardView);
@@ -159,5 +158,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         cardAnimation.start();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }
 
