@@ -27,6 +27,7 @@ import java.util.List;
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.CardAdapter;
 import com.example.aiya_test_3.incidents.firebaseCardSource;
+import com.example.aiya_test_3.login.Activities.Activity_Logout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
