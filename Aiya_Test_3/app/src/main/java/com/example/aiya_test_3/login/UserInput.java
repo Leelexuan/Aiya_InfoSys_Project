@@ -1,12 +1,8 @@
 package com.example.aiya_test_3.login;
 
-import androidx.annotation.NonNull;
-
-import com.example.aiya_test_3.login.Activities.Activity_SignUp;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 public class UserInput {
     /*DESCRIPTION
@@ -18,10 +14,10 @@ public class UserInput {
     *
     * */
 
-
     // STATIC METHODS //
 
-    public static boolean verify(String email, String password){
+    public static boolean verify(String email, String password, Context context){
+
         /*DESCRIPTION
          * This method checks if the user inputs are acceptable.
          *
@@ -34,29 +30,35 @@ public class UserInput {
          * boolean false: unacceptable input (not an email address)
          * */
 
-        if(!email.contains("@") || password.length()==0){return false;} // check if input email have @ symbol
-        return true; // valid email and password
-    }
+        // Check if email is valid, if not make toast to inform user
+        if (!email.contains("@")){
+            Log.d("USER INPUT", "invalid email");
+            Toast.makeText(context, "Walao, put a real email leh", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
+        // Check if password is valid, if not make toast to inform user
+        else if (password.length() < 6){
+            Log.d("USER INPUT", "password too short");
+            Toast.makeText(context, "Please enter a password of at least 6 characters", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        // passed all test cases.
+        return true;
+    }
 
     public static boolean passwordequals(String password, String confirm_password){
         //Check if passwords inputs are of the same value//
-        if (password.equals(confirm_password)){
-            return true;
-        }
-        else {
-            return false;
-        }
+        Log.d("USER INPUT", "checking password and confirm_password");
+        return password.equals(confirm_password); // returns either true or false.
     }
 
     public static boolean uniqueemail(String email){
         // Check if account with email already exists//
-
-        // TODO Check database for account with same linked email
+        // Implementation will be explored if the app uses a local database//
+        // Currently Firebase does the check on its end and does not require any implementation//
         return true;
-
     }
 
-
-
 }
+

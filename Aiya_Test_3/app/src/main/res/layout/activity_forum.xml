@@ -35,9 +35,10 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <!-- Map fragment in forum -->
+<!--        change this height to add height to map-->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="350dp">
             <fragment
                 xmlns:map="http://schemas.android.com/apk/res-auto"
                 class="com.google.android.gms.maps.SupportMapFragment"
@@ -53,11 +54,13 @@
 
         <!-- This is the nested scroll view container to hold all the different forum "topic" cards -->
         <!-- To be changed to "Recycler View" based on what Roger say is best practice (I still need research ths) -->
+<!--        change this color to prevent eyeburn on bottom half of container-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/revisedCardContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:background="?attr/colorOnPrimary">
         </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>

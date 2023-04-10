@@ -9,13 +9,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.Activities.Activity_Incidents;
-import com.example.aiya_test_3.incidents.Activities.Activity_LoadingScreenStartUp;
 import com.example.aiya_test_3.login.UserInput;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -69,37 +70,47 @@ public class Activity_Login extends AppCompatActivity {
                 String emailText = email.getText().toString();
                 String passwordText = password.getText().toString();
 
-                // DELEGATION STRATEGY //
-                // VERIFY USER INPUT -> IF VERIFIED -> VALIDATE WITH DATABASE //
-
-                // VERIFICATION: Check if user input is acceptable
-                boolean verified = userInput.verify(emailText, passwordText); // verified = true if is legal, false if illegal.
+                // Verification:
+                // 1.
+                boolean verified = userInput.verify(emailText, passwordText, Activity_Login.this); // verified = true if is legal, false if illegal.
 
                 if(verified){
-                    // VALIDATION: Cross check user input with database, if details match log user in//
-
-                    loginUser(emailText, passwordText);
+                    // VALIDATION:
+                    // 1. Cross check user input with database, if details match with database, log user in
+                    // 2. Explicit intent to the incidents activity (main page where we see the incidents.
+                    loginUser(emailText, passwordText); // delegate to another class
 
                 } else { // NOT VERIFIED //
                     // log unacceptable input //
-                    Log.d("USER LOGIN", "User input an unacceptable value."); // log unverified attemp
-                    // display Toast message //
-                    Toast.makeText(Activity_Login.this, "Walao, put a real email leh", Toast.LENGTH_SHORT).show();
+                    Log.d("USER LOGIN", "User input an unacceptable value."); // log unverified attempt
                 }
             }
         });
     }
 
     private void loginUser(String email, String password){
-        Log.d("USER LOGIN", "Button Pressed");
-        auth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
-            public void onSuccess(AuthResult authResult) {
-                Log.d("USER LOGIN", "Login Successful. Proceeding to Activity_Incident.");
-                Toast.makeText(Activity_Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Activity_Login.this, Activity_LoadingScreenStartUp.class));
-                finish();
+            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                // If log in successful, redirect user to main forum page
+                if (task.isSuccessful()){
+                    Log.d("LOGIN", "User successfully logged in");
+                    Toast.makeText(Activity_Login.this, "Log in success!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Activity_Login.this, Activity_Incidents.class));
+                    finish();
+                }
+
+                // Log failed log in attempt and make toast to inform user
+                else{
+                    Log.d("LOGIN", "Log in attempt fail");
+                    Toast.makeText(Activity_Login.this, "invalid email or password", Toast.LENGTH_SHORT).show();
+
+                }
+
             }
         });
+
+
     }
 }
