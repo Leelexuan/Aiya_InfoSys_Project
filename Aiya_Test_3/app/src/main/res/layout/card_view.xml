@@ -50,6 +50,8 @@
                 android:id="@+id/hazardDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="3dp"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget arcu dapibus,
                 vulputate felis sed, malesuada dolor. Nunc et massa viverra, tincidunt tellus ac, porttitor sapien.
                 Phasellus et risus sagittis, aliquam magna vel, vestibulum libero.  Morbi fringilla velit at nisi vestibulum, at bibendum odio
@@ -57,8 +59,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="3dp"
                 app:layout_constraintStart_toEndOf="@+id/hazardPicture"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.906" />
@@ -79,6 +79,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
+
         <TextView
             android:id="@+id/hazardAddress"
             android:layout_width="wrap_content"
@@ -92,6 +93,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/hazardName"
             app:layout_constraintVertical_bias="0.0" />
+
+        <ImageButton
+            android:id="@+id/upvote"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="4dp"
+            android:background="#00FFFFFF"
+            android:elevation="4dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/upvote"
+            android:text="upvote"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/upvote" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
