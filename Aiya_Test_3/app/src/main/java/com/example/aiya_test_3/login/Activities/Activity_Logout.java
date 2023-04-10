@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.incidents.Activities.Activity_LoadingScreenStartUp;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Activity_Logout extends AppCompatActivity {
@@ -32,7 +33,7 @@ public class Activity_Logout extends AppCompatActivity {
                 Log.d("USER LOGOUT", "user has been logged out");
                 Toast.makeText(Activity_Logout.this, "You have been logged out", Toast.LENGTH_SHORT).show();
                 // Switch activity to login page
-                startActivity(new Intent(Activity_Logout.this, Activity_Login.class));
+                startActivity(new Intent(Activity_Logout.this, Activity_LoadingScreenStartUp.class));
                 finish();
             }
         });
