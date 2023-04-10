@@ -80,28 +80,20 @@ public class Activity_SignUp extends AppCompatActivity {
                         // Check if no account with same email already created
                         boolean checkemail = signupuserInput.uniqueemail(usernameText);
 
-                        if (checkemail){
+                        if (checkemail){ // entered email is not in database
                             Log.d("USER SIGNUP", "verified unique email for sign up");
-
-                            usersignup(usernameText, confirm_passwordText);
-
+                            usersignup(usernameText, confirm_passwordText); // sign up users.
                         }
-
                     }
                     else{
                         Log.d("USER SIGNUP","username and password fail verification");
                         Toast.makeText(Activity_SignUp.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                     }
-
-
                 }
                 else {
                     Log.d("USER SIGNUP","sign up passwords do not match");
                     Toast.makeText(Activity_SignUp.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-
                 }
-
-
             }
         });
     }

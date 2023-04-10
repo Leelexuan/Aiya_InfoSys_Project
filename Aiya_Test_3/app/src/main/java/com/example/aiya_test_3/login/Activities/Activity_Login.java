@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aiya_test_3.R;
-import com.example.aiya_test_3.incidents.Activities.Activity_Incidents;
 import com.example.aiya_test_3.incidents.Activities.Activity_LoadingScreenStartUp;
 import com.example.aiya_test_3.login.UserInput;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -69,19 +68,14 @@ public class Activity_Login extends AppCompatActivity {
                 String emailText = email.getText().toString();
                 String passwordText = password.getText().toString();
 
-                // DELEGATION STRATEGY //
-                // VERIFY USER INPUT -> IF VERIFIED -> VALIDATE WITH DATABASE //
+                // Employ delegation strategy - delegate verification and validation to other objects.
 
-                // VERIFICATION: Check if user input is acceptable
+                // Verification: Check if user input is acceptable
                 boolean verified = userInput.verify(emailText, passwordText); // verified = true if is legal, false if illegal.
 
-                if(verified){
-                    // VALIDATION: Cross check user input with database, if details match log user in//
-
+                if(verified){ // successful verification
+                    // Validation: Cross check user input with database, if details match log user in
                     loginUser(emailText, passwordText);
-
-
-
 
                 } else { // NOT VERIFIED //
                     // log unacceptable input //
@@ -97,8 +91,11 @@ public class Activity_Login extends AppCompatActivity {
         auth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
+                // successful login
                 Log.d("USER LOGIN", "Login Successful. Proceeding to Activity_Incident.");
-                Toast.makeText(Activity_Login.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Activity_Login.this, "Login Successful", Toast.LENGTH_SHORT).show(); // display success attempt.
+
+                // explicit intent to go to loading screen upon successful login.
                 startActivity(new Intent(Activity_Login.this, Activity_LoadingScreenStartUp.class));
                 finish();
             }

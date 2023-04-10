@@ -1,13 +1,5 @@
 package com.example.aiya_test_3.login;
 
-import androidx.annotation.NonNull;
-
-import com.example.aiya_test_3.login.Activities.Activity_SignUp;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-
 public class UserInput {
     /*DESCRIPTION
     * This class takes in inputs from the login page and checks if the user entered an acceptable value.
@@ -26,37 +18,51 @@ public class UserInput {
          * This method checks if the user inputs are acceptable.
          *
          * INPUTS:
-         * String email from EditText widget email in the activity_login.xml
-         * String password from EditText widget password in the activity_login.xml
+         * String email from EditText widget
+         * String password from EditText widget
          *
          * OUTPUT:
          * boolean true: acceptable input
          * boolean false: unacceptable input (not an email address)
          * */
 
-        if(!email.contains("@") || password.length()==0){return false;} // check if input email have @ symbol
+        if(!email.contains("@") || password.length()<=5){return false;} // check if input email have @ symbol and password length > 5.
         return true; // valid email and password
     }
 
 
     public static boolean passwordequals(String password, String confirm_password){
-        //Check if passwords inputs are of the same value//
-        if (password.equals(confirm_password)){
-            return true;
-        }
-        else {
-            return false;
-        }
+        /*DESCRIPTION
+         * This method checks if the user inputs are acceptable.
+         *
+         * INPUTS:
+         * String password from EditText widget
+         * String confirm_password from EditText widget
+         *
+         * OUTPUT:
+         * boolean true: password and confirm_password matches
+         * boolean false: password and confirm_password does not match.
+         * */
+        return (password.equals(confirm_password));
     }
 
     public static boolean uniqueemail(String email){
-        // Check if account with email already exists//
+        /*DESCRIPTION
+         * This method checks if the input email can be found in the database.
+         *
+         * INPUTS:
+         * String email from EditText widget
+         *
+         * OUTPUT:
+         * boolean true: email is not in the database
+         * boolean false: email is found in the database.
+         * */
 
-        // TODO Check database for account with same linked email
+        // NOTE //
+        // Currently, firebase checks for a unique email automatically. However, we left this
+        // method in to account that the company may not be using firebase. Hence, we may still need
+        // to implement this method based on the selected database.
+
         return true;
-
     }
-
-
-
 }
