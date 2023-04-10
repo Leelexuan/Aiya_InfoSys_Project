@@ -33,6 +33,7 @@ public class Activity_Logout extends AppCompatActivity {
                 Toast.makeText(Activity_Logout.this, "You have been logged out", Toast.LENGTH_SHORT).show();
                 // Switch activity to login page
                 startActivity(new Intent(Activity_Logout.this, Activity_Login.class));
+                finish();
             }
         });
     }
