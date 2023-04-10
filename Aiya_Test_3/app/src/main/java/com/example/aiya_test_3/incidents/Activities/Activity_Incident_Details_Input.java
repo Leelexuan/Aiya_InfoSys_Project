@@ -24,8 +24,13 @@ import android.widget.Spinner;
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.IncidentLog;
 import com.example.aiya_test_3.incidents.Submitted_Details;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,8 +41,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class Activity_Incident_Details_Input extends AppCompatActivity {
@@ -53,6 +60,9 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
     StorageReference storageRef;
 
     String imageFileNameInStorage;
+
+    EditText HazardName_Input;
+    LatLng HazardAddress_LatLng;
 
     // Incident Log (Singleton)
     private IncidentLog incidentLog = IncidentLog.getInstance();
@@ -246,6 +256,37 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         EditText HazardAddress_Input = input_detail.findViewById(R.id.editText_PostalAddress);
         EditText HazardDescription_Input = input_detail.findViewById(R.id.editText_HazardDescriptionMultiLine);
 
+        // Initialise places
+        String MAPS_API = "AIzaSyDnIVT6BNvi2ANiKaoYhmteP3WaSGjbuOI";
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), MAPS_API);
+        }
+
+        ActivityResultLauncher<Intent> launcher;
+        // Initialize the ActivityResultLauncher
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    // Handle the result in the callback method
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        Place place = Autocomplete.getPlaceFromIntent(data);
+                        Log.d("Place",place.getAddress());
+                        Log.d("Place LatLng",place.getLatLng().toString());
+                        HazardAddress_Input.setText(place.getAddress());
+                        HazardAddress_LatLng = place.getLatLng();
+                    }
+                });
+
+        // Set click listener for HazardAddress_Input EditText
+        HazardAddress_Input.setOnClickListener(v -> {
+            List<Place.Field> field = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+            Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, field)
+                    .build(Activity_Incident_Details_Input.this);
+            launcher.launch(intent); // Use the launcher to start the activity
+        });
+
+
+
         submitHazard.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -268,9 +309,11 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
 
 
                 // Create a HashMap with the header as keys and input as values
-                HashMap<String, String> Send_database_details = new HashMap<>();
+                HashMap<String, Object> Send_database_details = new HashMap<>();
                 Send_database_details.put("HazardName_Input", HazardName_Input.getText().toString());
                 Send_database_details.put("HazardAddress_Input", HazardAddress_Input.getText().toString());
+                Send_database_details.put("HazardAddress_Lat", HazardAddress_LatLng.latitude);
+                Send_database_details.put("HazardAddress_Long", HazardAddress_LatLng.longitude);
                 Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
                 Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
 

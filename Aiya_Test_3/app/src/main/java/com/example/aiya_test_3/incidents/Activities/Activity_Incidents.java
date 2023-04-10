@@ -30,15 +30,18 @@ import com.example.aiya_test_3.incidents.firebaseCardSource;
 import com.example.aiya_test_3.login.Activities.Activity_Logout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.OnMapsSdkInitializedCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 
 
-public class Activity_Incidents extends AppCompatActivity implements SearchView.OnQueryTextListener, OnMapReadyCallback {
+public class Activity_Incidents extends AppCompatActivity implements SearchView.OnQueryTextListener, OnMapReadyCallback, OnMapsSdkInitializedCallback {
 
     // Instantiation of attributes and views //
     private SearchView searchView;    // Component for search bar
@@ -63,6 +66,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     @Override
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
         super.onCreate(savedInstanceState);
+        MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
 
         // Todo Design Pattern: Rewrite entire forum code using recycler view (low priority)(Lesson 4) [Darren]
         // main layout for this page
@@ -109,14 +113,9 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
         // We want to generate in the cards for the forum pages automatically
-        // cardContainer = findViewById(R.id.cardContainer);
-
-        int tempCardHeightVariable = 0;
-        int num_of_cards = 100; // Here, we hardcode the number of cards
-        cardData = new ArrayList<>(num_of_cards);
-
-        // Testing Recycler View
+        // Recycler View
         // Inflate the card_view.xml layout
         cardView = inflater.inflate(R.layout.card_view, null);
         RecyclerView revisedCardContainer = findViewById(R.id.revisedCardContainer);
@@ -182,6 +181,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     public void refreshData() {
         // Notify adapter that data has changed
         adapter.notifyDataSetChanged();
+        addNewMarkers();
     }
     // =======================================================================================
 
@@ -212,21 +212,70 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
         // Add bitmap marker
         BitmapDrawable bitmapDrawable = (BitmapDrawable) getDrawable(R.drawable.lamp_post);
         Bitmap bitmap = bitmapDrawable.getBitmap();
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
-
+        Log.d("Map Created", "Created");
         // Add a marker in singapore and move the camera
-        final LatLng singapore = new LatLng(1.28, 103.8);
-        mMap.addMarker(
-                new MarkerOptions()
-                        .position(singapore)
-                        .title("Marker in Singapore")
-                        .snippet("Population: 4,137,400")
-                        .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(singapore, 15));
+        LatLng singapore = new LatLng(1.28, 103.8);
+        for(int index = 0; index < cardDataSource.numberOfIncident(); index++){
+            LatLng name = cardDataSource.getHazardLatLng(index);
+            Log.d("Marker Created", "Created");
+            mMap.addMarker(
+                    new MarkerOptions()
+                            .position(name)
+                            .title("Marker in Singapore")
+                            .snippet("Population: 4,137,400")
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(name, 15));
+        }
+    }
+
+    @Override
+    public void onMapsSdkInitialized(MapsInitializer.Renderer renderer) {
+        switch (renderer) {
+            case LATEST:
+                Log.d("MapsDemo", "The latest version of the renderer is used.");
+                break;
+            case LEGACY:
+                Log.d("MapsDemo", "The legacy version of the renderer is used.");
+                break;
+        }
+    }
+
+    public void addNewMarkers(){
+
+        for(int index = 0; index < cardDataSource.numberOfIncident(); index++){
+
+            // Add bitmap marker
+            String HazardType = cardDataSource.getHazardType(index);
+
+            Log.d("Hazard Type: ",HazardType);
+            BitmapDrawable Hazard_icon;
+
+            switch (HazardType){
+                case "Litter" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.litter_hazard); break;
+                case "Fallen Tree" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.fallen_tree); break;
+                case "Pipe leakage" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.clogged_drain); break;
+                case "Rats in public area" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.mosquito_everywhere); break;
+                case "Choked drain" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.no_water); break;
+                default: Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.lamp_post); break;
+            }
+
+            Bitmap bitmap = Hazard_icon.getBitmap();
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
+
+            LatLng name = cardDataSource.getHazardLatLng(index);
+            Log.d("Marker Created", "Created");
+            mMap.addMarker(
+                    new MarkerOptions()
+                            .position(name)
+                            .title(cardDataSource.getHazardName(index))
+                            .snippet(cardDataSource.getHazardDescription(index))
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(name, 15));
+        }
     }
 
     @Override

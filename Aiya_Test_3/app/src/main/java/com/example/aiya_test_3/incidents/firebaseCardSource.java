@@ -3,6 +3,7 @@ package com.example.aiya_test_3.incidents;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,7 +22,9 @@ public class firebaseCardSource implements cardDataSource{
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
     int size;
-    List<String> hazardDescriptionList,hazardAddressList,hazardNameList,hazardImageList;
+    long numberOfIncident;
+    List<String> hazardDescriptionList,hazardAddressList,hazardNameList,hazardImageList, hazardTypeList;
+    List<Double> hazardLatList,hazardLngList;
     TextView t;
     boolean initialDataReadyFlag = false;
 
@@ -57,21 +60,33 @@ public class firebaseCardSource implements cardDataSource{
     private void repopulateList(DataSnapshot snapshot){
         hazardDescriptionList = new ArrayList<>();
         hazardNameList = new ArrayList<>();
+        hazardTypeList = new ArrayList<>();
         hazardAddressList = new ArrayList<>();
+        hazardLatList = new ArrayList<>();
+        hazardLngList = new ArrayList<>();
         hazardImageList = new ArrayList<>();
         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+
+            numberOfIncident = snapshot.getChildrenCount();
+
             Object value = dataSnapshot.getValue();
             if (value != null && value instanceof HashMap) {
                 HashMap<String, Object> hashMap = (HashMap<String, Object>) value;
                 // Access the values in the HashMap using their keys
                 String HazardName_Key = (String) hashMap.get("HazardName_Input");
                 String HazardDescription_Key = (String) hashMap.get("HazardDescription_Input");
+                String HazardType_Key = (String) hashMap.get("HazardType_Input");
                 String HazardAddress_Key = (String) hashMap.get("HazardAddress_Input");
+                Double HazardLat_key = (Double) hashMap.get("HazardAddress_Lat");
+                Double HazardLng_key = (Double) hashMap.get("HazardAddress_Long");
                 String HazardImage_Key = (String) hashMap.get("HazardImage_Input");
-                hazardDescriptionList.add(HazardDescription_Key);
                 hazardNameList.add(HazardName_Key);
+                hazardDescriptionList.add(HazardDescription_Key);
+                hazardTypeList.add(HazardType_Key);
                 hazardAddressList.add(HazardAddress_Key);
                 hazardImageList.add(HazardImage_Key);
+                hazardLatList.add(HazardLat_key);
+                hazardLngList.add(HazardLng_key);
                 Log.d(FIREBASE_TESTING, hazardDescriptionList.get(0));
             }
         }
@@ -82,21 +97,27 @@ public class firebaseCardSource implements cardDataSource{
         return initialDataReadyFlag;
     }
 
+    public long numberOfIncident(){ return numberOfIncident; }
+
     public void addWord(String s){
         nNodeRef.push().setValue(s);
         Log.d(FIREBASE_TESTING, "add word size " + size);
     }
 
-    public String getHazardDescription(int i){
-        return hazardDescriptionList.get(i);
-    }
-
     public String getHazardName(int i){
         return hazardNameList.get(i);
     }
-
+    public String getHazardDescription(int i){
+        return hazardDescriptionList.get(i);
+    }
+    public String getHazardType(int i) { return hazardTypeList.get(i); }
     public String getHazardAddress(int i){
         return hazardAddressList.get(i);
+    }
+
+    public LatLng getHazardLatLng(int i) {
+        LatLng HazardLatLng = new LatLng(hazardLatList.get(i),hazardLngList.get(i));
+        return HazardLatLng;
     }
 
     public String getHazardImage(int i) { return hazardImageList.get(i); }
