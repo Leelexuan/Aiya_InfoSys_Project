@@ -15,7 +15,8 @@ public class Submitted_Details extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submitted_details);
-
+        IncidentLog incidentLog = IncidentLog.getInstance();
+        incidentLog.INFO("Successfully Added a new incident");
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
