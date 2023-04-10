@@ -27,6 +27,7 @@ import java.util.List;
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.CardAdapter;
 import com.example.aiya_test_3.incidents.firebaseCardSource;
+import com.example.aiya_test_3.login.Activities.Activity_Logout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
@@ -86,6 +87,18 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
                 Intent openDetail_input = new Intent(Activity_Incidents.this, Activity_Incident_Details_Input.class);
                 startActivity(openDetail_input);
                 Log.d("Input Details Button", "User click to input details");
+            }
+        });
+
+        // Within app bar, there is a log out button, we want to address it so we instantiate it
+        ImageButton logout_button = app_bar.findViewById(R.id.logout_button);
+
+        logout_button.setOnClickListener(new View.OnClickListener() { //when button is clicked redirect to logout page
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Activity_Incidents.this, Activity_Logout.class));
+                Log.d("Logout button", "User clicked logout redirect button");
+
             }
         });
 
