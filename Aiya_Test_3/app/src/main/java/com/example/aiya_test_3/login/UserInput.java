@@ -14,7 +14,6 @@ public class UserInput {
     *
     * */
 
-
     // STATIC METHODS //
 
     public static boolean verify(String email, String password, Context context){
@@ -44,24 +43,14 @@ public class UserInput {
             Toast.makeText(context, "Please enter a password of at least 6 characters", Toast.LENGTH_SHORT).show();
             return false;
         }
-
-        // return true
-        else{
-            return true;
-        }
-
-
+        // passed all test cases.
+        return true;
     }
-
 
     public static boolean passwordequals(String password, String confirm_password){
         //Check if passwords inputs are of the same value//
-        if (password.equals(confirm_password)){
-            return true;
-        }
-        else {
-            return false;
-        }
+        Log.d("USER INPUT", "checking password and confirm_password");
+        return password.equals(confirm_password); // returns either true or false.
     }
 
     public static boolean uniqueemail(String email){
@@ -69,9 +58,7 @@ public class UserInput {
         // Implementation will be explored if the app uses a local database//
         // Currently Firebase does the check on its end and does not require any implementation//
         return true;
-
     }
 
-
-
 }
+

@@ -27,7 +27,6 @@ public class Activity_SignUp extends AppCompatActivity {
 
 
     //Declare necessary class//
-
     private UserInput signupuserInput = new UserInput(); // class to perform checks on user input
 
     //Firebase authentication//
@@ -64,44 +63,32 @@ public class Activity_SignUp extends AppCompatActivity {
                 String passwordText = password.getText().toString();
                 String confirm_passwordText = confirm_password.getText().toString();
 
-                // Check if passwords inputs are of same value
+                // Verify inputs
+                boolean verified = signupuserInput.verify(usernameText, confirm_passwordText, Activity_SignUp.this);
+                // Check if passwords are equal
                 boolean passwordequals = signupuserInput.passwordequals(passwordText, confirm_passwordText);
+                // Check if no account with same email already created (assuming we have our own local database)
+                boolean checkemail = signupuserInput.uniqueemail(usernameText);
 
-                if (passwordequals){
-                    // Log password check attempt
-                    Log.d("USER SIGNUP","sign up passwords are equal, proceed to verify email and password");
-
-                    // Check if email and password are valid
-                    boolean verified = signupuserInput.verify(usernameText, confirm_passwordText, Activity_SignUp.this);
-
-                    if (verified){
-                        Log.d("USER SIGNUP", "email and password verified");
-
-                        // Check if no account with same email already created (assuming we have our own local database)
-                        boolean checkemail = signupuserInput.uniqueemail(usernameText);
-
+                // check acceptable inputs
+                if (verified){
+                    Log.d("USER SIGNUP", "email and password verified");
+                    // check passwords
+                    if (passwordequals){
+                        Log.d("USER SIGNUP","sign up passwords are equal");
+                        // check email in database
                         if (checkemail){
                             Log.d("USER SIGNUP", "verified unique email for sign up");
-
                             usersignup(usernameText, confirm_passwordText);
-
                         }
-
+                    } else{ // password and confirmed_password typed are not equal
+                        Log.d("USER SIGNUP","sign up passwords do not match");
+                        Toast.makeText(Activity_SignUp.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                     }
-                    else{
-                        Log.d("USER SIGNUP","username and password fail verification");
-                        Toast.makeText(Activity_SignUp.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
-                    }
-
-
+                } else { // email or password is not acceptable.
+                    Log.d("USER SIGNUP","email and password fail verification");
+                    Toast.makeText(Activity_SignUp.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    Log.d("USER SIGNUP","sign up passwords do not match");
-                    Toast.makeText(Activity_SignUp.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-
-                }
-
-
             }
         });
     }

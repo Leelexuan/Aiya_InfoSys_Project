@@ -70,16 +70,15 @@ public class Activity_Login extends AppCompatActivity {
                 String emailText = email.getText().toString();
                 String passwordText = password.getText().toString();
 
-                // DELEGATION STRATEGY //
-                // VERIFY USER INPUT -> IF VERIFIED -> VALIDATE WITH DATABASE //
-
-                // VERIFICATION: Check if user input is acceptable
+                // Verification:
+                // 1.
                 boolean verified = userInput.verify(emailText, passwordText, Activity_Login.this); // verified = true if is legal, false if illegal.
 
                 if(verified){
-                    // VALIDATION: Cross check user input with database, if details match log user in//
-                    loginUser(emailText, passwordText);
-
+                    // VALIDATION:
+                    // 1. Cross check user input with database, if details match with database, log user in
+                    // 2. Explicit intent to the incidents activity (main page where we see the incidents.
+                    loginUser(emailText, passwordText); // delegate to another class
 
                 } else { // NOT VERIFIED //
                     // log unacceptable input //
