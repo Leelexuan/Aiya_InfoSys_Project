@@ -89,6 +89,18 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
             }
         });
 
+        // Within app bar, there is a log out button, we want to address it so we instantiate it
+        ImageButton logout_button = app_bar.findViewById(R.id.logout_button);
+
+        logout_button.setOnClickListener(new View.OnClickListener() { //when button is clicked redirect to logout page
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Activity_Incidents.this, Activity_Logout.class));
+                Log.d("Logout button", "User clicked logout redirect button");
+
+            }
+        });
+
         // Once everything is instantiated, add the app_bar layout to the container meant for app bar to the MainActivity's layout
         appbarContainer = findViewById(R.id.appbar);
         appbarContainer.addView(app_bar, 0);
