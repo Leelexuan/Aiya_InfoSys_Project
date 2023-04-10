@@ -72,12 +72,12 @@ public class Activity_SignUp extends AppCompatActivity {
                     Log.d("USER SIGNUP","sign up passwords are equal, proceed to verify email and password");
 
                     // Check if email and password are valid
-                    boolean verified = signupuserInput.verify(usernameText, confirm_passwordText);
+                    boolean verified = signupuserInput.verify(usernameText, confirm_passwordText, Activity_SignUp.this);
 
                     if (verified){
                         Log.d("USER SIGNUP", "email and password verified");
 
-                        // Check if no account with same email already created
+                        // Check if no account with same email already created (assuming we have our own local database)
                         boolean checkemail = signupuserInput.uniqueemail(usernameText);
 
                         if (checkemail){
