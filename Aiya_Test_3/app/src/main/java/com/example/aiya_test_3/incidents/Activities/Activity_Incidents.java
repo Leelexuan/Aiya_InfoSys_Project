@@ -256,9 +256,10 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
             switch (HazardType){
                 case "Litter" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.litter_hazard); break;
-                case "Fallen Tree" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.fallen_tree); break;
+                case "Fallen tree" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.fallen_tree); break;
                 case "Pipe leakage" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.clogged_drain); break;
-                case "Rats in public area" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.mosquito_everywhere); break;
+                case "Mosquito breeding danger" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.mosquito_everywhere); break;
+                case "Rats in public area" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.rat_infestation); break;
                 case "Choked drain" : Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.no_water); break;
                 default: Hazard_icon = (BitmapDrawable) getDrawable(R.drawable.lamp_post); break;
             }
