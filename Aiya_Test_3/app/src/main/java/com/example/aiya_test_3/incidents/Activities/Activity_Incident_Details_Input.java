@@ -304,7 +304,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 incidentLog.INFO("|" + String.format("%-12s", date) + "|" + hazardName + "|" + hazardAddress + "|");
 
                 // record the incident documentation into logcat.
-                Log.d("Incident Log", incidentLog.recordLog());
+                Log.d("Incident Log", incidentLog.returnIncidents());
 
 
                 // Create a HashMap with the header as keys and input as values
