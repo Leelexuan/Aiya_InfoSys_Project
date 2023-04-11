@@ -1,10 +1,5 @@
 package com.example.aiya_test_3.incidents.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-// For Firebase
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.IncidentLog;
 import com.example.aiya_test_3.incidents.Submitted_Details;
@@ -31,8 +30,6 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -179,13 +176,13 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 // Perform an action based on the selected radio button
-                if (checkedId == R.id.radio_button_important) {
+                if (checkedId == R.id.red_radio_button) {
                     Log.d("BUTTON", "Hello This is Important");// Option "Important" is selected
-                } else if (checkedId == R.id.radio_button_warning) {
+                } else if (checkedId == R.id.orange_radio_button) {
                     Log.d("BUTTON", "Hello This is Warning");// Option "Warning" is selected
-                } else if (checkedId == R.id.radio_button_mild) {
+                } else if (checkedId == R.id.yellow_radio_button) {
                     Log.d("BUTTON", "Hello This is Mild"); // Option "Mild" is selected
-                } else if (checkedId == R.id.radio_button_good) {
+                } else if (checkedId == R.id.green_radio_button) {
                     Log.d("BUTTON", "Hello This is Good"); // Option "Good" is selected
                 }
             }

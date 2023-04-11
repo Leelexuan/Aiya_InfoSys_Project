@@ -160,6 +160,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_width="wrap_content"
@@ -173,29 +174,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/HazardSeverity">
 
-        <!-- Need to make this responsive!!! :( -->
-
-        <include
-            layout="@layout/important_radio_button"
+        <RadioButton
+            android:id="@+id/green_radio_button"
             android:layout_width="60dp"
-            android:layout_height="60dp" />
+            android:layout_height="60dp"
+            android:scaleType="centerInside"
+            android:button="@null"
+            android:drawableTop="@drawable/green_alert"
+            android:background="@drawable/green_button_selector"/>
 
-        <include
-            layout="@layout/warning_radio_button"
+        <RadioButton
+            android:id="@+id/yellow_radio_button"
             android:layout_width="60dp"
-            android:layout_height="60dp" />
+            android:layout_height="60dp"
+            android:scaleType="centerInside"
+            android:button="@null"
+            android:drawableTop="@drawable/yellow_alert"
+            android:background="@drawable/yellow_button_selector"/>
 
-        <include
-            layout="@layout/mild_radio_button"
+        <RadioButton
+            android:id="@+id/orange_radio_button"
             android:layout_width="60dp"
-            android:layout_height="60dp" />
+            android:layout_height="60dp"
+            android:scaleType="centerInside"
+            android:button="@null"
+            android:drawableTop="@drawable/orange_alert"
+            android:background="@drawable/orange_button_selector"/>
 
-        <include
-            layout="@layout/good_radio_button"
+        <RadioButton
+            android:id="@+id/red_radio_button"
             android:layout_width="60dp"
-            android:layout_height="60dp" />
+            android:layout_height="60dp"
+            android:scaleType="centerInside"
+            android:button="@null"
+            android:drawableTop="@drawable/red_alert"
+            android:background="@drawable/red_button_selector"/>
 
     </RadioGroup>
+
+
 
     <Button
         android:id="@+id/uploadPhotoBtn"

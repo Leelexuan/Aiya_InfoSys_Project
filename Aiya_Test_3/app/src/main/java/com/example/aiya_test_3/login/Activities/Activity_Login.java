@@ -28,7 +28,7 @@ public class Activity_Login extends AppCompatActivity {
     private TextView signuplink;
 
     // Declare necessary classes //
-    private UserInput userInput = new UserInput(); // this class is used to verify and validate inputs.
+    private UserInput userInput; // this class is used to verify and validate inputs.
 
     // Connect to Firebase
     private FirebaseAuth auth;

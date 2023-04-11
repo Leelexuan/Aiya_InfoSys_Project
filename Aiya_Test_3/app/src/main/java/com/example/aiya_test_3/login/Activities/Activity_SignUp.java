@@ -27,9 +27,8 @@ public class Activity_SignUp extends AppCompatActivity {
     private Button sign_up;
     private TextView back_login;
 
-
     //Declare necessary class//
-    private UserInput signupuserInput = new UserInput(); // class to perform checks on user input
+    private UserInput signupuserInput; // class to perform checks on user input
 
     //Firebase authentication//
     private FirebaseAuth auth;
@@ -79,7 +78,7 @@ public class Activity_SignUp extends AppCompatActivity {
                 // Verify inputs
                 boolean verified = signupuserInput.verify(usernameText, confirm_passwordText, Activity_SignUp.this);
                 // Check if passwords are equal
-                boolean passwordequals = signupuserInput.passwordequals(passwordText, confirm_passwordText);
+                boolean passwordequals = signupuserInput.inputequals(passwordText, confirm_passwordText);
                 // Check if no account with same email already created (assuming we have our own local database)
                 boolean checkemail = signupuserInput.uniqueemail(usernameText);
 

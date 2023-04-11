@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-public class UserInput {
+public abstract class UserInput {
     /*DESCRIPTION
     * This class takes in inputs from the login page and checks if the user entered an acceptable value.
     * It does so by using a static method which can be accessed by every class.
@@ -47,10 +47,10 @@ public class UserInput {
         return true;
     }
 
-    public static boolean passwordequals(String password, String confirm_password){
+    public static boolean inputequals(String input1, String input2){
         //Check if passwords inputs are of the same value//
         Log.d("USER INPUT", "checking password and confirm_password");
-        return password.equals(confirm_password); // returns either true or false.
+        return input1.equals(input2); // returns either true or false.
     }
 
     public static boolean uniqueemail(String email){
