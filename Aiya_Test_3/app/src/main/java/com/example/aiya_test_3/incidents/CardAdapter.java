@@ -157,7 +157,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         cardAnimation.start();
     }
-
     @Override
     public long getItemId(int position) {
         return position;
