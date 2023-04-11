@@ -89,23 +89,26 @@ public class firebaseCardSource implements cardDataSource {
             hazardLngList.add(OriginalhazardLngList.get(i));
         }
 
-        for(int i = 0; i < hazardNameList.size(); i++){
-            if (hazardNameList.get(i).toLowerCase().contains(searcher.toLowerCase())){
-                if(!indexes.contains(i))
-                    indexes.add(i);
-            }
-        }
 
-        // Retain specific elements
-        for (int i = hazardNameList.size() - 1; i >= 0; i--) {
-            if (!indexes.contains(i)) {
-                hazardNameList.remove(i);
-                hazardDescriptionList.remove(i);
-                hazardTypeList.remove(i);
-                hazardAddressList.remove(i);
-                hazardImageList.remove(i);
-                hazardLatList.remove(i);
-                hazardLngList.remove(i);
+        if(!searcher.equals("")) {
+            for (int i = 0; i < hazardNameList.size(); i++) {
+                if (hazardNameList.get(i).toLowerCase().contains(searcher.toLowerCase())) {
+                    if (!indexes.contains(i))
+                        indexes.add(i);
+                }
+            }
+
+            // Retain specific elements
+            for (int i = hazardNameList.size() - 1; i >= 0; i--) {
+                if (!indexes.contains(i)) {
+                    hazardNameList.remove(i);
+                    hazardDescriptionList.remove(i);
+                    hazardTypeList.remove(i);
+                    hazardAddressList.remove(i);
+                    hazardImageList.remove(i);
+                    hazardLatList.remove(i);
+                    hazardLngList.remove(i);
+                }
             }
         }
 

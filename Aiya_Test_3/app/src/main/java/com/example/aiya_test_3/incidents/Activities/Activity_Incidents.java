@@ -207,16 +207,19 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         adapter.notifyDataSetChanged();
         return true;
     }
-
     @Override
-    public boolean onQueryTextChange(String newText) {
+    public boolean onQueryTextChange(String query) {
+        if (searchView.getQuery().length() == 0) {
+            cardDataSource.rebuild_list(query);
+            adapter.getItemCount();
+            revisedCardContainer.setAdapter(null);
+            revisedCardContainer.setLayoutManager(null);
+            revisedCardContainer.setAdapter(adapter);
+            revisedCardContainer.setLayoutManager(new LinearLayoutManager(this));
+            adapter.notifyDataSetChanged();
+        }
         return false;
     }
-
-    // Todo Search: To redo with smarter more efficient method
-    private void updateCardViews(List<String> data) {
-    }
-
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;

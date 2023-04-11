@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -21,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.incidents.CheckUserInputs;
 import com.example.aiya_test_3.incidents.IncidentLog;
 import com.example.aiya_test_3.incidents.Submitted_Details;
 import com.google.android.gms.maps.model.LatLng;
@@ -193,6 +195,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         storageRef = storageDatabaseRef.getReference();
 
         //name of photo to be uploaded
+        imageFileNameInStorage = "";
         String filename = "/User Uploaded Photos Test/" + System.currentTimeMillis() + ".jpg";
 
         ActivityResultLauncher<Intent> photo_app_launcher = registerForActivityResult(
@@ -289,8 +292,12 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         submitHazard.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Intent go_to_submit_page = new Intent(Activity_Incident_Details_Input.this, Submitted_Details.class);
-                startActivity(go_to_submit_page);
+                String HazardName = HazardName_Input.getText().toString();
+                String HazardAddress = HazardAddress_Input.getText().toString();
+                String HazardDescription =  HazardDescription_Input.getText().toString();
+                String HazardType =  HazardTypeDropDownMenu.getSelectedItem().toString();
+
+
                 Log.d("Submit Button", "User clicked submit details");
 
                 // obtain Hazard Name and pad to the right 15 spaces
@@ -307,22 +314,33 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 Log.d("Incident Log", incidentLog.recordLog());
 
 
-                // Create a HashMap with the header as keys and input as values
-                HashMap<String, Object> Send_database_details = new HashMap<>();
-                Send_database_details.put("HazardName_Input", HazardName_Input.getText().toString());
-                Send_database_details.put("HazardAddress_Input", HazardAddress_Input.getText().toString());
-                Send_database_details.put("HazardAddress_Lat", HazardAddress_LatLng.latitude);
-                Send_database_details.put("HazardAddress_Long", HazardAddress_LatLng.longitude);
-                Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
-                Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
+                // Check that user has input something
+                CheckUserInputs checker = new CheckUserInputs(HazardName,HazardAddress,HazardAddress_LatLng,HazardDescription,HazardType,imageFileNameInStorage);
+                String checked = checker.CheckAllUserInputs();
 
-                //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE (Lesson 5)
-                Send_database_details.put("HazardImage_Input", imageFileNameInStorage);
+                if(checked.equals("")){
+                    Intent go_to_submit_page = new Intent(Activity_Incident_Details_Input.this, Submitted_Details.class);
+                    startActivity(go_to_submit_page);
 
-                // Send the HashMap to Firebase
-                DatabaseReference nNodeRefPush = nNodeRefInputDetails.push();
-                nNodeRefPush.setValue(Send_database_details);
+                    // Create a HashMap with the header as keys and input as values
+                    HashMap<String, Object> Send_database_details = new HashMap<>();
+                    Send_database_details.put("HazardName_Input", HazardName_Input.getText().toString());
+                    Send_database_details.put("HazardAddress_Input", HazardAddress_Input.getText().toString());
+                    Send_database_details.put("HazardAddress_Lat", HazardAddress_LatLng.latitude);
+                    Send_database_details.put("HazardAddress_Long", HazardAddress_LatLng.longitude);
+                    Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
+                    Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
 
+                    //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE (Lesson 5)
+                    Send_database_details.put("HazardImage_Input", imageFileNameInStorage);
+
+                    // Send the HashMap to Firebase
+                    DatabaseReference nNodeRefPush = nNodeRefInputDetails.push();
+                    nNodeRefPush.setValue(Send_database_details);
+                }
+                else {
+                    Toast.makeText(Activity_Incident_Details_Input.this, "Please input " + checked, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
