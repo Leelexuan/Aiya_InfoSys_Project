@@ -104,12 +104,16 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
             }
         });
 
+        // Within app bar, there is a log in button (repurposed to refresh), we want to address it so we instantiate
+
+
         // Once everything is instantiated, add the app_bar layout to the container meant for app bar to the MainActivity's layout
         appbarContainer = findViewById(R.id.appbar);
         appbarContainer.addView(app_bar, 0);
 
 
-        //sets gmap
+
+        // sets gmap
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
