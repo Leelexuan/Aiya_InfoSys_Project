@@ -48,7 +48,18 @@ public abstract class UserInput {
     }
 
     public static boolean inputequals(String input1, String input2){
-        //Check if passwords inputs are of the same value//
+        /*DESCRIPTION
+         * This method checks if the user password and confirm_password entered in the
+         * sign up page matches.
+         *
+         * INPUTS:
+         * String password from EditText widget sign up activity
+         * String confirm_password from EditText widget sign up activity
+         *
+         * OUTPUT:
+         * boolean true: password matches
+         * boolean false: password does not match
+         * */
         Log.d("USER INPUT", "checking password and confirm_password");
         return input1.equals(input2); // returns either true or false.
     }
