@@ -1,40 +1,38 @@
 package Accounts;
 
+import java.util.ArrayList;
+
 // template design pattern to build an Account from the inputs.
 public abstract class Account {
-    void prepareAccount() {
-        String email = getEmail();
-        String password = getPassword();
-        // TODO: generate unique user id if have time.
-        // TODO: add account to database.
-    }
-
-    abstract String getEmail();
-    abstract String getPassword();
-
+    abstract String comment(String comment);
 }
 
-class normalAccount extends Account{
-    @Override
-    String getEmail() {
-        return "Test";
-    }
+// each account inherits from Account and should implement the observer interface.
+class normalAccount extends Account implements Observer{
+    private ArrayList<Subject> incidents;
 
     @Override
-    String getPassword() {
-        return "Test";
+    String comment(String comment){return "Test";}
+
+    @Override
+    public void update(String message) {
+    }
+
+    // handles what happens to the normal account when we register the user.
+    public void upvote(){
+        // TODO register user to the subject (incident/hazard)
     }
 }
 
-class verifiedAccount extends Account{
+class verifiedAccount extends Account implements Observer{
     // this subclass is meant for official (government) accounts
     @Override
-    String getEmail() {
-        return "Test";
-    }
+    String comment(String comment){return "Test";}
 
     @Override
-    String getPassword() {
-        return "Test";
+    public void update(String message) {
+        // TODO should display a toast message about the incident that they are subscribed to here.
     }
+
+
 }
