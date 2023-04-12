@@ -1,5 +1,7 @@
 package com.example.aiya_test_3.incidents.Activities;
 
+import static com.example.aiya_test_3.BuildConfig.MAPS_API_KEY;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,8 +49,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Activity_Incident_Details_Input extends AppCompatActivity {
+
+    /*DESCRIPTION
+     * This is the activity class for the details input page.
+     * On this page, users will be able to key in data and upload hazards
+     *
+     *  There are a total of 6 items to input and they are all checked using the CheckIncidentUserInputs class for validity
+     * */
+
     private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
     private LinearLayout appbarContainer,inputdetailsContainer; // Linear layout means it is either horizontal or vertical, holds the respective name item
     private View app_bar,input_detail;
@@ -76,7 +87,6 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         setContentView(R.layout.activity_detail_input); // activity_forum layout does not have content, only containers
 
         // Bring in contents to fill up the containers, we do this by using inflater
-
         // Inflater is to bring another layout into this layout
         inflater = LayoutInflater.from(this);
 
@@ -112,7 +122,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                     }
                 }
 
-                String[] options = issueList; // This are the options for the dropdown option
+                String[] options = issueList; // These are the options for the dropdown option
                 ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(Activity_Incident_Details_Input.this, android.R.layout.simple_spinner_item, options); // Add options to spinner
 
                 Spinner HazardTypeDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
@@ -174,7 +184,6 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
-            //Todo UI: Input the radio button icons with visibility change
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
@@ -203,7 +212,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Uri photoUri = result.getData().getData();
-                        StorageReference imageRef = storageRef.child(filename);
+                        StorageReference imageRef = storageRef.child(filename); // Upload photos to Firebase Storage
                         imageRef.putFile(photoUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -217,8 +226,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                             }
                         });
 
-
-                        //display user input
+                        //display user input in an imageView
                         ImageView uploaded_photo = input_detail.findViewById(R.id.uploadedPhotoImage);
                         uploaded_photo.setImageURI(photoUri);
                         uploaded_photo.setVisibility(View.VISIBLE);
@@ -228,7 +236,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
 
         );
 
-
+        // When user click the submit button, launch the photo gallery
         Button submitPicture = input_detail.findViewById(R.id.uploadPhotoBtn);
         submitPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -248,10 +256,6 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         final String hazardDetailsNode = "Hazard_Details";
         nNodeRefInputDetails = nRootDatabaseRef.child(hazardDetailsNode);
 
-        // Firebase Storage (For images and all form of data, can think of it like google drive)
-        storageDatabaseRef = FirebaseStorage.getInstance();
-        storageRef = storageDatabaseRef.getReference();
-
         // All the different inputs from the user are being initiated here
         Button submitHazard = input_detail.findViewById(R.id.submitHazardBtn);
         EditText HazardName_Input = input_detail.findViewById(R.id.editText_HazardName);
@@ -259,7 +263,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         EditText HazardDescription_Input = input_detail.findViewById(R.id.editText_HazardDescriptionMultiLine);
 
         // Initialise places
-        String MAPS_API = "AIzaSyDnIVT6BNvi2ANiKaoYhmteP3WaSGjbuOI";
+        String MAPS_API = MAPS_API_KEY;
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), MAPS_API);
         }
@@ -273,22 +277,22 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                         Intent data = result.getData();
                         Place place = Autocomplete.getPlaceFromIntent(data);
                         Log.d("Place",place.getAddress());
-                        Log.d("Place LatLng",place.getLatLng().toString());
-                        HazardAddress_Input.setText(place.getAddress());
+                        Log.d("Place LatLng", Objects.requireNonNull(place.getLatLng()).toString());
+                        String AddressString = place.getName() + " ( " + place.getAddress() + " ) ";
+                        HazardAddress_Input.setText(AddressString);
                         HazardAddress_LatLng = place.getLatLng();
                     }
                 });
 
-        // Set click listener for HazardAddress_Input EditText
+        // Set click listener for HazardAddress_Input EditText to open up places client
         HazardAddress_Input.setOnClickListener(v -> {
-            List<Place.Field> field = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+            List<Place.Field> field = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
             Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, field)
                     .build(Activity_Incident_Details_Input.this);
             launcher.launch(intent); // Use the launcher to start the activity
         });
 
-
-
+        // Set click listener when user submit
         submitHazard.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -297,24 +301,22 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 String HazardDescription =  HazardDescription_Input.getText().toString();
                 String HazardType =  HazardTypeDropDownMenu.getSelectedItem().toString();
 
-
                 Log.d("Submit Button", "User clicked submit details");
 
                 // obtain Hazard Name and pad to the right 15 spaces
-                String hazardName = String.format("%-15s", HazardName_Input.getText().toString());
-                String hazardAddress = String.format("%-15s", HazardAddress_Input.getText().toString());
+                String formattedHazardName = String.format("%-15s", HazardName);
+                String formattedHazardAddress = String.format("%-15s", HazardAddress);
 
                 // getting the current date
                 String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
                 // documenting the incident into the incident log.
-                incidentLog.INFO("|" + String.format("%-12s", date) + "|" + hazardName + "|" + hazardAddress + "|");
+                incidentLog.INFO("|" + String.format("%-12s", date) + "|" + formattedHazardName + "|" + formattedHazardAddress + "|");
 
                 // record the incident documentation into logcat.
                 Log.d("Incident Log", incidentLog.returnIncidents());
 
-
-                // Check that user has input something
+                // Check that user has input details and that the string is not empty
                 CheckIncidentUserInputs checker = new CheckIncidentUserInputs(HazardName,HazardAddress,HazardAddress_LatLng,HazardDescription,HazardType,imageFileNameInStorage);
                 String checked = checker.CheckAllUserInputs();
 

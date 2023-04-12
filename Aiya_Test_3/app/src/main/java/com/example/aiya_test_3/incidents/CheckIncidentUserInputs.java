@@ -48,7 +48,6 @@ public class CheckIncidentUserInputs extends UserInput {
     public boolean CheckHazardNameInput(){
         return HazardName.equals("");
     }
-
     public boolean CheckHazardAddress(){
         return HazardAddress.equals("");
     }
@@ -58,11 +57,9 @@ public class CheckIncidentUserInputs extends UserInput {
     public boolean CheckHazardDescription_Input(){
         return HazardDescription_Input.equals("");
     }
-
     public boolean CheckHazardType_Input(){
         return HazardType_Input.equals("");
     }
-
     public boolean CheckHazardImage_Input(){
         return HazardImage_Input.equals("");
     }

@@ -43,6 +43,24 @@ import com.google.firebase.database.DatabaseReference;
 
 public class Activity_Incidents extends AppCompatActivity implements SearchView.OnQueryTextListener, OnMapReadyCallback, OnMapsSdkInitializedCallback {
 
+    /*DESCRIPTION
+     * This is the activity class for the incident forum page.
+     * On this page, at the top there is an app bar with the following features
+     * - An ImageButton to Login
+     * - An ImageButton to Add Incidents
+     * - An ImageButton to Refresh Page (Not Implemented)
+     * - A search bar that searches all the recycler view cards
+     *
+     * Right below the app bar is a custom map powered by google maps. The maps have the following feature
+     * - Custom self-made hazard icons displayed on the map at the location of the hazard
+     *
+     * Finally, below that, we have the forum of hazards displayed using a recycler view with the following features
+     * - Expanding and minimizing of card to show or hide hazards
+     * - Card shows an image of the hazard pulled from a firebase storage
+     * - Card shows the hazard title, location and details pulled from a firebase real time database
+     * - Upvote button to attract attention (Not implemented)
+     * */
+
     // Instantiation of attributes and views //
     private SearchView searchView;    // Component for search bar
     private LayoutInflater inflater; // To instantiate a layout (use this to have more than 1 layout for every activity)
@@ -67,24 +85,6 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     @Override
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
         super.onCreate(savedInstanceState);
-
-        /*DESCRIPTION
-         * This is the activity class for the incident forum page.
-         * On this page, at the top there is an app bar with the following features
-         * - An ImageButton to Login
-         * - An ImageButton to Add Incidents
-         * - An ImageButton to Refresh Page (Not Implemented)
-         * - A search bar that searches all the recycler view cards
-         *
-         * Right below the app bar is a custom map powered by google maps. The maps have the following feature
-         * - Custom self-made hazard icons displayed on the map at the location of the hazard
-         *
-         * Finally, below that, we have the forum of hazards displayed using a recycler view with the following features
-         * - Expanding and minimizing of card to show or hide hazards
-         * - Card shows an image of the hazard pulled from a firebase storage
-         * - Card shows the hazard title, location and details pulled from a firebase real time database
-         * - Upvote button to attract attention (Not implemented)
-         * */
 
         // Inform the maps to use Latest renderer
         // This is so that we can use the cloud-based map styling instead of local styling
@@ -231,15 +231,17 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     // =======================================================================================
     @Override
     public boolean onQueryTextSubmit(String query) {
-        cardDataSource.rebuild_list(query); // Rebuild and filter the list based on the
-        adapter.getItemCount();
-        revisedCardContainer.setAdapter(null);
+        cardDataSource.rebuild_list(query); // Rebuild and filter the list of items obtained from the database based on the search query
+        adapter.getItemCount(); // recount the number of items in the list
+        revisedCardContainer.setAdapter(null); // reset the adapter to null
         revisedCardContainer.setLayoutManager(null);
-        revisedCardContainer.setAdapter(adapter);
+        revisedCardContainer.setAdapter(adapter); // set the adapter again with the revised list
         revisedCardContainer.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
         return true;
     }
+
+    // We use onQueryTextChange to detect when player has cancelled their search query
     @Override
     public boolean onQueryTextChange(String query) {
         if (searchView.getQuery().length() == 0) {
@@ -253,18 +255,28 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         }
         return false;
     }
+
+
+    // Methods for map usage
+
+    // when the map is ready
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        // Notify the log that the mpa is ready
         mMap = googleMap;
-        // Add bitmap marker
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) getDrawable(R.drawable.lamp_post);
-        Bitmap bitmap = bitmapDrawable.getBitmap();
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
         Log.d("Map Created", "Created");
     }
 
     @Override
     public void onMapsSdkInitialized(MapsInitializer.Renderer renderer) {
+
+        // Checking in logcat whether the user is using the latest ver of renderer
+        // This affects the map styling
+        // Phone Requirements:
+        // Android 5.0 (API level 21) or later (Our app is built for API 30)
+        // 2 GB or more storage
+        // Using Google Play Service Ver 21.39.14 or later
+
         switch (renderer) {
             case LATEST:
                 Log.d("MapsDemo", "The latest version of the renderer is used.");
@@ -277,6 +289,8 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
     // Adding unique markers
     public void addNewMarkers(){
+
+        // Adding the markers into the map
 
         for(int index = 0; index < cardDataSource.numberOfIncident(); index++){
 
