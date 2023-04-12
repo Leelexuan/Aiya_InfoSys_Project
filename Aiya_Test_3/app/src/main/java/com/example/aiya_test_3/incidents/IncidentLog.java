@@ -1,8 +1,21 @@
 package com.example.aiya_test_3.incidents;
 
 public class IncidentLog {
-    // this class implements the singleton (creational) design pattern
-    // purpose: tracking of incidents to ensure accountability.
+    /*DESCRIPTION
+     * The purpose of the IncidentLog is to record all status changes to an incident.
+     * Eg: Incident creation, Incident resolution or updates (by NEA).
+     *
+     * This class applies the singleton (creational) design pattern by creating only on instance
+     * of the IncidentLog locally. The reason for this pattern is to ensure that the statuses of
+     * incidents are changed in a linear fashion.
+     *
+     * (Yet to be implemented) In the android lifecycle, onDestroy() should upload the incident log
+     * to the database for documentation.
+     *
+     * METHODS:
+     * INFO: records down a status change (upload, update or resolution etc) in the incidents.
+     * returnIncidents: return the entire log (should be called onDestroy of the android lifecycle)
+     * */
 
     private static IncidentLog instance = null;
     private String log = "";
@@ -28,7 +41,7 @@ public class IncidentLog {
         log += "\n" + msg; // log activities down.
     }
 
-    public String recordLog(){
+    public String returnIncidents(){
         return log;
     }
 }

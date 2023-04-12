@@ -1,40 +1,53 @@
 package Accounts;
 
+import com.example.aiya_test_3.incidents.IncidentLog;
+
+import java.util.ArrayList;
+
 // template design pattern to build an Account from the inputs.
 public abstract class Account {
-    void prepareAccount() {
-        String email = getEmail();
-        String password = getPassword();
-        // TODO: generate unique user id if have time.
-        // TODO: add account to database.
-    }
-
-    abstract String getEmail();
-    abstract String getPassword();
-
+    abstract void comment(String comment);
 }
 
-class normalAccount extends Account{
+// each account inherits from Account and should implement the observer interface.
+class normalAccount extends Account implements Observer{
+    private ArrayList<Subject> incidents;
+
     @Override
-    String getEmail() {
-        return "Test";
+    void comment(String comment){
+
     }
 
     @Override
-    String getPassword() {
-        return "Test";
+    public void update(String message) {
+        // TODO should display a toast message about the incident that they are subscribed to here.
+    }
+
+    // handles what happens to the normal account when we register the user.
+    public void upvote(Subject incident){
+        // TODO register user to the subject (incident/hazard)
+        incidents.add(incident);
+    }
+
+    normalAccount(ArrayList<Subject> incidents){
+        // instantiate incidents that this account is subscribed to - TODO get incidents from DATABASE
+        this.incidents = incidents;
     }
 }
 
 class verifiedAccount extends Account{
     // this subclass is meant for official (government) accounts
     @Override
-    String getEmail() {
-        return "Test";
+    void comment(String comment){
+        // expecting to comment (should add a VERIFIED MESSAGE in front to distinguish the verified users.
     }
 
-    @Override
-    String getPassword() {
-        return "Test";
+    // polymorphism - same method name but do different things.
+    public void update(String date, String hazardName, String message) {
+        IncidentLog incidentLog = IncidentLog.getInstance();
+        String updateMessage = "|" + String.format("%-12s", date) + "|" + hazardName + "|" + message + "|";
+        incidentLog.INFO(updateMessage);
+
+        //TODO DATABASE send message to user account.
     }
 }
