@@ -67,10 +67,16 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     @Override
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
         super.onCreate(savedInstanceState);
+
+        // Inform the maps to use Latest renderer
+        // This is so that we can use the cloud-based map styling instead of local styling
+        // This is better as local styling will require the user to "update" the app every time we want the map style to change
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, this);
+
+        // Initialising Firebase Data
+        // This allows us to get the firebase data as quickly as possible by making it the first thing to be loaded
         cardDataSource = new firebaseCardSource();
 
-        // Todo Design Pattern: Rewrite entire forum code using recycler view (low priority)(Lesson 4) [Darren]
         // main layout for this page
         setContentView(R.layout.activity_forum); // activity_forum layout does not have content, only containers
 
@@ -105,19 +111,20 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         });
 
         // Within app bar, there is a log in button (repurposed to refresh), we want to address it so we instantiate
-
+        // TODO: Repurpose button to refresh
 
         // Once everything is instantiated, add the app_bar layout to the container meant for app bar to the MainActivity's layout
         appbarContainer = findViewById(R.id.appbar);
         appbarContainer.addView(app_bar, 0);
-
-
 
         // sets gmap
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
+        // This is here to run on UI thread as we notice that there is an issue for google maps (not fatal)
+        // Link to issue : https://issuetracker.google.com/issues/228091313
+        // This is the apparent fix
         Activity_Incidents.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -125,20 +132,20 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
             }
         });
 
-
         // We want to generate in the cards for the forum pages automatically
-        // Recycler View
+        // We use recycler view to save on memory
+
         // Inflate the card_view.xml layout
         cardView = inflater.inflate(R.layout.card_view, null);
         revisedCardContainer = findViewById(R.id.revisedCardContainer);
         cardContent = cardView.findViewById(R.id.card_content);
         cardTextView = cardContent.findViewById(R.id.hazardDescription);
 
-        //cardDataSource cardDataSource = new LocalCardData(cardTextView);//
-        cardDataSource = new firebaseCardSource();
-        adapter = new CardAdapter(this, cardDataSource);
-        revisedCardContainer.setAdapter( adapter );
+        adapter = new CardAdapter(this, cardDataSource); // Here we initialize the recycler view adapter with the card data
+        revisedCardContainer.setAdapter( adapter ); // Then we set the adapter
         revisedCardContainer.setLayoutManager( new LinearLayoutManager(this));
+
+        // Initialising the searchbar
         searchView = app_bar.findViewById(R.id.SearchBar);
         searchView.setOnQueryTextListener(this);
     }
@@ -196,6 +203,9 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     }
     // =======================================================================================
 
+    // Search Bar Method
+    // How it works is that we remove the items that are not in the search query and then reload
+    // the adapter
     @Override
     public boolean onQueryTextSubmit(String query) {
         cardDataSource.rebuild_list(query);
