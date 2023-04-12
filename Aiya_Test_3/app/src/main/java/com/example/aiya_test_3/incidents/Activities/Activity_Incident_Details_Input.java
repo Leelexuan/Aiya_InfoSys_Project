@@ -252,7 +252,6 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         storageRef = storageDatabaseRef.getReference();
 
         // All the different inputs from the user are being initiated here
-        // Todo Design Pattern: To rewrite using template/builder pattern (Lesson 3)
         Button submitHazard = input_detail.findViewById(R.id.submitHazardBtn);
         EditText HazardName_Input = input_detail.findViewById(R.id.editText_HazardName);
         EditText HazardAddress_Input = input_detail.findViewById(R.id.editText_PostalAddress);
