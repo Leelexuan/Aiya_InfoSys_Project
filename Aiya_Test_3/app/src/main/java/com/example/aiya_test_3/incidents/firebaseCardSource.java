@@ -182,17 +182,15 @@ public class firebaseCardSource implements cardDataSource {
     public boolean isInitialDataReadyFlag() {
         return initialDataReadyFlag;
     }
-
     public long numberOfIncident(){ return numberOfIncident; }
-
-    public void addWord(String s){
-        nNodeRef.push().setValue(s);
-        Log.d(FIREBASE_TESTING, "add word size " + size);
-    }
-
     public String getHazardName(int i){
         return hazardNameList.get(i);
     }
+
+    @Override
+    public void addWord(String s) {
+    }
+
     public String getHazardDescription(int i){
         return hazardDescriptionList.get(i);
     }
@@ -200,7 +198,6 @@ public class firebaseCardSource implements cardDataSource {
     public String getHazardAddress(int i){
         return hazardAddressList.get(i);
     }
-
     public LatLng getHazardLatLng(int i) {
         LatLng HazardLatLng = new LatLng(hazardLatList.get(i),hazardLngList.get(i));
         return HazardLatLng;

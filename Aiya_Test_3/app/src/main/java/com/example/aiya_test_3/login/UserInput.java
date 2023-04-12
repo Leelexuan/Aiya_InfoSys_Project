@@ -71,5 +71,7 @@ public abstract class UserInput {
         return true;
     }
 
+    abstract public String CheckAllUserInputs();
+
 }
 

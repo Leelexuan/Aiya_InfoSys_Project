@@ -68,6 +68,24 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     protected void onCreate(Bundle savedInstanceState) { // First thing that runs when you open activity
         super.onCreate(savedInstanceState);
 
+        /*DESCRIPTION
+         * This is the activity class for the incident forum page.
+         * On this page, at the top there is an app bar with the following features
+         * - An ImageButton to Login
+         * - An ImageButton to Add Incidents
+         * - An ImageButton to Refresh Page (Not Implemented)
+         * - A search bar that searches all the recycler view cards
+         *
+         * Right below the app bar is a custom map powered by google maps. The maps have the following feature
+         * - Custom self-made hazard icons displayed on the map at the location of the hazard
+         *
+         * Finally, below that, we have the forum of hazards displayed using a recycler view with the following features
+         * - Expanding and minimizing of card to show or hide hazards
+         * - Card shows an image of the hazard pulled from a firebase storage
+         * - Card shows the hazard title, location and details pulled from a firebase real time database
+         * - Upvote button to attract attention (Not implemented)
+         * */
+
         // Inform the maps to use Latest renderer
         // This is so that we can use the cloud-based map styling instead of local styling
         // This is better as local styling will require the user to "update" the app every time we want the map style to change
@@ -165,13 +183,14 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
             if(cardDataSource.isInitialDataReadyFlag() == false){
             // Schedule the next refresh after a delay (in milliseconds)
-                handler.postDelayed(this, 0); // 5000 milliseconds = 5 seconds
+                handler.postDelayed(this, 0);
             }
             else{
+
+                // We want it to stop refreshing once we got the data
                 cardDataSource.buildOriginalList();
                 Log.d("Refresh","Stop Refresh");
                 handler.removeCallbacks(refreshRunnable);
-
             }
         }
     };
@@ -183,8 +202,9 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
         // Call the refresh method here to initially load data
         refreshData();
+
         // Schedule the first refresh after a delay (in milliseconds)
-        handler.postDelayed(refreshRunnable, 5000); // 5000 milliseconds = 5 seconds
+        handler.postDelayed(refreshRunnable, 0);
     }
 
     // Stop auto-refresh when the Activity stops
@@ -199,16 +219,19 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     public void refreshData() {
         // Notify adapter that data has changed
         adapter.notifyDataSetChanged();
+
+        // Add the map markers
         addNewMarkers();
     }
     // =======================================================================================
 
     // Search Bar Method
     // How it works is that we remove the items that are not in the search query and then reload
-    // the adapter
+    // the adapter and refresh to have the updated list
+    // =======================================================================================
     @Override
     public boolean onQueryTextSubmit(String query) {
-        cardDataSource.rebuild_list(query);
+        cardDataSource.rebuild_list(query); // Rebuild and filter the list based on the
         adapter.getItemCount();
         revisedCardContainer.setAdapter(null);
         revisedCardContainer.setLayoutManager(null);
@@ -252,6 +275,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         }
     }
 
+    // Adding unique markers
     public void addNewMarkers(){
 
         for(int index = 0; index < cardDataSource.numberOfIncident(); index++){

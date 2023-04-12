@@ -1,9 +1,9 @@
 package com.example.aiya_test_3.incidents;
 
+import com.example.aiya_test_3.login.UserInput;
 import com.google.android.gms.maps.model.LatLng;
 
-public class CheckUserInputs {
-
+public class CheckIncidentUserInputs extends UserInput {
 
     String HazardName;
     String HazardAddress;
@@ -12,7 +12,7 @@ public class CheckUserInputs {
     String HazardType_Input;
     String HazardImage_Input;
 
-    public CheckUserInputs(String HazardName, String HazardAddress, LatLng HazardAddress_LatLng, String HazardDescription_Input, String HazardType_Input, String HazardImage_Input) {
+    public CheckIncidentUserInputs(String HazardName, String HazardAddress, LatLng HazardAddress_LatLng, String HazardDescription_Input, String HazardType_Input, String HazardImage_Input) {
         this.HazardName = HazardName;
         this.HazardAddress = HazardAddress;
         this.HazardAddress_LatLng = HazardAddress_LatLng;
@@ -21,6 +21,7 @@ public class CheckUserInputs {
         this.HazardImage_Input = HazardImage_Input;
     }
 
+    @Override
     public String CheckAllUserInputs(){
         if (CheckHazardNameInput()) {
             return "HazardName";

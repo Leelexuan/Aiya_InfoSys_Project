@@ -22,7 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aiya_test_3.R;
-import com.example.aiya_test_3.incidents.CheckUserInputs;
+import com.example.aiya_test_3.incidents.CheckIncidentUserInputs;
 import com.example.aiya_test_3.incidents.IncidentLog;
 import com.example.aiya_test_3.incidents.Submitted_Details;
 import com.google.android.gms.maps.model.LatLng;
@@ -71,6 +71,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // main layout for this page
         setContentView(R.layout.activity_detail_input); // activity_forum layout does not have content, only containers
 
@@ -315,7 +316,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
 
 
                 // Check that user has input something
-                CheckUserInputs checker = new CheckUserInputs(HazardName,HazardAddress,HazardAddress_LatLng,HazardDescription,HazardType,imageFileNameInStorage);
+                CheckIncidentUserInputs checker = new CheckIncidentUserInputs(HazardName,HazardAddress,HazardAddress_LatLng,HazardDescription,HazardType,imageFileNameInStorage);
                 String checked = checker.CheckAllUserInputs();
 
                 if(checked.equals("")){
@@ -330,8 +331,6 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                     Send_database_details.put("HazardAddress_Long", HazardAddress_LatLng.longitude);
                     Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
                     Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
-
-                    //Todo Database: Link firebase STORAGE image url to firebase REAL TIME DATABASE (Lesson 5)
                     Send_database_details.put("HazardImage_Input", imageFileNameInStorage);
 
                     // Send the HashMap to Firebase
