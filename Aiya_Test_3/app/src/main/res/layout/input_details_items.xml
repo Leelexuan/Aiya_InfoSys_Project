@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="212dp"
         android:fontFamily="@font/bobbyroughsoft"
-        android:text="Hazerd Type"
+        android:text="Hazard Type"
         android:textColor="#D44E52"
         android:textSize="16sp"
         android:textStyle="bold|italic"

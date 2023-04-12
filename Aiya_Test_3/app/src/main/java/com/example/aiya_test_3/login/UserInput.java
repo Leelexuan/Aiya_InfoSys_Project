@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-public class UserInput {
+public abstract class UserInput {
     /*DESCRIPTION
     * This class takes in inputs from the login page and checks if the user entered an acceptable value.
     * It does so by using a static method which can be accessed by every class.
