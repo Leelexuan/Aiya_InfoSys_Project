@@ -101,6 +101,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
                     String getClickedItemName = hazardName.getText().toString();
                     IncidentObject Incident =  data.getIncidentObjectbyName(getClickedItemName);
+                    //Accounts currentAccount = dataAccount.getAccountObject();
                     Incident.setUpvotes(Incident.getUpvotes()+1);
 
                     final String node = "Incident Objects";

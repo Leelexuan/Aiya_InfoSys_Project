@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class firebaseCardSource implements cardDataSource {
+public class firebaseRefreshCard extends firebaseCardSource {
 
     public static final String FIREBASE_TESTING = "FirebaseTesting";
     DatabaseReference nRootDatabaseRef, mRootDatabaseRef;
@@ -49,16 +49,16 @@ public class firebaseCardSource implements cardDataSource {
     ValueEventListener post2;
     boolean initialDataReadyFlag = false;
     final AtomicInteger numberOfIncident = new AtomicInteger();
+    String searcher;
 
-    public firebaseCardSource(){
+    public firebaseRefreshCard(String searcher){
 
         // Firebase Real-Time Database (Only for scalar data type e.g string, int, float)
         final String node = "Incident Objects";
         nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
         nNodeRef = nRootDatabaseRef.child(node);
-        recentPost = nNodeRef.limitToLast(5);
-        String searcher = "darren";
-        //recentPost = nNodeRef.orderByChild(searcher+"/hazardName_Input").equalTo(searcher);
+        this.searcher = searcher;
+        recentPost = nNodeRef.orderByChild(searcher+"/hazardName_Input").equalTo(searcher);
 
         // Firebase Storage (For images and all form of data, can think of it like google drive)
         storageDatabaseRef = FirebaseStorage.getInstance();
@@ -116,6 +116,7 @@ public class firebaseCardSource implements cardDataSource {
             }
         });
     }
+
 
     private void countListItems(DataSnapshot snapshot){
         size = (int) snapshot.getChildrenCount();
@@ -233,9 +234,4 @@ public class firebaseCardSource implements cardDataSource {
     }
 }
 
-class getDataFromFirebase implements Runnable{
 
-    @Override
-    public void run(){
-    }
-}

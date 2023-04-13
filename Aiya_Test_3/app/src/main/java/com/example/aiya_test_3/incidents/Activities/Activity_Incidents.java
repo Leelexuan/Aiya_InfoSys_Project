@@ -27,6 +27,7 @@ import java.util.List;
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.CardAdapter;
 import com.example.aiya_test_3.incidents.firebaseCardSource;
+import com.example.aiya_test_3.incidents.firebaseRefreshCard;
 import com.example.aiya_test_3.login.Activities.Activity_Logout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -229,13 +230,13 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     // =======================================================================================
     @Override
     public boolean onQueryTextSubmit(String query) {
-        cardDataSource.rebuild_list(query); // Rebuild and filter the list of items obtained from the database based on the search query
-        adapter.getItemCount(); // recount the number of items in the list
+        cardDataSource = new firebaseRefreshCard(query);
+        handler.postDelayed(refreshRunnable, 0);
+        adapter = new CardAdapter(this, cardDataSource); // Here we initialize the recycler view adapter with the card data
         revisedCardContainer.setAdapter(null); // reset the adapter to null
         revisedCardContainer.setLayoutManager(null);
         revisedCardContainer.setAdapter(adapter); // set the adapter again with the revised list
         revisedCardContainer.setLayoutManager(new LinearLayoutManager(this));
-        adapter.notifyDataSetChanged();
         return true;
     }
 
@@ -243,13 +244,13 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     @Override
     public boolean onQueryTextChange(String query) {
         if (searchView.getQuery().length() == 0) {
-            cardDataSource.rebuild_list(query);
-            adapter.getItemCount();
-            revisedCardContainer.setAdapter(null);
+            cardDataSource = new firebaseCardSource();
+            handler.postDelayed(refreshRunnable, 0);
+            adapter = new CardAdapter(this, cardDataSource); // Here we initialize the recycler view adapter with the card data
+            revisedCardContainer.setAdapter(null); // reset the adapter to null
             revisedCardContainer.setLayoutManager(null);
-            revisedCardContainer.setAdapter(adapter);
+            revisedCardContainer.setAdapter(adapter); // set the adapter again with the revised list
             revisedCardContainer.setLayoutManager(new LinearLayoutManager(this));
-            adapter.notifyDataSetChanged();
         }
         return false;
     }
