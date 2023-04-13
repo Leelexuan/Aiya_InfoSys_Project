@@ -47,6 +47,7 @@ public class firebaseCardSource implements cardDataSource {
     List<IncidentObject> IncidentObjectsList;
     ChildEventListener post;
     ValueEventListener post2;
+    String searcher;
     boolean initialDataReadyFlag = false;
     final AtomicInteger numberOfIncident = new AtomicInteger();
 
@@ -57,8 +58,73 @@ public class firebaseCardSource implements cardDataSource {
         nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
         nNodeRef = nRootDatabaseRef.child(node);
         recentPost = nNodeRef.limitToLast(5);
-        String searcher = "darren";
+
+        // Firebase Storage (For images and all form of data, can think of it like google drive)
+        storageDatabaseRef = FirebaseStorage.getInstance();
+        storageRef = storageDatabaseRef.getReference();
+
+        hazardDescriptionList = new ArrayList<>();
+        hazardNameList = new ArrayList<>();
+        hazardTypeList = new ArrayList<>();
+        hazardAddressList = new ArrayList<>();
+        hazardLatList = new ArrayList<>();
+        hazardLngList = new ArrayList<>();
+        hazardImageList = new ArrayList<>();
+        IncidentObjectsList = new ArrayList<>();
+
+        post2 = recentPost.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                countListItems(snapshot);
+
+            }
+            //
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+//
+            }
+        });
+
+        post = recentPost.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                int count = numberOfIncident.incrementAndGet();
+                Log.d("CheckPoint 1", "Started");
+                repopulateList(snapshot);
+                initialDataReadyFlag = true;
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public firebaseCardSource(String searcher){
+
+        // Firebase Real-Time Database (Only for scalar data type e.g string, int, float)
+        final String node = "Incident Objects";
+        nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        nNodeRef = nRootDatabaseRef.child(node);
+        this.searcher = searcher;
         //recentPost = nNodeRef.orderByChild(searcher+"/hazardName_Input").equalTo(searcher);
+        recentPost = nNodeRef.orderByChild("Incident/upvotes").equalTo(searcher);
 
         // Firebase Storage (For images and all form of data, can think of it like google drive)
         storageDatabaseRef = FirebaseStorage.getInstance();

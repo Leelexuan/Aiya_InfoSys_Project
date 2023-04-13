@@ -46,7 +46,7 @@ public class IncidentObject {
         nNodeRefInputDetails = nRootDatabaseRef.child(hazardDetailsNode);
         HashMap<String, IncidentObject> Send_database_details = new HashMap<>();
 
-        Send_database_details.put(HazardName_Input, new IncidentObject(HazardName_Input, HazardAddress_Input, HazardAddress_Lat, HazardAddress_Long, HazardDescription_Input, HazardType_Input,  HazardImage_Input));
+        Send_database_details.put("Incident", new IncidentObject(HazardName_Input, HazardAddress_Input, HazardAddress_Lat, HazardAddress_Long, HazardDescription_Input, HazardType_Input,  HazardImage_Input));
         DatabaseReference nNodeRefPush = nNodeRefInputDetails.push();
         nNodeRefPush.setValue(Send_database_details);
     }

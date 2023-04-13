@@ -106,7 +106,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
                     final String node = "Incident Objects";
                     nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
-                    nNodeRef = nRootDatabaseRef.child(node).child(Incident.getHazardID()).child(Incident.getHazardName_Input());
+                    nNodeRef = nRootDatabaseRef.child(node).child(Incident.getHazardID()).child("Incident");
                     nNodeRef.runTransaction(new Transaction.Handler() {
                         @Override
                         public Transaction.Result doTransaction(MutableData mutableData) {

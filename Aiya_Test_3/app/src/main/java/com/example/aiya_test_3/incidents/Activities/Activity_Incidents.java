@@ -230,7 +230,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     // =======================================================================================
     @Override
     public boolean onQueryTextSubmit(String query) {
-        cardDataSource = new firebaseRefreshCard(query);
+        cardDataSource = new firebaseCardSource(query);
         handler.postDelayed(refreshRunnable, 0);
         adapter = new CardAdapter(this, cardDataSource); // Here we initialize the recycler view adapter with the card data
         revisedCardContainer.setAdapter(null); // reset the adapter to null
