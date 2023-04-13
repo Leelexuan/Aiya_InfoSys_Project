@@ -37,12 +37,11 @@
 
         <ScrollView
             android:id="@+id/scrollView2"
-            android:layout_width="333dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="60dp"
-            app:layout_constraintBottom_toTopOf="@+id/hazardPicture"
+            android:layout_width="339dp"
+            android:layout_height="73dp"
+            android:layout_marginTop="80dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.609"
+            app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -56,6 +55,9 @@
                 vulputate felis sed, malesuada dolor. Nunc et massa viverra, tincidunt tellus ac, porttitor sapien.
                 Phasellus et risus sagittis, aliquam magna vel, vestibulum libero.  Morbi fringilla velit at nisi vestibulum, at bibendum odio
                 ultrices. Ut a lorem in metus maximus porta."
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -70,6 +72,7 @@
             android:layout_height="wrap_content"
             android:text="Title"
             android:textAlignment="viewStart"
+            android:textAllCaps="true"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/scrollView2"
@@ -82,13 +85,13 @@
 
         <TextView
             android:id="@+id/hazardAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="290dp"
+            android:layout_height="34dp"
             android:layout_marginBottom="14dp"
             android:text="Hazard Address"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/upvote"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/hazardName"
@@ -107,7 +110,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_bias="0.04"
             app:srcCompat="@drawable/upvote" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

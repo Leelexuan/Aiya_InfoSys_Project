@@ -173,6 +173,20 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     // This entire code block is for that
     // =======================================================================================
     private Handler handler = new Handler();
+
+    private Runnable checkOnClickCard = new Runnable() {
+        @Override
+        public void run() {
+
+            if(adapter.isClicked()){
+                LatLng LastClickedLocation = adapter.getClickedCardPosition();
+                moveMap(LastClickedLocation);
+                adapter.setClicked(false);
+            }
+            handler.postDelayed(checkOnClickCard, 0);
+        }
+    };
+
     private Runnable refreshRunnable = new Runnable() {
         @Override
         public void run() {
@@ -190,6 +204,12 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
                 cardDataSource.buildOriginalList();
                 Log.d("Refresh","Stop Refresh");
                 handler.removeCallbacks(refreshRunnable);
+                if(adapter.isClicked()){
+                    LatLng LastClickedLocation = adapter.getClickedCardPosition();
+                    moveMap(LastClickedLocation);
+                    handler.postDelayed(checkOnClickCard, 0);
+                    adapter.setClicked(false);
+                }
             }
         }
     };
@@ -201,8 +221,14 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
         // Call the refresh method here to initially load data
         refreshData();
-
         // Schedule the first refresh after a delay (in milliseconds)
+
+        if(adapter.isClicked()){
+            LatLng LastClickedLocation = adapter.getClickedCardPosition();
+            moveMap(LastClickedLocation);
+            adapter.setClicked(false);
+        }
+        handler.postDelayed(checkOnClickCard, 0);
         handler.postDelayed(refreshRunnable, 0);
     }
 
@@ -211,6 +237,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     protected void onStop() {
         super.onStop();
         // Remove any pending callbacks to stop the auto-refresh
+        handler.removeCallbacks(checkOnClickCard);
         handler.removeCallbacks(refreshRunnable);
     }
 
@@ -318,6 +345,10 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
                             .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(name, 15));
         }
+    }
+
+    public void moveMap(LatLng LastClickedLocation){
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LastClickedLocation, 15));
     }
 
     @Override

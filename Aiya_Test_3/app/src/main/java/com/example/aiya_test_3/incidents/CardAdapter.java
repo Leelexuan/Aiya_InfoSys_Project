@@ -20,7 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aiya_test_3.R;
+import com.example.aiya_test_3.incidents.Activities.Activity_Incidents;
 import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
+    private String LastClickPosition;
 
     LayoutInflater mInflater;
     Context context;
@@ -41,6 +44,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
     public int positionL = 0;
+    private boolean Clicked;
+
+    private Double hazardLat;
+    private Double hazardLng;
+    private LatLng hazardLatLng;
+
     public CardAdapter(Context context, firebaseCardSource data) {
         this.context = context;
         this.data = data;
@@ -56,7 +65,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         private View cardContent;
         int original_height = 0;
 
-        public static final int Fixed_Height = 400;
+        public static final int Fixed_Height = 450;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -89,7 +98,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleCard(cardView, original_height);
+                    toggleCard(cardView, original_height,hazardName);
                     Log.d("Card Created","Card Created");
                 }
             });
@@ -161,12 +170,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     int vHeight = 0; // instantiate card height
 
-    public void toggleCard(View view, int original_height) {
+    public void toggleCard(View view, int original_height, TextView hazardName) {
 
         vHeight = original_height; // instantiate card height
         int height = view.getMeasuredHeight();
         ValueAnimator cardAnimation;
         if (view.getMeasuredHeight() == Fixed_Height) {
+
+            // Jump to hazard location on map
+            LastClickPosition = hazardName.getText().toString();
+            Clicked = true;
+            setClickedCardPosition();
+
             // Card is minimized, expand it
             cardAnimation = ValueAnimator.ofInt(Fixed_Height, vHeight);
             cardAnimation.setDuration(500);
@@ -208,6 +223,30 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public void setClickedCardPosition(){
+
+        if(Clicked == true){
+            hazardLat = data.getIncidentObjectbyName(LastClickPosition).getHazardAddress_Lat();
+            hazardLng = data.getIncidentObjectbyName(LastClickPosition).getHazardAddress_Long();
+            hazardLatLng =  new LatLng(hazardLat,hazardLng);
+        }
+    }
+
+    public LatLng getClickedCardPosition(){
+
+        if(Clicked == true){
+            return hazardLatLng;
+        }
+        return null;
+    }
+    public boolean isClicked() {
+        return Clicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        Clicked = clicked;
     }
 }
 

@@ -11,7 +11,9 @@
     android:clickable="false"
     android:visibility="visible"
     android:clipChildren="false"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:background="?attr/colorOnPrimary"
+    >
 
     <!-- Map fragment in forum -->
 
@@ -24,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="?attr/colorOnPrimary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -38,7 +41,7 @@
 <!--        change this height to add height to map-->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp">
+            android:layout_height="300dp">
             <fragment
                 xmlns:map="http://schemas.android.com/apk/res-auto"
                 class="com.google.android.gms.maps.SupportMapFragment"

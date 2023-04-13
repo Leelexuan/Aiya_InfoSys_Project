@@ -123,8 +123,7 @@ public class firebaseCardSource implements cardDataSource {
         nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
         nNodeRef = nRootDatabaseRef.child(node);
         this.searcher = searcher;
-        //recentPost = nNodeRef.orderByChild(searcher+"/hazardName_Input").equalTo(searcher);
-        recentPost = nNodeRef.orderByChild("Incident/upvotes").equalTo(searcher);
+        recentPost = nNodeRef.orderByChild("Incident/hazardName_Input").equalTo(searcher);
 
         // Firebase Storage (For images and all form of data, can think of it like google drive)
         storageDatabaseRef = FirebaseStorage.getInstance();
