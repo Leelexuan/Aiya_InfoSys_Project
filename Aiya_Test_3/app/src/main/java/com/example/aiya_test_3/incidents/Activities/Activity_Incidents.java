@@ -128,8 +128,6 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
             }
         });
 
-        // Within app bar, there is a log in button (repurposed to refresh), we want to address it so we instantiate
-        // TODO: Repurpose button to refresh
 
         // Once everything is instantiated, add the app_bar layout to the container meant for app bar to the MainActivity's layout
         appbarContainer = findViewById(R.id.appbar);

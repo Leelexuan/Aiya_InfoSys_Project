@@ -4,21 +4,29 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
-public class IncidentObject {
+import Accounts.Observer;
+import Accounts.Subject;
 
+public class IncidentObject implements Subject {
+
+    private ArrayList<Observer> observers;
     private String HazardID;
-    private  String HazardName_Input;
-    private  String HazardAddress_Input;
-    private  LatLng HazardAddress_LatLng;
-    private  Double HazardAddress_Lat;
-    private  Double HazardAddress_Long;
-    private  String HazardDescription_Input;
-    private  String HazardType_Input;
-    private  String HazardImage_Input;
-    private  long upvotes;
+    private String HazardName_Input;
+    private String HazardAddress_Input;
+    private LatLng HazardAddress_LatLng;
+    private Double HazardAddress_Lat;
+    private Double HazardAddress_Long;
+    private String HazardDescription_Input;
+    private String HazardType_Input;
+    private String HazardImage_Input;
+    private long upvotes;
 
     DatabaseReference nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();;
     DatabaseReference nNodeRefInputDetails;
@@ -38,6 +46,7 @@ public class IncidentObject {
         this.HazardDescription_Input = HazardDescription_Input;
         this.HazardType_Input = HazardType_Input;
         this.HazardImage_Input = HazardImage_Input;
+        // TODO assign observers to the list of observers from the firebase.
         setUpvotes(1);
     }
 
@@ -60,6 +69,7 @@ public class IncidentObject {
     public void setHazardID(String hazardID) {
         HazardID = hazardID;
     }
+
     public String getHazardName_Input() {
         return HazardName_Input;
     }
@@ -120,6 +130,8 @@ public class IncidentObject {
         return HazardImage_Input;
     }
 
+    public ArrayList<Observer> getObservers() {return observers;}
+
     public void setHazardImage_Input(String hazardImage_Input) {
         HazardImage_Input = hazardImage_Input;
     }
@@ -132,5 +144,31 @@ public class IncidentObject {
         this.upvotes = upvotes;
     }
 
+    @Override
+    public void register(Observer o) { // this event should occur if the user upvotes an event.
+        // TODO DATABASE: get the list of users subscribe to this incident and assign to observers.
+        // eg: observer = getObservers(this) - get the list of users who subscribe to this incident.
+        // TODO obtain observer user id.
+        observers.add(o);
+        // TODO DATABASE: update real time firebase.
+    }
+
+    @Override // this event should occur when the user removes their upvote from this incident.
+    public void unregister(Observer o) {
+        // eg: observer = getObservers(this) - get the list of users who subscribe to this incident.
+        observers.remove(o);
+        // TODO DATABASE: update real time firebase.
+    }
+
+    @Override
+    public void notifyObserver(String message) {
+        // loop through all observers and update them.
+        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        for (Observer user: observers){
+            user.update(date, this.getHazardName_Input(), message); // this update method should send the message to the database
+            // the next time the user logs into their account, they will have receive an update about the incident.
+        }
+    }
 }
 

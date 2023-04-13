@@ -329,19 +329,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
 
                     IncidentObject NewIncident = new IncidentObject(HazardName,HazardAddress,HazardAddress_Lat, HazardAddress_Long,HazardDescription,HazardType,imageFileNameInStorage);
                     NewIncident.saveIncidentToDatabase();
-//                    // Create a HashMap with the header as keys and input as values
-//                    HashMap<String, Object> Send_database_details = new HashMap<>();
-//                    Send_database_details.put("HazardName_Input", HazardName_Input.getText().toString());
-//                    Send_database_details.put("HazardAddress_Input", HazardAddress_Input.getText().toString());
-//                    Send_database_details.put("HazardAddress_Lat", HazardAddress_LatLng.latitude);
-//                    Send_database_details.put("HazardAddress_Long", HazardAddress_LatLng.longitude);
-//                    Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
-//                    Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
-//                    Send_database_details.put("HazardImage_Input", imageFileNameInStorage);
-//
-//                    // Send the HashMap to Firebase
-//                    DatabaseReference nNodeRefPush = nNodeRefInputDetails.push();
-//                    nNodeRefPush.setValue(Send_database_details);
+
                 }
                 else {
                     Toast.makeText(Activity_Incident_Details_Input.this, "Please input " + checked, Toast.LENGTH_SHORT).show();
