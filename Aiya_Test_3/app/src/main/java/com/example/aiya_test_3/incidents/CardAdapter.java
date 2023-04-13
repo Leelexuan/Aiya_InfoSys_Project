@@ -68,7 +68,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             cardContent = itemView.findViewById(R.id.card_content);
             ImageButton upvote = itemView.findViewById(R.id.upvote);
 
-                    // Minimize initial cards
+            // Minimize initial cards
             // Here, we need to use this ViewTreeObserver and onGlobalLayout
             // Basically, we need to get original height of the card so that we can minimize and expand it
             // But we cannot get the original height in the constructor because the card havent been built yet
@@ -99,10 +99,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                 @Override
                 public void onClick(View v) {
 
-                    IncidentObject Incident =  data.getIncidentObject((int) getItemId());
-                    // Will not be able to handle search //TODO handle search
-                    // Before clicking upvote and after search, will be able to expand/min card
-                    // After clicking upvote and after search, it will crash if click expand/min card
+                    String getClickedItemName = hazardName.getText().toString();
+                    IncidentObject Incident =  data.getIncidentObjectbyName(getClickedItemName);
                     Incident.setUpvotes(Incident.getUpvotes()+1);
 
                     final String node = "Incident Objects";

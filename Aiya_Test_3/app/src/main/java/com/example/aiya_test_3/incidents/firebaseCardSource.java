@@ -275,6 +275,21 @@ public class firebaseCardSource implements cardDataSource {
     public IncidentObject getIncidentObject(int i) {
         return IncidentObjectsList.get(i);
     }
+
+    public IncidentObject getIncidentObjectbyName(String i) {
+
+        for (IncidentObject EachIncident : IncidentObjectsList){
+
+            if(EachIncident.getHazardName_Input().equals(i)){
+
+                return EachIncident;
+
+            }
+
+        }
+
+        return null;
+    }
 }
 
 class getDataFromFirebase implements Runnable{
