@@ -47,6 +47,16 @@ public abstract class UserInput {
         return true;
     }
 
+    public static boolean checkOfficial(String email){
+        // proof of concept, check if email is an NEA email
+        if (email.contains("@nea.gov.sg")){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public static boolean inputequals(String input1, String input2){
         /*DESCRIPTION
          * This method checks if the user password and confirm_password entered in the

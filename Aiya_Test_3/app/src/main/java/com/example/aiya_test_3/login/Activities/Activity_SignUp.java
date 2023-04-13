@@ -19,6 +19,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.HashMap;
+
+import Accounts.normalAccount;
+import Accounts.officialAccount;
+
 
 public class Activity_SignUp extends AppCompatActivity {
     // Declaring necessary widgets//
@@ -81,6 +88,8 @@ public class Activity_SignUp extends AppCompatActivity {
                 boolean passwordequals = signupuserInput.inputequals(passwordText, confirm_passwordText);
                 // Check if no account with same email already created (assuming we have our own local database)
                 boolean checkemail = signupuserInput.uniqueemail(usernameText);
+                // Check if account to be created is an official account
+                boolean officialaccount = signupuserInput.checkOfficial(usernameText);
 
                 // check acceptable inputs
                 if (verified){
@@ -91,7 +100,7 @@ public class Activity_SignUp extends AppCompatActivity {
                         // check email in database
                         if (checkemail){
                             Log.d("USER SIGNUP", "verified unique email for sign up");
-                            usersignup(usernameText, confirm_passwordText);
+                            usersignup(usernameText, confirm_passwordText, officialaccount);
                         }
                     } else{ // password and confirmed_password typed are not equal
                         Log.d("USER SIGNUP","sign up passwords do not match");
@@ -106,18 +115,41 @@ public class Activity_SignUp extends AppCompatActivity {
     }
 
     // Method to sign up user account to Firebase
-    private void usersignup(String email, String password) {
+    private void usersignup(String email, String password, boolean official) {
 
-        //create user account in Firebase
+        //create user account in Firebase Authentication
 
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(Activity_SignUp.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     Toast.makeText(Activity_SignUp.this, "User sign up successful", Toast.LENGTH_SHORT).show();
-                    Log.d("USER SIGNUP", "Sign up successful");
-                    startActivity(new Intent(Activity_SignUp.this, Activity_Incidents.class));
-                    finish();
+                    Log.d("USER SIGNUP", "Authentication successful");
+
+                    // Get user id of current user who has been authenticated
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String uid = user.getUid();
+                        // Check if official account, then create either normal or official account
+                        if (official){
+                            officialAccount account = new officialAccount();
+                            account.createAccountInDatabase(uid);
+                            Log.d("USER SIGNUP", "official account created in database");
+
+                        }
+                        else {
+                            normalAccount account = new normalAccount();
+                            account.createAccountInDatabase(uid);
+                            Log.d("USER SIGNUP", "normal account created in database");
+                        }
+                        startActivity(new Intent(Activity_SignUp.this, Activity_Incidents.class));
+                        finish();
+                    }
+                    else{
+                        Log.d("USER SIGNUP", "User not found in Firebase Auth");
+                        Toast.makeText(Activity_SignUp.this, "Sign up error please try again", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
                 else {
                     Toast.makeText(Activity_SignUp.this, "Sign up failed", Toast.LENGTH_SHORT).show();
@@ -125,8 +157,9 @@ public class Activity_SignUp extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
 }
-
 
