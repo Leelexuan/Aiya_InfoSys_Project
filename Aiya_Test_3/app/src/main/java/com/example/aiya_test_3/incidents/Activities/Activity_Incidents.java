@@ -256,9 +256,7 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         return false;
     }
 
-
     // Methods for map usage
-
     // when the map is ready
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -269,7 +267,6 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
 
     @Override
     public void onMapsSdkInitialized(MapsInitializer.Renderer renderer) {
-
         // Checking in logcat whether the user is using the latest ver of renderer
         // This affects the map styling
         // Phone Requirements:
@@ -291,7 +288,6 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
     public void addNewMarkers(){
 
         // Adding the markers into the map
-
         for(int index = 0; index < cardDataSource.numberOfIncident(); index++){
 
             // Add bitmap marker
