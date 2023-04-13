@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +22,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.aiya_test_3.R;
 import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -32,7 +38,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     firebaseCardSource data;
 
     //Firebase Code
-    DatabaseReference mRootDatabaseRef;
+    DatabaseReference nRootDatabaseRef;
+    DatabaseReference nNodeRef;
     public int positionL = 0;
     public CardAdapter(Context context, firebaseCardSource data) {
         this.context = context;
@@ -59,8 +66,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             hazardAddress = itemView.findViewById(R.id.hazardAddress);
             hazardPicture = itemView.findViewById(R.id.hazardPicture);
             cardContent = itemView.findViewById(R.id.card_content);
+            ImageButton upvote = itemView.findViewById(R.id.upvote);
 
-            // Minimize initial cards
+                    // Minimize initial cards
             // Here, we need to use this ViewTreeObserver and onGlobalLayout
             // Basically, we need to get original height of the card so that we can minimize and expand it
             // But we cannot get the original height in the constructor because the card havent been built yet
@@ -85,6 +93,42 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                     Log.d("Card Created","Card Created");
                 }
             });
+
+            //Listener for when user click upvote
+            upvote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    IncidentObject Incident =  data.getIncidentObject((int) getItemId());
+                    // Will not be able to handle search //TODO handle search
+                    // Before clicking upvote and after search, will be able to expand/min card
+                    // After clicking upvote and after search, it will crash if click expand/min card
+                    Incident.setUpvotes(Incident.getUpvotes()+1);
+
+                    final String node = "Incident Objects";
+                    nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
+                    nNodeRef = nRootDatabaseRef.child(node).child(Incident.getHazardID()).child(Incident.getHazardName_Input());
+                    nNodeRef.runTransaction(new Transaction.Handler() {
+                        @Override
+                        public Transaction.Result doTransaction(MutableData mutableData) {
+                            IncidentObject currentValue = mutableData.getValue(IncidentObject.class);
+                            if (currentValue == null) {
+                                mutableData.child("upvotes").setValue(1);
+                            } else {
+                                mutableData.child("upvotes").setValue(Incident.getUpvotes());
+                            }
+
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(
+                                DatabaseError databaseError, boolean committed, DataSnapshot dataSnapshot) {
+                            System.out.println("Transaction completed");
+                        }});
+                }
+            });
+
         }
     }
 

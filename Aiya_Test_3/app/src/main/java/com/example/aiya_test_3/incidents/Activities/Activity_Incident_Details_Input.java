@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.CheckIncidentUserInputs;
 import com.example.aiya_test_3.incidents.IncidentLog;
+import com.example.aiya_test_3.incidents.IncidentObject;
 import com.example.aiya_test_3.incidents.Submitted_Details;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -300,6 +301,8 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 String HazardAddress = HazardAddress_Input.getText().toString();
                 String HazardDescription =  HazardDescription_Input.getText().toString();
                 String HazardType =  HazardTypeDropDownMenu.getSelectedItem().toString();
+                Double HazardAddress_Lat = HazardAddress_LatLng.latitude;
+                Double HazardAddress_Long = HazardAddress_LatLng.longitude;
 
                 Log.d("Submit Button", "User clicked submit details");
 
@@ -324,19 +327,21 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                     Intent go_to_submit_page = new Intent(Activity_Incident_Details_Input.this, Submitted_Details.class);
                     startActivity(go_to_submit_page);
 
-                    // Create a HashMap with the header as keys and input as values
-                    HashMap<String, Object> Send_database_details = new HashMap<>();
-                    Send_database_details.put("HazardName_Input", HazardName_Input.getText().toString());
-                    Send_database_details.put("HazardAddress_Input", HazardAddress_Input.getText().toString());
-                    Send_database_details.put("HazardAddress_Lat", HazardAddress_LatLng.latitude);
-                    Send_database_details.put("HazardAddress_Long", HazardAddress_LatLng.longitude);
-                    Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
-                    Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
-                    Send_database_details.put("HazardImage_Input", imageFileNameInStorage);
-
-                    // Send the HashMap to Firebase
-                    DatabaseReference nNodeRefPush = nNodeRefInputDetails.push();
-                    nNodeRefPush.setValue(Send_database_details);
+                    IncidentObject NewIncident = new IncidentObject(HazardName,HazardAddress,HazardAddress_Lat, HazardAddress_Long,HazardDescription,HazardType,imageFileNameInStorage);
+                    NewIncident.saveIncidentToDatabase();
+//                    // Create a HashMap with the header as keys and input as values
+//                    HashMap<String, Object> Send_database_details = new HashMap<>();
+//                    Send_database_details.put("HazardName_Input", HazardName_Input.getText().toString());
+//                    Send_database_details.put("HazardAddress_Input", HazardAddress_Input.getText().toString());
+//                    Send_database_details.put("HazardAddress_Lat", HazardAddress_LatLng.latitude);
+//                    Send_database_details.put("HazardAddress_Long", HazardAddress_LatLng.longitude);
+//                    Send_database_details.put("HazardDescription_Input", HazardDescription_Input.getText().toString());
+//                    Send_database_details.put("HazardType_Input", HazardTypeDropDownMenu.getSelectedItem().toString());
+//                    Send_database_details.put("HazardImage_Input", imageFileNameInStorage);
+//
+//                    // Send the HashMap to Firebase
+//                    DatabaseReference nNodeRefPush = nNodeRefInputDetails.push();
+//                    nNodeRefPush.setValue(Send_database_details);
                 }
                 else {
                     Toast.makeText(Activity_Incident_Details_Input.this, "Please input " + checked, Toast.LENGTH_SHORT).show();

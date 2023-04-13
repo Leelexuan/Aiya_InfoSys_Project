@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,8 +18,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class firebaseCardSource implements cardDataSource {
 
@@ -29,7 +32,6 @@ public class firebaseCardSource implements cardDataSource {
     StorageReference storageRef;
 
     int size;
-    long numberOfIncident;
     List<String> hazardDescriptionList,hazardAddressList,hazardNameList,hazardImageList, hazardTypeList;
     List<Double> hazardLatList,hazardLngList;
     List<String> OriginalHazardNameList;
@@ -39,12 +41,15 @@ public class firebaseCardSource implements cardDataSource {
     List<String> OriginalhazardImageList;
     List<Double> OriginalhazardLatList;
     List<Double> OriginalhazardLngList;
+
+    List<IncidentObject> IncidentObjectsList;
     boolean initialDataReadyFlag = false;
+    final AtomicInteger numberOfIncident = new AtomicInteger();
 
     public firebaseCardSource(){
 
         // Firebase Real-Time Database (Only for scalar data type e.g string, int, float)
-        final String node = "Hazard_Details";
+        final String node = "Incident Objects";
         nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
         nNodeRef = nRootDatabaseRef.child(node);
 
@@ -52,13 +57,50 @@ public class firebaseCardSource implements cardDataSource {
         storageDatabaseRef = FirebaseStorage.getInstance();
         storageRef = storageDatabaseRef.getReference();
 
+        hazardDescriptionList = new ArrayList<>();
+        hazardNameList = new ArrayList<>();
+        hazardTypeList = new ArrayList<>();
+        hazardAddressList = new ArrayList<>();
+        hazardLatList = new ArrayList<>();
+        hazardLngList = new ArrayList<>();
+        hazardImageList = new ArrayList<>();
+        IncidentObjectsList = new ArrayList<>();
+
         nNodeRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 countListItems(snapshot);
+            }
+            //
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+//
+            }
+        });
+
+        nNodeRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                int count = numberOfIncident.incrementAndGet();
                 Log.d("CheckPoint 1", "Started");
+                countListItems(snapshot);
                 repopulateList(snapshot);
                 initialDataReadyFlag = true;
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override
@@ -121,31 +163,31 @@ public class firebaseCardSource implements cardDataSource {
     }
 
     private void repopulateList(DataSnapshot snapshot){
-        hazardDescriptionList = new ArrayList<>();
-        hazardNameList = new ArrayList<>();
-        hazardTypeList = new ArrayList<>();
-        hazardAddressList = new ArrayList<>();
-        hazardLatList = new ArrayList<>();
-        hazardLngList = new ArrayList<>();
-        hazardImageList = new ArrayList<>();
 
         Log.d("CheckPoint 2", "Started");
 
         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
 
-            numberOfIncident = snapshot.getChildrenCount();
+            String IncidentID = snapshot.getKey();
 
-            Object value = dataSnapshot.getValue();
-            if (value != null && value instanceof HashMap) {
-                HashMap<String, Object> hashMap = (HashMap<String, Object>) value;
-                // Access the values in the HashMap using their keys
-                String HazardName_Key = (String) hashMap.get("HazardName_Input");
-                String HazardDescription_Key = (String) hashMap.get("HazardDescription_Input");
-                String HazardType_Key = (String) hashMap.get("HazardType_Input");
-                String HazardAddress_Key = (String) hashMap.get("HazardAddress_Input");
-                Double HazardLat_key = (Double) hashMap.get("HazardAddress_Lat");
-                Double HazardLng_key = (Double) hashMap.get("HazardAddress_Long");
-                String HazardImage_Key = (String) hashMap.get("HazardImage_Input");
+            IncidentObject value = dataSnapshot.getValue(IncidentObject.class); // Notice here you get the class Incident Object from firebase
+            System.out.println(value);
+
+            if (value != null && value instanceof IncidentObject) {
+                IncidentObjectsList.add(value); // Put the objects into a list for further reference
+                IncidentObjectsList.get(numberOfIncident.intValue()-1).setHazardID(IncidentID); // get the objectID (This is a unique ID of the object randomly generated).
+                // This is required for path
+
+                // Access the values from the object using the getter
+                String HazardName_Key = (String) value.getHazardName_Input();
+                String HazardDescription_Key = (String) value.getHazardDescription_Input();
+                String HazardType_Key = (String) value.getHazardType_Input();
+                String HazardAddress_Key = (String) value.getHazardAddress_Input();
+                Double HazardLat_key = (Double) value.getHazardAddress_Lat();
+                Double HazardLng_key = (Double) value.getHazardAddress_Long();
+                String HazardImage_Key = (String) value.getHazardImage_Input();
+
+                // Putting them into the respective list
                 hazardNameList.add(HazardName_Key);
                 hazardDescriptionList.add(HazardDescription_Key);
                 hazardTypeList.add(HazardType_Key);
@@ -154,6 +196,26 @@ public class firebaseCardSource implements cardDataSource {
                 hazardLatList.add(HazardLat_key);
                 hazardLngList.add(HazardLng_key);
                 Log.d(FIREBASE_TESTING, hazardDescriptionList.get(0));
+
+//            if (value != null && value instanceof HashMap) {
+//                HashMap<String, Object> hashMap = (HashMap<String, Object>) value;
+//                // Access the values in the HashMap using their keys
+//                String HazardName_Key = (String) hashMap.get("HazardName_Input");
+//                String HazardDescription_Key = (String) hashMap.get("HazardDescription_Input");
+//                String HazardType_Key = (String) hashMap.get("HazardType_Input");
+//                String HazardAddress_Key = (String) hashMap.get("HazardAddress_Input");
+//                Double HazardLat_key = (Double) hashMap.get("HazardAddress_Lat");
+//                Double HazardLng_key = (Double) hashMap.get("HazardAddress_Long");
+//                String HazardImage_Key = (String) hashMap.get("HazardImage_Input");
+//                hazardNameList.add(HazardName_Key);
+//                hazardDescriptionList.add(HazardDescription_Key);
+//                hazardTypeList.add(HazardType_Key);
+//                hazardAddressList.add(HazardAddress_Key);
+//                hazardImageList.add(HazardImage_Key);
+//                hazardLatList.add(HazardLat_key);
+//                hazardLngList.add(HazardLng_key);
+//                Log.d(FIREBASE_TESTING, hazardDescriptionList.get(0));
+
             }
         }
     }
@@ -182,7 +244,7 @@ public class firebaseCardSource implements cardDataSource {
     public boolean isInitialDataReadyFlag() {
         return initialDataReadyFlag;
     }
-    public long numberOfIncident(){ return numberOfIncident; }
+    public long numberOfIncident(){ return numberOfIncident.longValue(); }
     public String getHazardName(int i){
         return hazardNameList.get(i);
     }
@@ -210,6 +272,9 @@ public class firebaseCardSource implements cardDataSource {
         return size;
     }
 
+    public IncidentObject getIncidentObject(int i) {
+        return IncidentObjectsList.get(i);
+    }
 }
 
 class getDataFromFirebase implements Runnable{
