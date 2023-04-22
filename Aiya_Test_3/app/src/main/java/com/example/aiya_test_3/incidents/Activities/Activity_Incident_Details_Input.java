@@ -5,8 +5,6 @@ import static com.example.aiya_test_3.BuildConfig.MAPS_API_KEY;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,14 +45,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Activity_Incident_Details_Input extends AppCompatActivity {
 
@@ -80,6 +76,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
 
     EditText HazardName_Input;
     LatLng HazardAddress_LatLng = null;
+    Spinner HazardTypeDropDownMenu;
 
     // Incident Log (Singleton)
     private IncidentLog incidentLog = IncidentLog.getInstance();
@@ -114,7 +111,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         inputdetailsContainer.addView(input_detail);
 
         Button submitPicture = input_detail.findViewById(R.id.uploadPhotoBtn);
-        Spinner HazardTypeDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
+        HazardTypeDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
         RadioGroup SeverityRadioGroup = input_detail.findViewById(R.id.radio_group);
 
         // Get the list of issues from Database
@@ -122,45 +119,46 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         nNodeRefIssueList = nRootDatabaseRef.child(issueNode);
 
         // onDataChange is async, so means that it is getting this data while the app is also building
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        final Handler handler = new Handler(Looper.getMainLooper());
-        executor.execute( new Runnable() {
-            @Override
-            public void run () {
-            //Background work here
-                nNodeRefIssueList.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        int size = (int) snapshot.getChildrenCount();
-                        int index = 0;
-                        issueList = new String[size];
-
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Object value = dataSnapshot.getValue();
-                            if (value != null && value instanceof String) {
-                                issueList[index++] = dataSnapshot.getValue(String.class);
-                            }
-                        }
-
-                        handler.post( new Runnable() {
-                            @Override
-                            public void run () {
-                                //UI Thread work here
-                                if(issueList != null){
-                                    String[] options = issueList; // These are the options for the dropdown option
-                                    ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(Activity_Incident_Details_Input.this, android.R.layout.simple_spinner_item, options); // Add options to spinner
-                                    HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
-                });
-            }
-        });
+//        ExecutorService executor = Executors.newSingleThreadExecutor();
+//        final Handler handler = new Handler(Looper.getMainLooper());
+//        executor.execute( new Runnable() {
+//            @Override
+//            public void run () {
+//            //Background work here
+//                nNodeRefIssueList.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                        int size = (int) snapshot.getChildrenCount();
+//                        int index = 0;
+//                        issueList = new String[size];
+//
+//                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                            Object value = dataSnapshot.getValue();
+//                            if (value != null && value instanceof String) {
+//                                issueList[index++] = dataSnapshot.getValue(String.class);
+//                            }
+//                        }
+//
+//                        handler.post( new Runnable() {
+//                            @Override
+//                            public void run () {
+//                                //UI Thread work here
+//                                if(issueList != null){
+//                                    String[] options = issueList; // These are the options for the dropdown option
+//                                    ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(Activity_Incident_Details_Input.this, android.R.layout.simple_spinner_item, options); // Add options to spinner
+//                                    HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
+//                                }
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {}
+//                });
+//            }
+//        });
 
         HazardTypeDropDownMenu.setSelection(0); // Set the first value as the default value
         // Set Drop Down on clicked listener for logging purposes
@@ -313,6 +311,44 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
             }
         });
 
+    }
+
+    void getIssueList(){
+        handleBackgroundTask retrieveIssues = new handleBackgroundTask();
+        handleBackgroundTask.start(nNodeRefIssueList);
+    }
+
+    class handleBackgroundTask extends BackgroundTasks<DatabaseReference, ArrayList<String>>{
+        @Override
+        public ArrayList<String> task(DatabaseReference dbInput) {
+            ArrayList<String> issues = new ArrayList<String>();
+            dbInput.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int size = (int) snapshot.getChildrenCount();
+                    int index = 0;
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Object value = dataSnapshot.getValue();
+                        if (value != null && value instanceof String) {
+                            issues.add(dataSnapshot.getValue(String.class));
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+            return issues;
+        }
+
+        @Override
+        public void done(ArrayList<String> input) {
+            if(input != null){
+                String[] options = input.toArray(new String[0]); // These are the options for the dropdown option
+                ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(Activity_Incident_Details_Input.this, android.R.layout.simple_spinner_item, options); // Add options to spinner
+                HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
+            }
+        }
     }
 
     private void LogInformation(String HazardName, String HazardAddress){

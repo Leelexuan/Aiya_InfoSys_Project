@@ -81,6 +81,6 @@ public abstract class UserInput {
         return true;
     }
 
-    abstract public String CheckAllUserInputs();
+    public static String CheckAllUserInputs();
 }
 

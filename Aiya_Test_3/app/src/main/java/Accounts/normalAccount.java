@@ -11,7 +11,7 @@ public class normalAccount extends Account implements Observer{
 
     @Override
     public void update(String date, String hazardName, String message) {
-        // TODO should display a toast message about the incident that they are subscribed to here.
+
     }
 
     @Override
