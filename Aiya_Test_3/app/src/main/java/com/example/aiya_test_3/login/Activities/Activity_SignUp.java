@@ -14,14 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aiya_test_3.R;
 import com.example.aiya_test_3.incidents.Activities.Activity_Incidents;
-import com.example.aiya_test_3.login.UserInput;
+import com.example.aiya_test_3.login.SignUpUserInput;
+import com.example.aiya_test_3.login.UserInputAbstract;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.HashMap;
 
 import Accounts.normalAccount;
 import Accounts.officialAccount;
@@ -33,9 +32,6 @@ public class Activity_SignUp extends AppCompatActivity {
 
     private Button sign_up;
     private TextView back_login;
-
-    //Declare necessary class//
-    private UserInput signupuserInput; // class to perform checks on user input
 
     //Firebase authentication//
     private FirebaseAuth auth;
@@ -82,34 +78,20 @@ public class Activity_SignUp extends AppCompatActivity {
                 String passwordText = password.getText().toString();
                 String confirm_passwordText = confirm_password.getText().toString();
 
-                // Verify inputs
-                boolean verified = signupuserInput.verify(usernameText, confirm_passwordText, Activity_SignUp.this);
-                // Check if passwords are equal
-                boolean passwordequals = signupuserInput.inputequals(passwordText, confirm_passwordText);
-                // Check if no account with same email already created (assuming we have our own local database)
-                boolean checkemail = signupuserInput.uniqueemail(usernameText);
-                // Check if account to be created is an official account
-                boolean officialaccount = signupuserInput.checkOfficial(usernameText);
+                // Delegate user input verification to another class that implements template method
+                UserInputAbstract signupinput = new SignUpUserInput();
 
-                // check acceptable inputs
-                if (verified){
-                    Log.d("USER SIGNUP", "email and password verified");
-                    // check passwords
-                    if (passwordequals){
-                        Log.d("USER SIGNUP","sign up passwords are equal");
-                        // check email in database
-                        if (checkemail){
-                            Log.d("USER SIGNUP", "verified unique email for sign up");
-                            usersignup(usernameText, confirm_passwordText, officialaccount);
-                        }
-                    } else{ // password and confirmed_password typed are not equal
-                        Log.d("USER SIGNUP","sign up passwords do not match");
-                        Toast.makeText(Activity_SignUp.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                    }
-                } else { // email or password is not acceptable.
-                    Log.d("USER SIGNUP","email and password fail verification");
-                    Toast.makeText(Activity_SignUp.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+                // Verification of user inputs
+                if (signupinput.accountInputCheck(usernameText,passwordText,confirm_passwordText,Activity_SignUp.this)){
+                    // Check if email used qualifies for official account
+                    boolean checkOfficial = ((SignUpUserInput) signupinput).checkOfficialEmail(usernameText);
+                    usersignup(usernameText, passwordText, checkOfficial);
+
+                } else { // NOT VERIFIED //
+                    // log unacceptable input //
+                    Log.d("USER SIGNUP", "User input an unacceptable value."); // log unverified attempt
                 }
+
             }
         });
     }

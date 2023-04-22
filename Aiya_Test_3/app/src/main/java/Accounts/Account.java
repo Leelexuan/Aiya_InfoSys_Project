@@ -3,6 +3,7 @@ package Accounts;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
 // template design pattern to build an Account from the inputs.
 public abstract class Account {
 

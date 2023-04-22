@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aiya_test_3.R;
-import com.example.aiya_test_3.incidents.Activities.Activity_Incidents;
-import com.example.aiya_test_3.login.UserInput;
+import com.example.aiya_test_3.login.LogInUserInput;
+import com.example.aiya_test_3.login.UserInputAbstract;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,9 +26,6 @@ public class Activity_Login extends AppCompatActivity {
     private Button loginButton;
 
     private TextView signuplink;
-
-    // Declare necessary classes //
-    private UserInput userInput; // this class is used to verify and validate inputs.
 
     // Connect to Firebase
     private FirebaseAuth auth;
@@ -70,15 +67,12 @@ public class Activity_Login extends AppCompatActivity {
                 String emailText = email.getText().toString();
                 String passwordText = password.getText().toString();
 
-                // Verification:
-                // 1.
-                boolean verified = userInput.verify(emailText, passwordText, Activity_Login.this); // verified = true if is legal, false if illegal.
+                // Delegate user input verification to another class that implements template method
+                UserInputAbstract logininput = new LogInUserInput();
 
-                if(verified){
-                    // VALIDATION:
-                    // 1. Cross check user input with database, if details match with database, log user in
-                    // 2. Explicit intent to the incidents activity (main page where we see the incidents.
-                    loginUser(emailText, passwordText); // delegate to another class
+                // Verification of user inputs
+                if(logininput.accountInputCheck(emailText,passwordText,"",Activity_Login.this)){
+                    userLogIn(emailText, passwordText); // delegate to another class
 
                 } else { // NOT VERIFIED //
                     // log unacceptable input //
@@ -88,7 +82,7 @@ public class Activity_Login extends AppCompatActivity {
         });
     }
 
-    private void loginUser(String email, String password){
+    private void userLogIn(String email, String password){
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

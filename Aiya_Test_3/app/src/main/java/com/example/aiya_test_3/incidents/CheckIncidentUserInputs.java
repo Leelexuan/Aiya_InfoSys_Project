@@ -1,9 +1,11 @@
 package com.example.aiya_test_3.incidents;
 
-import com.example.aiya_test_3.login.UserInput;
+import android.content.Context;
+
+import com.example.aiya_test_3.login.UserInputAbstract;
 import com.google.android.gms.maps.model.LatLng;
 
-public class CheckIncidentUserInputs extends UserInput {
+public class CheckIncidentUserInputs extends UserInputAbstract {
 
     String HazardName;
     String HazardAddress;
@@ -19,6 +21,11 @@ public class CheckIncidentUserInputs extends UserInput {
         this.HazardDescription_Input = HazardDescription_Input;
         this.HazardType_Input = HazardType_Input;
         this.HazardImage_Input = HazardImage_Input;
+    }
+
+    @Override
+    public boolean accountInputCheck(String email, String password1, String password2, Context context) {
+        return false;
     }
 
     @Override
