@@ -1,9 +1,7 @@
 package com.example.aiya_test_3.incidents;
 
 import android.util.Log;
-import android.widget.TextView;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -15,9 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,7 +25,7 @@ public class firebaseCardSource implements cardDataSource {
     public static final String FIREBASE_TESTING = "FirebaseTesting";
     DatabaseReference nRootDatabaseRef, mRootDatabaseRef;
     DatabaseReference nNodeRef, mNodeRef;
-    Query recentPost, queryPost;
+    Query Post_Order;
     FirebaseStorage storageDatabaseRef;
     StorageReference storageRef;
 
@@ -45,38 +41,31 @@ public class firebaseCardSource implements cardDataSource {
     List<Double> OriginalhazardLngList;
 
     List<IncidentObject> IncidentObjectsList;
-    ChildEventListener post;
-    ValueEventListener post2;
     String searcher;
     boolean initialDataReadyFlag = false;
     final AtomicInteger numberOfIncident = new AtomicInteger();
 
-    public firebaseCardSource(){
+    public firebaseCardSource(@Nullable String searcher){
 
         // Firebase Real-Time Database (Only for scalar data type e.g string, int, float)
         final String node = "Incident Objects";
         nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
         nNodeRef = nRootDatabaseRef.child(node);
-        recentPost = nNodeRef.limitToLast(5);
 
         // Firebase Storage (For images and all form of data, can think of it like google drive)
         storageDatabaseRef = FirebaseStorage.getInstance();
         storageRef = storageDatabaseRef.getReference();
 
-        hazardDescriptionList = new ArrayList<>();
-        hazardNameList = new ArrayList<>();
-        hazardTypeList = new ArrayList<>();
-        hazardAddressList = new ArrayList<>();
-        hazardLatList = new ArrayList<>();
-        hazardLngList = new ArrayList<>();
-        hazardImageList = new ArrayList<>();
-        IncidentObjectsList = new ArrayList<>();
+        // Set whether to order post by searched query or by latest 5
+        setPost_Order(searcher);
 
-        post2 = recentPost.addValueEventListener(new ValueEventListener() {
+        // Initialise lists for all the different items in card
+        InitialiseCardItemsList();
+
+        Post_Order.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 countListItems(snapshot);
-
             }
             //
             @Override
@@ -85,96 +74,25 @@ public class firebaseCardSource implements cardDataSource {
             }
         });
 
-        post = recentPost.addChildEventListener(new ChildEventListener() {
+        Post_Order.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                int count = numberOfIncident.incrementAndGet();
-                Log.d("CheckPoint 1", "Started");
+                numberOfIncident.incrementAndGet();
                 repopulateList(snapshot);
                 initialDataReadyFlag = true;
             }
-
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
             }
-
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
             }
-
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public firebaseCardSource(String searcher){
-
-        // Firebase Real-Time Database (Only for scalar data type e.g string, int, float)
-        final String node = "Incident Objects";
-        nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        nNodeRef = nRootDatabaseRef.child(node);
-        this.searcher = searcher;
-        recentPost = nNodeRef.orderByChild("Incident/hazardName_Input").equalTo(searcher);
-
-        // Firebase Storage (For images and all form of data, can think of it like google drive)
-        storageDatabaseRef = FirebaseStorage.getInstance();
-        storageRef = storageDatabaseRef.getReference();
-
-        hazardDescriptionList = new ArrayList<>();
-        hazardNameList = new ArrayList<>();
-        hazardTypeList = new ArrayList<>();
-        hazardAddressList = new ArrayList<>();
-        hazardLatList = new ArrayList<>();
-        hazardLngList = new ArrayList<>();
-        hazardImageList = new ArrayList<>();
-        IncidentObjectsList = new ArrayList<>();
-
-        post2 = recentPost.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                countListItems(snapshot);
-
-            }
-            //
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-//
-            }
-        });
-
-        post = recentPost.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                int count = numberOfIncident.incrementAndGet();
-                Log.d("CheckPoint 1", "Started");
-                repopulateList(snapshot);
-                initialDataReadyFlag = true;
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -185,6 +103,27 @@ public class firebaseCardSource implements cardDataSource {
     private void countListItems(DataSnapshot snapshot){
         size = (int) snapshot.getChildrenCount();
         Log.d(FIREBASE_TESTING, "constructor size " + size);
+    }
+
+    private void InitialiseCardItemsList(){
+        hazardDescriptionList = new ArrayList<>();
+        hazardNameList = new ArrayList<>();
+        hazardTypeList = new ArrayList<>();
+        hazardAddressList = new ArrayList<>();
+        hazardLatList = new ArrayList<>();
+        hazardLngList = new ArrayList<>();
+        hazardImageList = new ArrayList<>();
+        IncidentObjectsList = new ArrayList<>();
+    }
+
+    private void setPost_Order(String searcher){
+        if(searcher != null){
+            this.searcher = searcher;
+            Post_Order = nNodeRef.orderByChild("Incident/hazardName_Input").equalTo(searcher);
+        }
+        else{
+            Post_Order = nNodeRef.limitToLast(5);
+        }
     }
 
     private void repopulateList(DataSnapshot snapshot){
@@ -225,28 +164,6 @@ public class firebaseCardSource implements cardDataSource {
             }
         }
     }
-
-    public void buildOriginalList(){
-
-        OriginalHazardNameList = new ArrayList<>();
-        OriginalhazardDescriptionList = new ArrayList<>();
-        OriginalhazardTypeList = new ArrayList<>();
-        OriginalhazardAddressList = new ArrayList<>();
-        OriginalhazardImageList = new ArrayList<>();
-        OriginalhazardLatList = new ArrayList<>();
-        OriginalhazardLngList = new ArrayList<>();
-
-        for (int i = 0; i < hazardNameList.size(); i ++) {
-            OriginalHazardNameList.add(hazardNameList.get(i));
-            OriginalhazardDescriptionList.add(hazardDescriptionList.get(i));
-            OriginalhazardTypeList.add(hazardTypeList.get(i));
-            OriginalhazardAddressList.add(hazardAddressList.get(i));
-            OriginalhazardImageList.add(hazardImageList.get(i));
-            OriginalhazardLatList.add(hazardLatList.get(i));
-            OriginalhazardLngList.add(hazardLngList.get(i));
-        }
-    }
-
     public boolean isInitialDataReadyFlag() {
         return initialDataReadyFlag;
     }
@@ -295,12 +212,5 @@ public class firebaseCardSource implements cardDataSource {
         }
 
         return null;
-    }
-}
-
-class getDataFromFirebase implements Runnable{
-
-    @Override
-    public void run(){
     }
 }

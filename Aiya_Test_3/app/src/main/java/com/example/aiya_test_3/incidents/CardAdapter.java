@@ -6,7 +6,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aiya_test_3.R;
-import com.example.aiya_test_3.incidents.Activities.Activity_Incidents;
-import com.google.android.gms.auth.api.signin.internal.Storage;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
@@ -38,21 +33,21 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     LayoutInflater mInflater;
     Context context;
-    firebaseCardSource data;
+    firebaseCardSource CardData;
 
     //Firebase Code
     DatabaseReference nRootDatabaseRef;
     DatabaseReference nNodeRef;
     public int positionL = 0;
-    private boolean Clicked;
+    private boolean CardClicked;
 
     private Double hazardLat;
     private Double hazardLng;
     private LatLng hazardLatLng;
 
-    public CardAdapter(Context context, firebaseCardSource data) {
+    public CardAdapter(Context context, firebaseCardSource CardData) {
         this.context = context;
-        this.data = data;
+        this.CardData = CardData;
         mInflater = LayoutInflater.from(context);
         setHasStableIds(true);
     }
@@ -98,6 +93,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    // Set Last Click Position and inform Incident Activity it can  call movemap location to last clicked
+                    setCardClicked(true);
+                    updateLastClickPosition(hazardName);
+
+                    // Expand/Minimize Card
                     toggleCard(cardView, original_height,hazardName);
                     Log.d("Card Created","Card Created");
                 }
@@ -107,37 +108,37 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             upvote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     String getClickedItemName = hazardName.getText().toString();
-                    IncidentObject Incident =  data.getIncidentObjectbyName(getClickedItemName);
-                    //Accounts currentAccount = dataAccount.getAccountObject();
-                    Incident.setUpvotes(Incident.getUpvotes()+1);
-
-                    final String node = "Incident Objects";
-                    nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
-                    nNodeRef = nRootDatabaseRef.child(node).child(Incident.getHazardID()).child("Incident");
-                    nNodeRef.runTransaction(new Transaction.Handler() {
-                        @Override
-                        public Transaction.Result doTransaction(MutableData mutableData) {
-                            IncidentObject currentValue = mutableData.getValue(IncidentObject.class);
-                            if (currentValue == null) {
-                                mutableData.child("upvotes").setValue(1);
-                            } else {
-                                mutableData.child("upvotes").setValue(Incident.getUpvotes());
-                            }
-
-                            return Transaction.success(mutableData);
-                        }
-
-                        @Override
-                        public void onComplete(
-                                DatabaseError databaseError, boolean committed, DataSnapshot dataSnapshot) {
-                            System.out.println("Transaction completed");
-                        }});
+                    IncidentObject Incident =  CardData.getIncidentObjectbyName(getClickedItemName);
+                    Incident.setUpvotes(Incident.getUpvotes()+1); // Increase upvote locally
+                    updateFirebaseUpvoteValue(Incident);
                 }
             });
 
         }
+    }
+
+    private void updateFirebaseUpvoteValue(IncidentObject Incident){
+        final String node = context.getString(R.string.Incident_Objects);
+        nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        nNodeRef = nRootDatabaseRef.child(node).child(Incident.getHazardID()).child("Incident");
+        nNodeRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                IncidentObject currentValue = mutableData.getValue(IncidentObject.class);
+                if (currentValue == null) {
+                    mutableData.child("upvotes").setValue(0);
+                } else {
+                    mutableData.child("upvotes").setValue(Incident.getUpvotes());
+                }
+
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean committed, DataSnapshot dataSnapshot) {
+                System.out.println("Transaction completed");
+            }});
     }
 
     @NonNull
@@ -150,22 +151,25 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        String word = data.getHazardDescription(position);
-        String hazardName = data.getHazardName(position);
-        String hazardType = data.getHazardType(position);
-        String hazardAddress = data.getHazardAddress(position);
-        LatLng hazardLatLng = data.getHazardLatLng(position);
-        StorageReference hazardPicture = data.getHazardImage(position);
+
+        String word = CardData.getHazardDescription(position);
+        String hazardName = CardData.getHazardName(position);
+        String hazardType = CardData.getHazardType(position);
+        String hazardAddress = CardData.getHazardAddress(position);
+        LatLng hazardLatLng = CardData.getHazardLatLng(position);
+        StorageReference hazardPicture = CardData.getHazardImage(position);
         Log.d("RecyclerView", "onBindViewHolder(): " + word);
+
         holder.hazardDescription.setText(word);
         holder.hazardName.setText(hazardName);
         holder.hazardAddress.setText(hazardAddress);
+
         FireBaseUtils.downloadToImageView(holder.itemView.getContext(),hazardPicture,holder.hazardPicture);
     }
 
     @Override
     public int getItemCount() {
-        return data.getSize(); // return the total number of data items.
+        return CardData.getSize(); // return the total number of data items.
     }
 
     int vHeight = 0; // instantiate card height
@@ -176,11 +180,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         int height = view.getMeasuredHeight();
         ValueAnimator cardAnimation;
         if (view.getMeasuredHeight() == Fixed_Height) {
-
-            // Jump to hazard location on map
-            LastClickPosition = hazardName.getText().toString();
-            Clicked = true;
-            setClickedCardPosition();
 
             // Card is minimized, expand it
             cardAnimation = ValueAnimator.ofInt(Fixed_Height, vHeight);
@@ -215,6 +214,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         cardAnimation.start();
     }
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -225,28 +225,33 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         return position;
     }
 
-    public void setClickedCardPosition(){
+    public void updateLastClickPosition(TextView hazardName){
+        LastClickPosition = hazardName.getText().toString();
+        setClickedCardPosition();
+    }
 
-        if(Clicked == true){
-            hazardLat = data.getIncidentObjectbyName(LastClickPosition).getHazardAddress_Lat();
-            hazardLng = data.getIncidentObjectbyName(LastClickPosition).getHazardAddress_Long();
+    public void setClickedCardPosition(){
+        if(isCardClicked()){
+            hazardLat = CardData.getIncidentObjectbyName(LastClickPosition).getHazardAddress_Lat();
+            hazardLng = CardData.getIncidentObjectbyName(LastClickPosition).getHazardAddress_Long();
             hazardLatLng =  new LatLng(hazardLat,hazardLng);
         }
     }
 
     public LatLng getClickedCardPosition(){
-
-        if(Clicked == true){
+        if(isCardClicked()){
             return hazardLatLng;
         }
         return null;
     }
-    public boolean isClicked() {
-        return Clicked;
+
+    public boolean isCardClicked() {
+        return CardClicked;
     }
 
-    public void setClicked(boolean clicked) {
-        Clicked = clicked;
+    public void setCardClicked(boolean clicked) {
+        CardClicked = clicked;
     }
+
 }
 

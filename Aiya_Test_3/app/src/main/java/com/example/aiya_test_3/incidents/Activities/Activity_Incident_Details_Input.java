@@ -5,6 +5,8 @@ import static com.example.aiya_test_3.BuildConfig.MAPS_API_KEY;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +53,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Activity_Incident_Details_Input extends AppCompatActivity {
 
@@ -75,7 +79,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
     String imageFileNameInStorage;
 
     EditText HazardName_Input;
-    LatLng HazardAddress_LatLng;
+    LatLng HazardAddress_LatLng = null;
 
     // Incident Log (Singleton)
     private IncidentLog incidentLog = IncidentLog.getInstance();
@@ -83,6 +87,13 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Firebase Real-Time Database (Only for scalar data type e.g string, int, float)
+        nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
+
+        // Firebase Storage (For images and all form of data, can think of it like google drive)
+        storageDatabaseRef = FirebaseStorage.getInstance();
+        storageRef = storageDatabaseRef.getReference();
 
         // main layout for this page
         setContentView(R.layout.activity_detail_input); // activity_forum layout does not have content, only containers
@@ -102,72 +113,58 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         inputdetailsContainer = findViewById(R.id.inputdetailsContainer);
         inputdetailsContainer.addView(input_detail);
 
-        nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        Button submitPicture = input_detail.findViewById(R.id.uploadPhotoBtn);
+        Spinner HazardTypeDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
+        RadioGroup SeverityRadioGroup = input_detail.findViewById(R.id.radio_group);
 
+        // Get the list of issues from Database
         final String issueNode = "Issues";
         nNodeRefIssueList = nRootDatabaseRef.child(issueNode);
 
-        // Get the list of issues
-        // So onDataChange is async, so means that it is getting this data while the app is also building
-        // So we need to have another issueList and drop down that is null while this is still getting the data
-        nNodeRefIssueList.addListenerForSingleValueEvent(new ValueEventListener() {
+        // onDataChange is async, so means that it is getting this data while the app is also building
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        final Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute( new Runnable() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int size = (int) snapshot.getChildrenCount();
-                issueList = new String[size];
-                int index = 0;
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Object value = dataSnapshot.getValue();
-                    if (value != null && value instanceof String) {
-                        issueList[index++] = dataSnapshot.getValue(String.class);
+            public void run () {
+            //Background work here
+                nNodeRefIssueList.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        int size = (int) snapshot.getChildrenCount();
+                        int index = 0;
+                        issueList = new String[size];
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Object value = dataSnapshot.getValue();
+                            if (value != null && value instanceof String) {
+                                issueList[index++] = dataSnapshot.getValue(String.class);
+                            }
+                        }
+
+                        handler.post( new Runnable() {
+                            @Override
+                            public void run () {
+                                //UI Thread work here
+                                if(issueList != null){
+                                    String[] options = issueList; // These are the options for the dropdown option
+                                    ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(Activity_Incident_Details_Input.this, android.R.layout.simple_spinner_item, options); // Add options to spinner
+                                    HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
+                                }
+                            }
+                        });
                     }
-                }
-
-                String[] options = issueList; // These are the options for the dropdown option
-                ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(Activity_Incident_Details_Input.this, android.R.layout.simple_spinner_item, options); // Add options to spinner
-
-                Spinner HazardTypeDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
-                HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
-                HazardTypeDropDownMenu.setSelection(0); // Set the first value as the default value
-
-                // Note currently when you choose an item in drop down box, it doesn't do anything other than logcat
-                HazardTypeDropDownMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                     @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        Log.d("Hazard Drop Down Menu", "You have selected: " + HazardTypeDropDownMenu.getSelectedItem());
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        // Never do anything, go back to default
-                    }
+                    public void onCancelled(@NonNull DatabaseError error) {}
                 });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
-        // From here, it is just a repeat of whatever is inside onDataChange but with null values
-        //=======================================================================================
-        ArrayAdapter<String> optionAdapter = null;
-        if (issueList == null) {
-            issueList = new String[0];
-            String[] options = issueList; // This are the options for the dropdown option
-            optionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
-
-        }
-
-        Spinner HazardTypeDropDownMenu = input_detail.findViewById(R.id.hazardTypeSpinner);
-        HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
         HazardTypeDropDownMenu.setSelection(0); // Set the first value as the default value
-
-        // Note currently when you choose an item in drop down box, it doesn't do anything other than logcat
+        // Set Drop Down on clicked listener for logging purposes
         HazardTypeDropDownMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("Hazard Drop Down Menu", "You have selected: " + HazardTypeDropDownMenu.getSelectedItem());
@@ -178,16 +175,11 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 // Never do anything, go back to default
             }
         });
-        //=============================== END onDataChange Duplicate w Null ====================
 
-        // This is for the radio button on the hazard severity
-        RadioGroup radioGroup = input_detail.findViewById(R.id.radio_group);
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
+        SeverityRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            // Set On check changed listener for logging purposes
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                 // Perform an action based on the selected radio button
                 if (checkedId == R.id.red_radio_button) {
                     Log.d("BUTTON", "Hello This is Important");// Option "Important" is selected
@@ -201,13 +193,12 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
             }
         });
 
-        // Firebase Storage (For images and all form of data, can think of it like google drive)
-        storageDatabaseRef = FirebaseStorage.getInstance();
-        storageRef = storageDatabaseRef.getReference();
+
 
         //name of photo to be uploaded
         imageFileNameInStorage = "";
-        String filename = "/User Uploaded Photos Test/" + System.currentTimeMillis() + ".jpg";
+
+        String filename = getString(R.string.StorageImagePath) + System.currentTimeMillis() + getString(R.string.ImageFileType_JPG);
 
         ActivityResultLauncher<Intent> photo_app_launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -233,12 +224,9 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                         uploaded_photo.setVisibility(View.VISIBLE);
                         Log.d("putFile","User uploaded photo to database");
                         }
-                    }
-
-        );
+                    });
 
         // When user click the submit button, launch the photo gallery
-        Button submitPicture = input_detail.findViewById(R.id.uploadPhotoBtn);
         submitPicture.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -297,39 +285,27 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         submitHazard.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+                Log.d("Submit Button", "User clicked submit details");
+
                 String HazardName = HazardName_Input.getText().toString();
                 String HazardAddress = HazardAddress_Input.getText().toString();
                 String HazardDescription =  HazardDescription_Input.getText().toString();
                 String HazardType =  HazardTypeDropDownMenu.getSelectedItem().toString();
-                Double HazardAddress_Lat = HazardAddress_LatLng.latitude;
-                Double HazardAddress_Long = HazardAddress_LatLng.longitude;
 
-                Log.d("Submit Button", "User clicked submit details");
-
-                // obtain Hazard Name and pad to the right 15 spaces
-                String formattedHazardName = String.format("%-15s", HazardName);
-                String formattedHazardAddress = String.format("%-15s", HazardAddress);
-
-                // getting the current date
-                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-
-                // documenting the incident into the incident log.
-                incidentLog.INFO("|" + String.format("%-12s", date) + "|" + formattedHazardName + "|" + formattedHazardAddress + "|");
-
-                // record the incident documentation into logcat.
-                Log.d("Incident Log", incidentLog.returnIncidents());
-
+                LogInformation(HazardName,HazardAddress);
                 // Check that user has input details and that the string is not empty
                 CheckIncidentUserInputs checker = new CheckIncidentUserInputs(HazardName,HazardAddress,HazardAddress_LatLng,HazardDescription,HazardType,imageFileNameInStorage);
                 String checked = checker.CheckAllUserInputs();
 
                 if(checked.equals("")){
-                    Intent go_to_submit_page = new Intent(Activity_Incident_Details_Input.this, Submitted_Details.class);
-                    startActivity(go_to_submit_page);
+                    Double HazardAddress_Lat = HazardAddress_LatLng.latitude;
+                    Double HazardAddress_Long = HazardAddress_LatLng.longitude;
 
                     IncidentObject NewIncident = new IncidentObject(HazardName,HazardAddress,HazardAddress_Lat, HazardAddress_Long,HazardDescription,HazardType,imageFileNameInStorage);
                     NewIncident.saveIncidentToDatabase();
 
+                    Intent go_to_submit_page = new Intent(Activity_Incident_Details_Input.this, Submitted_Details.class);
+                    startActivity(go_to_submit_page);
                 }
                 else {
                     Toast.makeText(Activity_Incident_Details_Input.this, "Please input " + checked, Toast.LENGTH_SHORT).show();
@@ -337,5 +313,20 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void LogInformation(String HazardName, String HazardAddress){
+        // obtain Hazard Name and pad to the right 15 spaces
+        String formattedHazardName = String.format("%-15s", HazardName);
+        String formattedHazardAddress = String.format("%-15s", HazardAddress);
+
+        // getting the current date
+        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        // documenting the incident into the incident log.
+        incidentLog.INFO("|" + String.format("%-12s", date) + "|" + formattedHazardName + "|" + formattedHazardAddress + "|");
+
+        // record the incident documentation into logcat.
+        Log.d("Incident Log", incidentLog.returnIncidents());
     }
 }

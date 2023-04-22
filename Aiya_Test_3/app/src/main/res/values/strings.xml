@@ -24,4 +24,8 @@
     <string name="account_create_success">Your account is successfully registered!</string>
     <string name="MAPS_API">ce558cd849364031</string>
 
+    <string name="Incident_Objects">Incident Objects</string>
+    <string name="StorageImagePath">/User Uploaded Photos Test/</string>
+    <string name="ImageFileType_JPG">.jpg</string>
+
 </resources>

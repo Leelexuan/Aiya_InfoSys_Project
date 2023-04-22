@@ -8,8 +8,8 @@
 
     <TextView
         android:id="@+id/HazardSubject"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="95dp"
+        android:layout_height="21dp"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/bobbyroughsoft"
         android:text="Hazard Name"
@@ -46,8 +46,8 @@
 
     <TextView
         android:id="@+id/HazardAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="102dp"
+        android:layout_height="20dp"
         android:layout_marginTop="120dp"
         android:fontFamily="@font/bobbyroughsoft"
         android:text="Address Name"
@@ -61,8 +61,8 @@
 
     <TextView
         android:id="@+id/hazardType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="89dp"
+        android:layout_height="22dp"
         android:layout_marginTop="212dp"
         android:fontFamily="@font/bobbyroughsoft"
         android:text="Hazard Type"
@@ -109,11 +109,12 @@
 
     <TextView
         android:id="@+id/HazardDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="21dp"
         android:layout_marginTop="288dp"
         android:fontFamily="@font/bobbyroughsoft"
         android:text="Hazard Description"
+        android:textAlignment="viewStart"
         android:textColor="#D44E52"
         android:textSize="16sp"
         android:textStyle="bold|italic"
@@ -229,7 +230,7 @@
         android:id="@+id/submitHazardBtn"
         android:layout_width="249dp"
         android:layout_height="41dp"
-        android:layout_marginTop="29dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="29dp"
         android:background="#DB4545"
         android:text="Submit Hazard"
