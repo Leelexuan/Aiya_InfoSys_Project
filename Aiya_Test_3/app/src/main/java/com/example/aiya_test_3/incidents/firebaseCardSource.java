@@ -32,13 +32,6 @@ public class firebaseCardSource implements cardDataSource {
     int size;
     List<String> hazardDescriptionList,hazardAddressList,hazardNameList,hazardImageList, hazardTypeList;
     List<Double> hazardLatList,hazardLngList;
-    List<String> OriginalHazardNameList;
-    List<String> OriginalhazardDescriptionList;
-    List<String> OriginalhazardTypeList;
-    List<String> OriginalhazardAddressList;
-    List<String> OriginalhazardImageList;
-    List<Double> OriginalhazardLatList;
-    List<Double> OriginalhazardLngList;
 
     List<IncidentObject> IncidentObjectsList;
     String searcher;

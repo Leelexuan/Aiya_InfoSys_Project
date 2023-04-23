@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IncidentObject {
-
     private String HazardID;
     private  String HazardName_Input;
     private  String HazardAddress_Input;
@@ -19,7 +18,6 @@ public class IncidentObject {
     private  String HazardType_Input;
     private  String HazardImage_Input;
     private  long upvotes;
-
     DatabaseReference nRootDatabaseRef = FirebaseDatabase.getInstance().getReference();;
     DatabaseReference nNodeRefInputDetails;
 

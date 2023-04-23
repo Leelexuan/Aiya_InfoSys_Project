@@ -54,7 +54,8 @@ import java.util.Objects;
 
 public class Activity_Incident_Details_Input extends AppCompatActivity {
 
-    /*DESCRIPTION
+    /*DESCRIPTION:
+     *
      * This is the activity class for the details input page.
      * On this page, users will be able to key in data and upload hazards
      *
@@ -262,11 +263,12 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                     Double HazardAddress_Lat = HazardAddress_LatLng.latitude;
                     Double HazardAddress_Long = HazardAddress_LatLng.longitude;
 
-                    IncidentObject NewIncident = new IncidentObject(HazardName,HazardAddress,HazardAddress_Lat, HazardAddress_Long,HazardDescription,HazardType,imageFileNameInStorage);
-                    NewIncident.saveIncidentToDatabase();
-
                     Intent go_to_submit_page = new Intent(Activity_Incident_Details_Input.this, Submitted_Details.class);
                     startActivity(go_to_submit_page);
+                    finish();
+
+                    IncidentObject NewIncident = new IncidentObject(HazardName,HazardAddress,HazardAddress_Lat, HazardAddress_Long,HazardDescription,HazardType,imageFileNameInStorage);
+                    NewIncident.saveIncidentToDatabase();
                 }
                 else {
                     Toast.makeText(Activity_Incident_Details_Input.this, "Please input " + checked, Toast.LENGTH_SHORT).show();
