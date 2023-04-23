@@ -1,6 +1,16 @@
 package com.example.aiya_test_3.login;
 
 import android.content.Context;
+
+/* DESCRIPTION
+This abstract class is used as a template to for the template design pattern.
+LogInUserInput and SignUpUserInput class will extend this abstract class with their own specific implementation of abstract methods.
+This is done as user input has to be checked at different areas but what they check for may differ.
+Therefore we use a template design that can be reused in the future if we add more features that require checking user input.
+
+This is also a form of delegation as the tasks of checking user input is delegated to objects who extend
+this abstract class rather than doing the check in the activity itself.
+ */
 public abstract class UserInputAbstract {
 
 

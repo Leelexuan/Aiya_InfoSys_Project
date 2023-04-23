@@ -85,7 +85,7 @@ public class Activity_SignUp extends AppCompatActivity {
                 if (signupinput.accountInputCheck(usernameText,passwordText,confirm_passwordText,Activity_SignUp.this)){
                     // Check if email used qualifies for official account
                     boolean checkOfficial = ((SignUpUserInput) signupinput).checkOfficialEmail(usernameText);
-                    usersignup(usernameText, passwordText, checkOfficial);
+                    userSignUp(usernameText, passwordText, checkOfficial);
 
                 } else { // NOT VERIFIED //
                     // log unacceptable input //
@@ -97,7 +97,7 @@ public class Activity_SignUp extends AppCompatActivity {
     }
 
     // Method to sign up user account to Firebase
-    private void usersignup(String email, String password, boolean official) {
+    private void userSignUp(String email, String password, boolean official) {
 
         //create user account in Firebase Authentication
 
