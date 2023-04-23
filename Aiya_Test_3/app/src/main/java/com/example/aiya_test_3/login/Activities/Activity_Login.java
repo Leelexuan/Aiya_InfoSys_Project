@@ -73,7 +73,7 @@ public class Activity_Login extends AppCompatActivity {
 
                 // Verification of user inputs
                 if(logininput.accountInputCheck(emailText,passwordText,"",Activity_Login.this)){
-                    userLogIn(emailText, passwordText); // delegate to another class
+                    userLogIn(emailText, passwordText); // delegate to another method
 
                 } else { // NOT VERIFIED //
                     // log unacceptable input //

@@ -2,6 +2,7 @@ package com.example.aiya_test_3.incidents.Activities;
 
 import static com.example.aiya_test_3.BuildConfig.MAPS_API_KEY;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.example.aiya_test_3.incidents.CheckIncidentUserInputs;
 import com.example.aiya_test_3.incidents.IncidentLog;
 import com.example.aiya_test_3.incidents.IncidentObject;
 import com.example.aiya_test_3.incidents.Submitted_Details;
+import com.example.aiya_test_3.login.UserInputAbstract;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -254,10 +256,11 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 String HazardDescription =  HazardDescription_Input.getText().toString();
                 String HazardType =  HazardTypeDropDownMenu.getSelectedItem().toString();
 
-                LogInformation(HazardName,HazardAddress);
+                LogInformation(HazardName,HazardAddress); // Separate Method to log information
+
                 // Check that user has input details and that the string is not empty
-                CheckIncidentUserInputs checker = new CheckIncidentUserInputs(HazardName,HazardAddress,HazardAddress_LatLng,HazardDescription,HazardType,imageFileNameInStorage);
-                String checked = checker.CheckAllUserInputs();
+                UserInputAbstract checker = new CheckIncidentUserInputs();
+                String checked = checker.IncidentUserInputCheck(HazardName,HazardAddress,HazardAddress_LatLng,HazardDescription,HazardType,imageFileNameInStorage);
 
                 if(checked.equals("")){
                     Double HazardAddress_Lat = HazardAddress_LatLng.latitude;

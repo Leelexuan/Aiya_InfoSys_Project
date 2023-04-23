@@ -4,8 +4,9 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-public class LogInUserInput extends UserInputAbstract{
+import com.google.android.gms.maps.model.LatLng;
 
+public class LogInUserInput extends UserInputAbstract{
 
     @Override
     public boolean accountInputCheck(String email, String password1, String password2, Context context) {
@@ -30,7 +31,7 @@ public class LogInUserInput extends UserInputAbstract{
 
     // This is not used in Log In, so we will return null
     @Override
-    public String CheckAllUserInputs() {
+    public String IncidentUserInputCheck(String HazardName, String HazardAddress, LatLng HazardAddress_LatLng, String HazardDescription_Input, String HazardType_Input, String HazardImage_Input) {
         return null;
     }
 }
