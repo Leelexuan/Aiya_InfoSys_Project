@@ -22,7 +22,6 @@ public class Submitted_Details extends AppCompatActivity {
             public void run() {
                 Intent go_back_forum_page = new Intent(Submitted_Details.this, Activity_Incidents.class);
                 startActivity(go_back_forum_page);
-                finish();
             }
         }, 2000);   // Wait for 2 seconds (Once we connect to database, we can make it actually take amount of time required to upload the data
     }
