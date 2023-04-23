@@ -120,45 +120,8 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
 
         // onDataChange is async, so means that it is getting this data while the app is also building
 
-//        ExecutorService executor = Executors.newSingleThreadExecutor();
-//        final Handler handler = new Handler(Looper.getMainLooper());
-//        executor.execute( new Runnable() {
-//            @Override
-//            public void run () {
-//            //Background work here
-//                nNodeRefIssueList.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                        int size = (int) snapshot.getChildrenCount();
-//                        int index = 0;
-//                        issueList = new String[size];
-//
-//                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                            Object value = dataSnapshot.getValue();
-//                            if (value != null && value instanceof String) {
-//                                issueList[index++] = dataSnapshot.getValue(String.class);
-//                            }
-//                        }
-//
-//                        handler.post( new Runnable() {
-//                            @Override
-//                            public void run () {
-//                                //UI Thread work here
-//                                if(issueList != null){
-//                                    String[] options = issueList; // These are the options for the dropdown option
-//                                    ArrayAdapter<String> optionAdapter = new ArrayAdapter<>(Activity_Incident_Details_Input.this, android.R.layout.simple_spinner_item, options); // Add options to spinner
-//                                    HazardTypeDropDownMenu.setAdapter(optionAdapter); // set the options into the drop down menu
-//                                }
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {}
-//                });
-//            }
-//        });
+        handleBackgroundTask retrieveIssues = new handleBackgroundTask();
+        retrieveIssues.start(nNodeRefIssueList); // Delegation strategy -> An object to handle the background task of retrieving incidents. -> The object uses Template design.
 
         HazardTypeDropDownMenu.setSelection(0); // Set the first value as the default value
         // Set Drop Down on clicked listener for logging purposes
@@ -311,11 +274,6 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
             }
         });
 
-    }
-
-    void getIssueList(){
-        handleBackgroundTask retrieveIssues = new handleBackgroundTask();
-        handleBackgroundTask.start(nNodeRefIssueList);
     }
 
     class handleBackgroundTask extends BackgroundTasks<DatabaseReference, ArrayList<String>>{
