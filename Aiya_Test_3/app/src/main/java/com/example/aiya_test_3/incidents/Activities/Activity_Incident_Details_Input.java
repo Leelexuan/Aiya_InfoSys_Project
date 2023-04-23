@@ -283,6 +283,9 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
         @Override
         public ArrayList<String> task(DatabaseReference dbInput) {
             ArrayList<String> issues = new ArrayList<String>();
+            ArrayList<Boolean> DataRetrivedFlag = new ArrayList<Boolean>();
+            DataRetrivedFlag.add(false);
+
             dbInput.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -292,6 +295,7 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                         Object value = dataSnapshot.getValue();
                         if (value != null && value instanceof String) {
                             issues.add(dataSnapshot.getValue(String.class));
+                            DataRetrivedFlag.set(0,true);
                         }
                     }
                 }
@@ -299,6 +303,9 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError error) {
                 }
             });
+
+            while(!DataRetrivedFlag.get(0)) {}
+
             return issues;
         }
 
