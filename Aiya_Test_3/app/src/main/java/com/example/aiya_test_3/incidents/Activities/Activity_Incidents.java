@@ -312,9 +312,6 @@ public class Activity_Incidents extends AppCompatActivity implements SearchView.
         // Notify the log that the mpa is ready
         mMap = googleMap;
 
-        // Prompt the user for permission.
-        getLocationPermission();
-
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
 
