@@ -156,8 +156,6 @@ public class Activity_Incident_Details_Input extends AppCompatActivity {
             }
         });
 
-
-
         //name of photo to be uploaded
         imageFileNameInStorage = "";
 

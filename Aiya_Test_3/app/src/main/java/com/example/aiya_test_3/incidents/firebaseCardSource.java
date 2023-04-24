@@ -121,8 +121,6 @@ public class firebaseCardSource implements cardDataSource {
 
     private void repopulateList(DataSnapshot snapshot){
 
-        Log.d("CheckPoint 2", "Started");
-
         for(DataSnapshot dataSnapshot: snapshot.getChildren()){
 
             String IncidentID = snapshot.getKey();
